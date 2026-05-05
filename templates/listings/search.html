@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Meklēšana: {{ query }}{% endblock %}
+
+{% block content %}
+<style>
+.listing-card { border-radius: 12px; overflow: hidden; border: 1px solid #e9ecef; background: white; transition: all .18s; }
+.listing-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
+.listing-card .card-img { height: 170px; object-fit: cover; width: 100%; }
+.listing-card .no-img { height: 170px; background: #f4f5f7; display: flex; align-items: center; justify-content: center; }
+</style>
+
+<div class="row g-4">
+    <!-- Filtri -->
+    <div class="col-md-3">
+        <div class="card p-3" style="border-radius:12px;position:sticky;top:1rem">
+            <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-funnel text-danger me-2"></i>Filtri</h6>
+            <form method="get" id="filter-form">
+                <input type="hidden" name="q" value="{{ query }}">
+
+                <div class="mb-3">
+                    <label class="form-label fw-600" style="font-weight:600;font-size:.83rem">Veids</label>
+                    <select name="listing_type" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">Visi</option>
+                        <option value="listing" {% if f.listing_type == 'listing' %}selected{% endif %}>Sludinājumi</option>
+                        <option value="auction" {% if f.listing_type == 'auction' %}selected{% endif %}>Izsoles</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-600" style="font-weight:600;font-size:.83rem">Kategorija</label>
+                    <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">Visas</option>
+                        {% for cat in top_categories %}
+                        <option value="{{ cat.pk }}" {% if f.category == cat.pk|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-600" style="font-weight:600;font-size:.83rem">Stāvoklis</label>
+                    <select name="condition" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">Jebkāds</option>
+                        {% for val,label in condition_choices %}
+                        <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-600" style="font-weight:600;font-size:.83rem">Cena (€)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" name="price_min" class="form-control form-control-sm" placeholder="No" value="{{ f.price_min }}" min="0">
+                        <input type="number" name="price_max" class="form-control form-control-sm" placeholder="Līdz" value="{{ f.price_max }}" min="0">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-danger btn-sm w-100">
+                    <i class="bi bi-search me-1"></i>Meklēt
+                </button>
+                {% if f.price_min or f.price_max or f.condition or f.category or f.listing_type %}
+                <a href="?q={{ query }}" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                    <i class="bi bi-x me-1"></i>Notīrīt filtrus
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Rezultāti -->
+    <div class="col-md-9">
+        <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+            <h4 class="mb-0 fw-800" style="font-weight:800">
+                <i class="bi bi-search text-danger me-2"></i>„{{ query }}"
+            </h4>
+            <span class="badge rounded-pill" style="background:#f4f5f7;color:#6c757d;font-size:.82rem;padding:.35rem .75rem;font-weight:600">
+                {{ listings.count }} rezultāti
+            </span>
+        </div>
+
+        {% if listings %}
+        <div class="row g-3">
+            {% for listing in listings %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="listing-card h-100">
+                    {% with listing.get_main_image as img %}
+                    {% if img %}
+                    <img src="{{ img.image.url }}" class="card-img">
+                    {% else %}
+                    <div class="no-img"><i class="bi bi-image text-secondary fs-2"></i></div>
+                    {% endif %}
+                    {% endwith %}
+                    <div class="p-3">
+                        {% if listing.is_featured %}<span class="badge me-1" style="background:#fef9c3;color:#92400e;border-radius:20px;font-size:.7rem"><i class="bi bi-star-fill me-1"></i>TOP</span>{% endif %}
+                        {% if listing.is_auction %}<span class="auction-badge me-1">IZSOLE</span>{% endif %}
+                        <h6 class="mt-1 mb-1" style="font-size:.87rem;font-weight:600;line-height:1.35">{{ listing.title|truncatechars:50 }}</h6>
+                        {% if listing.price %}
+                        <p class="fw-bold mb-1" style="color:#16a34a;font-size:.95rem">€{{ listing.price }}</p>
+                        {% else %}
+                        <p class="text-muted mb-1" style="font-size:.8rem">Cena pēc vienošanās</p>
+                        {% endif %}
+                        <p class="text-muted mb-2" style="font-size:.78rem"><i class="bi bi-geo-alt me-1"></i>{% if listing.city %}{{ listing.city }}{% elif listing.location %}{{ listing.location }}{% else %}—{% endif %}</p>
+                        <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-sm btn-outline-danger w-100">Skatīt</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card p-5 text-center border-0" style="background:#f8f9fa;border-radius:16px">
+            <i class="bi bi-search text-muted" style="font-size:3rem"></i>
+            <h5 class="mt-3 text-muted">Nekas netika atrasts</h5>
+            <p class="text-muted mb-0">Mēģini citu meklēšanas vārdu vai <a href="{% url 'home' %}">atgriezties sākumlapā</a>.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

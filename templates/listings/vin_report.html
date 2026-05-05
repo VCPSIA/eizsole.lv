@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}VIN atskaite — {{ report.vin }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Drukāšanas stili ── */
+@media print {
+    /* Slēpj lapas elementus */
+    nav.navbar, footer, .breadcrumb, .no-print,
+    .btn, nav[aria-label="breadcrumb"] { display: none !important; }
+
+    body { background: white !important; font-size: 11pt; }
+    .container, .col-lg-8 { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .row.justify-content-center { margin: 0 !important; }
+
+    /* Kartītes bez ēnas */
+    .card { border: 1px solid #ccc !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: .5rem !important; }
+
+    /* Drukā fona krāsas (statusa bloki) */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    /* Tabula */
+    table { width: 100% !important; }
+    th, td { padding: 4px 8px !important; font-size: 10pt !important; }
+
+    /* Rāda tikai drukāšanas galveni */
+    .print-header { display: block !important; }
+
+    /* Lapas iestatījumi */
+    @page { margin: 1.5cm; size: A4; }
+}
+
+@media screen {
+    .print-header { display: none; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% with d=report.report_data %}
+
+<!-- Drukāšanas galvene (redzama tikai drukājot) -->
+<div class="print-header" style="border-bottom:2px solid #e63946;padding-bottom:.75rem;margin-bottom:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+            <div style="font-size:18pt;font-weight:800;color:#e63946">eizsole.lv</div>
+            <div style="font-size:9pt;color:#6c757d">Lētākā izsoļu un sludinājumu platforma</div>
+        </div>
+        <div style="text-align:right;font-size:9pt;color:#6c757d">
+            <div>Atskaite sagatavota: {{ report.created_at|date:"d.m.Y H:i" }}</div>
+            <div>VIN: <strong style="font-family:monospace">{{ report.vin }}</strong></div>
+            <div>Sludinājums: {{ listing.title|truncatechars:50 }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+<div class="col-lg-8">
+
+<nav aria-label="breadcrumb" class="mb-3 no-print">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Sākums</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'listing_detail' listing.pk %}">{{ listing.title|truncatechars:40 }}</a></li>
+        <li class="breadcrumb-item active">VIN atskaite</li>
+    </ol>
+</nav>
+
+{% if reused %}
+<div class="alert alert-info d-flex align-items-center gap-2 mb-3 no-print" style="border-radius:10px">
+    <i class="bi bi-info-circle-fill fs-5"></i>
+    <div>Šī atskaite tika iegūta <strong>{{ report.created_at|date:"d.m.Y H:i" }}</strong> — bez papildus maksas.</div>
+</div>
+{% endif %}
+
+{% if d._demo %}
+<div class="alert alert-warning d-flex align-items-center gap-2 mb-3" style="border-radius:10px">
+    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+    <div><strong>Demo režīms</strong> — API atslēga nav iestatīta. Dati ir fiktīvi.</div>
+</div>
+{% endif %}
+
+<!-- Virsraksts -->
+<div class="card mb-3" style="border-radius:16px;border:2px solid #e63946">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="width:52px;height:52px;background:#fee2e2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="bi bi-file-earmark-text text-danger" style="font-size:1.5rem"></i>
+            </div>
+            <div>
+                <h5 class="mb-0 fw-700" style="font-weight:700">Automašīnas vēstures atskaite</h5>
+                <div class="text-muted" style="font-size:.85rem">
+                    VIN: <span class="font-monospace fw-700" style="font-weight:700">{{ report.vin }}</span>
+                    &nbsp;·&nbsp; {{ report.created_at|date:"d.m.Y H:i" }}
+                </div>
+            </div>
+            <div class="ms-auto text-end" style="font-size:.8rem;color:#6c757d">
+                Maksa: €{{ report.price_net }}
+                {% if report.vat_amount > 0 %} + PVN €{{ report.vat_amount }}{% endif %}
+                {% if report.is_eu_vat %}<br><span style="font-size:.72rem">ES PVN: {{ report.eu_vat_number }}</span>{% endif %}
+            </div>
+        </div>
+
+        <!-- Statusa kartītes -->
+        <div class="row g-2">
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded text-center {% if d.accidents %}bg-danger text-white{% else %}bg-success text-white{% endif %}" style="border-radius:10px!important">
+                    <i class="bi {% if d.accidents %}bi-exclamation-triangle-fill{% else %}bi-shield-check-fill{% endif %} fs-4 d-block mb-1"></i>
+                    <div style="font-size:.78rem;font-weight:700">Negadījumi</div>
+                    <div style="font-size:.85rem">{% if d.accidents %}{{ d.accidents|length }}{% else %}Nav{% endif %}</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded text-center {% if d.theft %}bg-danger text-white{% else %}bg-success text-white{% endif %}" style="border-radius:10px!important">
+                    <i class="bi {% if d.theft %}bi-exclamation-octagon-fill{% else %}bi-lock-fill{% endif %} fs-4 d-block mb-1"></i>
+                    <div style="font-size:.78rem;font-weight:700">Zādzība</div>
+                    <div style="font-size:.85rem">{% if d.theft %}Reģistrēta{% else %}Nav{% endif %}</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded text-center {% if d.write_off %}bg-danger text-white{% else %}bg-success text-white{% endif %}" style="border-radius:10px!important">
+                    <i class="bi {% if d.write_off %}bi-x-circle-fill{% else %}bi-check-circle-fill{% endif %} fs-4 d-block mb-1"></i>
+                    <div style="font-size:.78rem;font-weight:700">Norakstīts</div>
+                    <div style="font-size:.85rem">{% if d.write_off %}Jā{% else %}Nē{% endif %}</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded text-center {% if not d.inspection_valid %}bg-warning{% else %}bg-success text-white{% endif %}" style="border-radius:10px!important">
+                    <i class="bi bi-card-checklist fs-4 d-block mb-1"></i>
+                    <div style="font-size:.78rem;font-weight:700">Tech. apskate</div>
+                    <div style="font-size:.85rem">{% if d.inspection_valid %}Derīga{% else %}Nav{% endif %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pamata info -->
+{% if d.make or d.model or d.year %}
+<div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
+    <div class="card-body">
+        <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-car-front text-danger me-2"></i>Transportlīdzekļa dati</h6>
+        <div class="row g-2" style="font-size:.88rem">
+            {% if d.make %}<div class="col-6"><div class="text-muted">Marka</div><div class="fw-600" style="font-weight:600">{{ d.make }}</div></div>{% endif %}
+            {% if d.model %}<div class="col-6"><div class="text-muted">Modelis</div><div class="fw-600" style="font-weight:600">{{ d.model }}</div></div>{% endif %}
+            {% if d.year %}<div class="col-6"><div class="text-muted">Izlaiduma gads</div><div class="fw-600" style="font-weight:600">{{ d.year }}</div></div>{% endif %}
+            {% if d.engine %}<div class="col-6"><div class="text-muted">Dzinējs</div><div class="fw-600" style="font-weight:600">{{ d.engine }}</div></div>{% endif %}
+            {% if d.color %}<div class="col-6"><div class="text-muted">Krāsa</div><div class="fw-600" style="font-weight:600">{{ d.color }}</div></div>{% endif %}
+            {% if d.country_of_origin %}<div class="col-6"><div class="text-muted">Izcelsmes valsts</div><div class="fw-600" style="font-weight:600">{{ d.country_of_origin }}</div></div>{% endif %}
+            {% if d.owners_count %}<div class="col-6"><div class="text-muted">Iepriekšējo īpašnieku sk.</div><div class="fw-600" style="font-weight:600">{{ d.owners_count }}</div></div>{% endif %}
+            {% if d.last_inspection %}<div class="col-6"><div class="text-muted">Pēdējā tech. apskate</div><div class="fw-600" style="font-weight:600">{{ d.last_inspection }}</div></div>{% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Nobraukuma vēsture -->
+{% if d.mileage_records %}
+<div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
+    <div class="card-body">
+        <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-speedometer2 text-danger me-2"></i>Nobraukuma vēsture</h6>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0" style="font-size:.87rem">
+                <thead><tr>
+                    <th>Datums</th><th>Nobraukums</th><th>Avots</th>
+                </tr></thead>
+                <tbody>
+                {% for rec in d.mileage_records %}
+                <tr>
+                    <td>{{ rec.date }}</td>
+                    <td class="fw-600" style="font-weight:600">{{ rec.mileage|floatformat:0 }} km</td>
+                    <td class="text-muted">{{ rec.source }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Negadījumi -->
+{% if d.accidents %}
+<div class="card mb-3" style="border-radius:12px;border:2px solid #fca5a5">
+    <div class="card-body">
+        <h6 class="fw-700 mb-3 text-danger" style="font-weight:700"><i class="bi bi-exclamation-triangle-fill me-2"></i>Negadījumu vēsture ({{ d.accidents|length }})</h6>
+        {% for acc in d.accidents %}
+        <div class="p-2 rounded mb-2" style="background:#fef2f2;font-size:.87rem">
+            <div class="fw-600" style="font-weight:600">{{ acc.date|default:"Datums nav zināms" }}</div>
+            <div>{{ acc.description|default:"Detaļas nav pieejamas" }}</div>
+            {% if acc.severity %}<span class="badge bg-danger mt-1">{{ acc.severity }}</span>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card mb-3" style="border-radius:12px;border:1px solid #bbf7d0">
+    <div class="card-body d-flex align-items-center gap-3">
+        <i class="bi bi-shield-check-fill text-success fs-3"></i>
+        <div>
+            <div class="fw-700" style="font-weight:700">Negadījumi nav reģistrēti</div>
+            <div class="text-muted" style="font-size:.85rem">Reģistros nav informācijas par nelaimes gadījumiem.</div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Drukāšanas kājene -->
+<div class="print-header" style="border-top:1px solid #e9ecef;margin-top:1.5rem;padding-top:.75rem;font-size:8pt;color:#9ca3af;text-align:center">
+    Atskaite ģenerēta vietnē eizsole.lv &nbsp;·&nbsp; {{ report.created_at|date:"d.m.Y H:i" }} &nbsp;·&nbsp; Pircējs: {{ report.purchased_by.username }}
+    {% if report.is_eu_vat %}&nbsp;·&nbsp; ES PVN maksātājs: {{ report.eu_vat_number }}{% endif %}
+</div>
+
+<!-- Pogas (ekrānā) -->
+<div class="d-flex gap-2 mt-4 no-print">
+    <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Atpakaļ
+    </a>
+    <button onclick="window.print()" class="btn btn-dark">
+        <i class="bi bi-printer me-1"></i>Drukāt / Saglabāt PDF
+    </button>
+</div>
+
+</div>
+</div>
+{% endwith %}
+{% endblock %}

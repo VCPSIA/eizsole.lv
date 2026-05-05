@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="currentColor">
+  <!-- Biezā zole -->
+  <rect x="6" y="58" width="62" height="9" rx="4.5"/>
+  <!-- Aizmale / apaļā daļa aizmugurē -->
+  <rect x="52" y="36" width="16" height="24" rx="6"/>
+  <!-- Kurpes pamattekne (apaļš purngals) -->
+  <path d="M8 58 C8 46 12 36 26 32 C38 28 54 30 56 40 L56 58 Z"/>
+  <!-- Apaļš purngals priekšā -->
+  <ellipse cx="18" cy="50" rx="13" ry="10"/>
+</svg>

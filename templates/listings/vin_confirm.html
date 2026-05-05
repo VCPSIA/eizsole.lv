@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}VIN atskaite — {{ vin }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-6">
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Sākums</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'listing_detail' listing.pk %}">{{ listing.title|truncatechars:40 }}</a></li>
+        <li class="breadcrumb-item active">VIN atskaite</li>
+    </ol>
+</nav>
+
+<div class="card" style="border-radius:16px;border:1px solid #e9ecef">
+    <div class="card-body p-4">
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div style="width:52px;height:52px;background:#fee2e2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="bi bi-file-earmark-text text-danger" style="font-size:1.5rem"></i>
+            </div>
+            <div>
+                <h5 class="mb-0 fw-700" style="font-weight:700">Automašīnas vēstures atskaite</h5>
+                <div class="text-muted" style="font-size:.85rem">VIN: <span class="font-monospace fw-600" style="font-weight:600">{{ vin }}</span></div>
+            </div>
+        </div>
+
+        <!-- Kas iekļauts -->
+        <div class="p-3 rounded mb-4" style="background:#f8f9fa;border:1px solid #e9ecef">
+            <div class="fw-600 mb-2" style="font-weight:600;font-size:.88rem">Atskaitē iekļauts:</div>
+            <div class="row g-1" style="font-size:.83rem">
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Nelaimes gadījumu vēsture</div>
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Nobraukuma pārbaude</div>
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Īpašnieku skaits</div>
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Zādzību reģistrs</div>
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Tehniskās apskates</div>
+                <div class="col-6"><i class="bi bi-check-lg text-success me-1"></i>Norakstīšanas statuss</div>
+            </div>
+        </div>
+
+        <!-- Cena -->
+        <form method="post" id="vin-form">
+            {% csrf_token %}
+            <input type="hidden" name="is_eu_vat" id="is_eu_vat_input" value="0">
+
+            <!-- Nodokļu izvēle -->
+            <div class="mb-3">
+                <label class="form-label fw-600" style="font-weight:600">Maksātāja statuss</label>
+                <div class="d-flex flex-column gap-2">
+                    <label class="d-flex align-items-start gap-2 p-3 rounded cursor-pointer"
+                           style="border:1.5px solid #e9ecef;border-radius:10px!important;cursor:pointer" id="opt-normal">
+                        <input type="radio" name="vat_type" value="normal" class="mt-1" checked onchange="setVatType('normal')">
+                        <div>
+                            <div class="fw-600" style="font-weight:600;font-size:.9rem">Privātpersona vai Latvijas uzņēmums</div>
+                            <div class="text-muted" style="font-size:.8rem">Ar PVN 21%</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <div class="fw-800 text-danger" style="font-weight:800;font-size:1.1rem">€{{ price_gross }}</div>
+                            <div class="text-muted" style="font-size:.72rem">t.sk. PVN €{{ price_gross|add:"-15.00" }}</div>
+                        </div>
+                    </label>
+                    <label class="d-flex align-items-start gap-2 p-3 rounded cursor-pointer"
+                           style="border:1.5px solid #e9ecef;border-radius:10px!important;cursor:pointer" id="opt-eu">
+                        <input type="radio" name="vat_type" value="eu" class="mt-1" onchange="setVatType('eu')">
+                        <div>
+                            <div class="fw-600" style="font-weight:600;font-size:.9rem">ES PVN maksātājs (ārpus Latvijas)</div>
+                            <div class="text-muted" style="font-size:.8rem">Reversā PVN — bez PVN</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <div class="fw-800 text-success" style="font-weight:800;font-size:1.1rem">€{{ price_net }}</div>
+                            <div class="text-muted" style="font-size:.72rem">bez PVN</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ES PVN numurs (slēpts sākumā) -->
+            <div id="eu-vat-block" class="mb-3" style="display:none">
+                <label class="form-label fw-semibold">ES PVN reģistrācijas numurs <span class="text-danger">*</span></label>
+                <input type="text" name="eu_vat_number" id="eu_vat_number"
+                       class="form-control font-monospace text-uppercase"
+                       placeholder="Piemērs: DE123456789, PL1234567890"
+                       maxlength="30">
+                <div class="form-text">Ievadiet pilnu numuru ar valsts kodu (piemēram, DE, PL, SE...)</div>
+            </div>
+
+            <!-- Kopsavilkums -->
+            <div class="p-3 rounded mb-4" style="background:#fff3cd;border:1px solid #ffc107">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-600" style="font-weight:600">Kopā no jūsu maka:</span>
+                    <span class="fw-800 text-danger" style="font-weight:800;font-size:1.2rem" id="total-display">€{{ price_gross }}</span>
+                </div>
+                <div class="text-muted mt-1" style="font-size:.78rem">
+                    <i class="bi bi-info-circle me-1"></i>Ja šis VIN jau tika pārbaudīts pēdējo 30 dienu laikā, atskaite tiks parādīta bez maksas.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100 fw-700" style="font-weight:700;border-radius:10px;padding:.75rem">
+                <i class="bi bi-file-earmark-text me-2"></i>Iegūt atskaiti
+            </button>
+            <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-outline-secondary w-100 mt-2">Atpakaļ</a>
+        </form>
+
+    </div>
+</div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function setVatType(type) {
+    const euBlock = document.getElementById('eu-vat-block');
+    const totalDisplay = document.getElementById('total-display');
+    const isEuInput = document.getElementById('is_eu_vat_input');
+    const optNormal = document.getElementById('opt-normal');
+    const optEu = document.getElementById('opt-eu');
+
+    if (type === 'eu') {
+        euBlock.style.display = 'block';
+        document.getElementById('eu_vat_number').required = true;
+        totalDisplay.textContent = '€{{ price_net }}';
+        isEuInput.value = '1';
+        optEu.style.borderColor = '#e63946';
+        optNormal.style.borderColor = '#e9ecef';
+    } else {
+        euBlock.style.display = 'none';
+        document.getElementById('eu_vat_number').required = false;
+        totalDisplay.textContent = '€{{ price_gross }}';
+        isEuInput.value = '0';
+        optNormal.style.borderColor = '#e63946';
+        optEu.style.borderColor = '#e9ecef';
+    }
+}
+setVatType('normal');
+</script>
+{% endblock %}

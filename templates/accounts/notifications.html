@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Paziņojumi{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h4 class="mb-0 fw-800" style="font-weight:800"><i class="bi bi-bell text-danger me-2"></i>Paziņojumi</h4>
+</div>
+
+{% if not notifs %}
+<div class="card p-5 text-center border-0" style="background:#f8f9fa;border-radius:16px">
+    <i class="bi bi-bell text-muted" style="font-size:3rem"></i>
+    <p class="mt-3 text-muted mb-0">Nav jaunu paziņojumu.</p>
+</div>
+{% else %}
+<div class="card p-0" style="border-radius:12px;overflow:hidden">
+{% for n in notifs %}
+<a href="{{ n.url }}" class="d-flex align-items-start gap-3 p-3 text-decoration-none text-dark border-bottom"
+   style="{% if not n.is_read %}background:#fff9f0{% endif %}transition:background .15s"
+   onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='{% if not n.is_read %}#fff9f0{% else %}white{% endif %}'">
+    <div style="width:36px;height:36px;border-radius:50%;background:{% if n.notif_type == 'bid' %}#dcfce7{% elif n.notif_type == 'message' %}#dbeafe{% elif n.notif_type == 'outbid' %}#fee2e2{% else %}#f4f5f7{% endif %};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="bi {% if n.notif_type == 'bid' %}bi-hammer text-success{% elif n.notif_type == 'message' %}bi-chat-dots text-primary{% elif n.notif_type == 'outbid' %}bi-arrow-up text-danger{% elif n.notif_type == 'won' %}bi-trophy text-warning{% else %}bi-bell text-muted{% endif %}"></i>
+    </div>
+    <div class="flex-grow-1">
+        <div style="font-size:.88rem;font-weight:{% if not n.is_read %}600{% else %}400{% endif %}">{{ n.text }}</div>
+        <div class="text-muted" style="font-size:.75rem">{{ n.created_at|date:"d.m.Y H:i" }}</div>
+    </div>
+    {% if not n.is_read %}
+    <div style="width:8px;height:8px;border-radius:50%;background:#e63946;margin-top:6px;flex-shrink:0"></div>
+    {% endif %}
+</a>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

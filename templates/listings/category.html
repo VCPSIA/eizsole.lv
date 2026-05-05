@@ -1,0 +1,680 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<style>
+.sidebar-link {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    border-radius: 7px;
+    font-size: 0.85rem;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all .13s;
+}
+.sidebar-link:hover { background: #f4f5f7; color: #e63946; }
+.sidebar-link.active { background: #fee2e2; color: #e63946; font-weight: 700; }
+.sidebar-link.sub { padding-left: 1.4rem; font-size: 0.82rem; font-weight: 400; }
+.sidebar-link.subsub { padding-left: 2.1rem; font-size: 0.78rem; font-weight: 400; color: #6c757d; }
+.sidebar-link.subsub.active { color: #e63946; background: #fff5f5; }
+
+.listing-card { border-radius: 10px; overflow: hidden; border: 1px solid #e9ecef; background: white; transition: all .18s; color: inherit; }
+.listing-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
+
+/* Rindu izkārtojums */
+#listings-grid.list-view { display: flex !important; flex-direction: column; gap: 0; }
+#listings-grid.list-view > div { flex: 0 0 100% !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin-top: 0 !important; }
+#listings-grid.list-view .listing-card { display: flex !important; flex-direction: row !important; align-items: stretch; min-height: 60px; }
+#listings-grid.list-view .listing-card > a { flex-direction: row !important; align-items: stretch; flex: 1; min-width: 0; }
+#listings-grid.list-view .listing-card .lc-img { width: 100px; min-width: 100px; flex-shrink: 0; padding: 3px 0; display: flex; align-items: center; }
+#listings-grid.list-view .listing-card .lc-img img,
+#listings-grid.list-view .listing-card .lc-img .no-img { width: 100px; height: 60px; border-radius: 8px; object-fit: contain; background: #f4f5f7; }
+#listings-grid.list-view .listing-card .lc-body { display: flex; flex-direction: row; align-items: center; flex: 1; padding: .35rem .75rem; gap: .75rem; }
+#listings-grid.list-view .listing-card .lc-info { flex: 1; min-width: 0; display: flex; flex-direction: row; gap: 1rem; align-items: center; }
+#listings-grid.list-view .listing-card .lc-info .lc-title-block { min-width: 180px; max-width: 220px; flex-shrink: 0; }
+#listings-grid.list-view .listing-card .lc-desc { display: flex !important; flex-wrap: wrap; align-items: center; flex: 1; min-width: 0; gap: .3rem; }
+#listings-grid.list-view .listing-card .lc-price { min-width: 160px; text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: .3rem; }
+#listings-grid.list-view .listing-card .lc-price .d-flex { justify-content: flex-end; }
+#listings-grid.list-view .listing-card .lc-price .btn { width: auto; }
+/* Kolonnu izkārtojums — noklusējuma stils */
+.listing-card .lc-img { padding: 2.5%; }
+.listing-card .lc-img img { height: 145px; width: 95%; object-fit: contain; border-radius: 8px; display: block; background: #f4f5f7; }
+.listing-card .lc-img .no-img { height: 145px; width: 95%; border-radius: 8px; background: #f4f5f7; display: flex; align-items: center; justify-content: center; }
+.listing-card .lc-body { padding: .75rem; display: flex; flex-direction: column; flex: 1; }
+.listing-card .lc-info { flex: 1; }
+.listing-card .lc-price { margin-top: auto; }
+.listing-card .lc-price .btn { width: 100%; }
+/* Kolonnu skaits */
+#listings-grid > div { flex: 0 0 33.333%; width: 33.333%; max-width: 33.333%; }
+#listings-grid.cols-3 > div { flex: 0 0 33.333% !important; width: 33.333% !important; max-width: 33.333% !important; }
+#listings-grid.cols-4 > div { flex: 0 0 25% !important; width: 25% !important; max-width: 25% !important; }
+#listings-grid.cols-5 > div { flex: 0 0 20% !important; width: 20% !important; max-width: 20% !important; }
+#listings-grid.cols-4 .listing-card .lc-img img,
+#listings-grid.cols-4 .listing-card .lc-img .no-img { height: 116px; }
+#listings-grid.cols-5 .listing-card .lc-img img,
+#listings-grid.cols-5 .listing-card .lc-img .no-img { height: 101px; }
+@media (max-width: 767px) {
+    #listings-grid.cols-3 > div,
+    #listings-grid.cols-4 > div,
+    #listings-grid.cols-5 > div { flex: 0 0 50% !important; width: 50% !important; max-width: 50% !important; }
+}
+.layout-btn { border: 1.5px solid #dee2e6; background: white; color: #6c757d; border-radius: 7px; padding: .3rem .55rem; cursor: pointer; transition: all .15s; }
+.layout-btn.active, .layout-btn:hover { border-color: #e63946; color: #e63946; background: #fff5f5; }
+
+.fav-btn { position:absolute; top:.5rem; right:.5rem; z-index:10; width:32px; height:32px; border-radius:50%; border:none; background:rgba(255,255,255,.85); color:#ccc; display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; transition:all .18s; backdrop-filter:blur(4px); }
+.fav-btn:hover, .fav-btn.active { color:#e63946; background:white; box-shadow:0 2px 8px rgba(230,57,70,.25); }
+.fav-btn.active i { font-size:1rem; }
+
+.sub-card {
+    background: white;
+    border: 1.5px solid #e9ecef;
+    border-radius: 10px;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    transition: all .15s;
+}
+.sub-card:hover { border-color: #e63946; box-shadow: 0 3px 12px rgba(230,57,70,.12); transform: translateY(-1px); }
+.sub-card i { font-size: 1.4rem; color: #e63946; }
+.sub-card div { font-size: 0.78rem; font-weight: 600; color: #374151; margin-top: 0.3rem; line-height: 1.2; }
+</style>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Sākums</a></li>
+        {% if category.parent.parent.parent %}
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.parent.slug %}">{{ category.parent.parent.parent.name }}</a></li>
+        {% endif %}
+        {% if category.parent.parent %}
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.slug %}">{{ category.parent.parent.name }}</a></li>
+        {% endif %}
+        {% if category.parent %}
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.slug %}">{{ category.parent.name }}</a></li>
+        {% endif %}
+        <li class="breadcrumb-item active">{{ category.name }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <!-- Sānjosla -->
+    {% if top_parent %}
+    <div class="col-md-3">
+        <div class="card p-0" style="border-radius:12px;overflow:hidden">
+            <div class="px-3 py-2" style="background:#e63946">
+                <a href="{% url 'category' top_parent.slug %}" class="text-white text-decoration-none fw-700 d-flex align-items-center gap-2" style="font-weight:700;font-size:.92rem">
+                    {% if top_parent.icon|slice:":3" == "ti-" %}<i class="ti {{ top_parent.icon }}"></i>{% else %}<i class="bi bi-{{ top_parent.icon|default:'tag' }}"></i>{% endif %} {{ top_parent.name }}
+                </a>
+            </div>
+            <div class="p-2" style="max-height:78vh;overflow-y:auto">
+                {% for lvl2 in top_parent.children.all %}
+                <a href="{% url 'category' lvl2.slug %}"
+                   class="sidebar-link fw-semibold {% if lvl2.slug in active_slugs %}active{% endif %}">
+                    {{ lvl2.name }}
+                </a>
+                {% if lvl2.slug in active_slugs %}
+                    {% for lvl3 in lvl2.children.all %}
+                    <a href="{% url 'category' lvl3.slug %}"
+                       class="sidebar-link sub {% if lvl3.slug in active_slugs %}active{% endif %}">
+                        <i class="bi bi-chevron-right me-1" style="font-size:.6rem;opacity:.5"></i>{{ lvl3.name }}
+                    </a>
+                    {% if lvl3.slug in active_slugs %}
+                        {% for lvl4 in lvl3.children.all %}
+                        <a href="{% url 'category' lvl4.slug %}"
+                           class="sidebar-link subsub {% if lvl4.slug in active_slugs %}active{% endif %}">
+                            — {{ lvl4.name }}
+                        </a>
+                        {% endfor %}
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+    {% else %}
+    <div class="col-12">
+    {% endif %}
+
+        <!-- Apakškategoriju kartes -->
+        {% if subcategories %}
+        <div class="row g-2 mb-4">
+            {% for sub in subcategories %}
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'category' sub.slug %}" class="text-decoration-none">
+                    <div class="sub-card">
+                        {% if sub.icon|slice:":4" == "svg:" %}
+                            {% with name=sub.icon|slice:'4:' %}
+                            {% if name|slice:"-4:" == ".png" %}
+                            <img src="{% static 'icons/' %}{{ name }}" style="width:1.5rem;height:1.5rem;object-fit:contain">
+                            {% else %}
+                            <img src="{% static 'icons/' %}{{ name }}.svg" style="width:1.5rem;height:1.5rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
+                            {% endif %}
+                            {% endwith %}
+                        {% elif sub.icon|slice:":3" == "ti-" %}
+                        <i class="ti {{ sub.icon }}"></i>
+                        {% else %}
+                        <i class="bi bi-{{ sub.icon|default:'chevron-right' }}"></i>
+                        {% endif %}
+                        <div>{{ sub.name }}</div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Auto filtri -->
+        {% if show_auto_filters %}
+        <div class="card mb-4" style="border-radius:12px;border:1.5px solid #e9ecef">
+            <div class="card-header py-2 px-3" style="background:#f8f9fa;border-radius:12px 12px 0 0">
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>Meklēšanas filtri</span>
+            </div>
+            <form method="get" class="card-body pt-3 pb-3">
+                <div class="row g-3">
+                    <!-- Cena -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="price_max" class="form-control" placeholder="Līdz" min="0" value="{{ f.price_max }}">
+                        </div>
+                    </div>
+                    <!-- Gads -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Gads</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="year_min" class="form-control" placeholder="No" min="1900" max="2030" value="{{ f.year_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="year_max" class="form-control" placeholder="Līdz" min="1900" max="2030" value="{{ f.year_max }}">
+                        </div>
+                    </div>
+                    <!-- Tilpums -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Tilpums (L)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="volume_min" class="form-control" placeholder="No" min="0" step="0.1" value="{{ f.volume_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="volume_max" class="form-control" placeholder="Līdz" min="0" step="0.1" value="{{ f.volume_max }}">
+                        </div>
+                    </div>
+                    <!-- Dzinējs -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Dzinēja tips</label>
+                        <select name="engine_type" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            {% for val, label in auto_choices.engine_types %}
+                            <option value="{{ val }}" {% if f.engine_type == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Ātrumkārba -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Ātrumkārba</label>
+                        <select name="transmission" class="form-select form-select-sm">
+                            <option value="">Visas</option>
+                            {% for val, label in auto_choices.transmissions %}
+                            <option value="{{ val }}" {% if f.transmission == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Virsbūve -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Virsbūves tips</label>
+                        <select name="body_type" class="form-select form-select-sm">
+                            <option value="">Visas</option>
+                            {% for val, label in auto_choices.body_types %}
+                            <option value="{{ val }}" {% if f.body_type == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Nobraukums -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Nobraukums (km)</label>
+                        <input type="number" name="mileage_max" class="form-control form-control-sm" placeholder="Līdz" min="0" value="{{ f.mileage_max }}">
+                    </div>
+                    <!-- Darījuma veids -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Darījuma veids</label>
+                        <select name="deal_type" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>Pārdod</option>
+                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>Pērk</option>
+                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>Maina</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-danger btn-sm px-4">
+                        <i class="bi bi-search me-1"></i>Meklēt
+                    </button>
+                    <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-x me-1"></i>Notīrīt
+                    </a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Riepas filtri -->
+        {% if show_tire_filters %}
+        <div class="card mb-4" style="border-radius:12px;border:1.5px solid #bfdbfe">
+            <div class="card-header py-2 px-3" style="background:#eff6ff;border-radius:12px 12px 0 0">
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-primary me-2"></i>Meklēšanas filtri</span>
+            </div>
+            <form method="get" class="card-body pt-3 pb-3">
+                <div class="row g-3">
+                    <!-- Cena -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="price_max" class="form-control" placeholder="Līdz" min="0" value="{{ f.price_max }}">
+                        </div>
+                    </div>
+                    <!-- Ražotājs -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Ražotājs</label>
+                        <input type="text" name="manufacturer" class="form-control form-control-sm"
+                               placeholder="Michelin, Nokian..." value="{{ f.manufacturer }}">
+                    </div>
+                    <!-- Sezona -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Sezona</label>
+                        <select name="season" class="form-select form-select-sm">
+                            <option value="">Visas</option>
+                            {% for val, label in tire_season_choices %}
+                            <option value="{{ val }}" {% if f.season == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Platums -->
+                    <div class="col-md-2 col-6">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Platums (mm)</label>
+                        <input type="number" name="width" class="form-control form-control-sm"
+                               placeholder="205" min="100" max="400" step="5" value="{{ f.width }}">
+                    </div>
+                    <!-- Profils -->
+                    <div class="col-md-2 col-6">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Profils (%)</label>
+                        <input type="number" name="profile" class="form-control form-control-sm"
+                               placeholder="55" min="20" max="100" value="{{ f.profile }}">
+                    </div>
+                    <!-- Rādiuss -->
+                    <div class="col-md-2 col-6">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Rādiuss (R)</label>
+                        <input type="number" name="radius" class="form-control form-control-sm"
+                               placeholder="16" min="8" max="30" value="{{ f.radius }}">
+                    </div>
+                    <!-- Slodzes indekss -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Slodzes indekss</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="load_min" class="form-control" placeholder="No" min="0" value="{{ f.load_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="load_max" class="form-control" placeholder="Līdz" min="0" value="{{ f.load_max }}">
+                        </div>
+                    </div>
+                    <!-- Ātruma indekss -->
+                    <div class="col-md-1 col-6">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Ātr. ind.</label>
+                        <input type="text" name="speed_index" class="form-control form-control-sm"
+                               placeholder="H" maxlength="3" style="text-transform:uppercase" value="{{ f.speed_index }}">
+                    </div>
+                    <!-- Stāvoklis -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Stāvoklis</label>
+                        <select name="condition" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            {% for val, label in condition_choices %}
+                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm px-4">
+                        <i class="bi bi-search me-1"></i>Meklēt
+                    </button>
+                    <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-x me-1"></i>Notīrīt
+                    </a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Vispārējie filtri -->
+        {% if not show_auto_filters and not show_tire_filters %}
+        <div class="card mb-4" style="border-radius:12px;border:1.5px solid #e9ecef">
+            <div class="card-header py-2 px-3" style="background:#f8f9fa;border-radius:12px 12px 0 0">
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>Meklēšanas filtri</span>
+            </div>
+            <form method="get" class="card-body pt-3 pb-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
+                            <span class="input-group-text">—</span>
+                            <input type="number" name="price_max" class="form-control" placeholder="Līdz" min="0" value="{{ f.price_max }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Stāvoklis</label>
+                        <select name="condition" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            {% for val, label in condition_choices %}
+                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Valsts</label>
+                        <input type="text" name="country" class="form-control form-control-sm"
+                               placeholder="Latvija, Lietuva..." value="{{ f.country }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Darījuma veids</label>
+                        <select name="deal_type" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>Pārdod</option>
+                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>Pērk</option>
+                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>Maina</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" style="font-size:.82rem">Veids</label>
+                        <select name="listing_type" class="form-select form-select-sm">
+                            <option value="">Visi</option>
+                            <option value="listing" {% if f.listing_type == "listing" %}selected{% endif %}>Sludinājums</option>
+                            <option value="auction" {% if f.listing_type == "auction" %}selected{% endif %}>Izsole</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-danger btn-sm px-4">
+                        <i class="bi bi-search me-1"></i>Meklēt
+                    </button>
+                    <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-x me-1"></i>Notīrīt
+                    </a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Sludinājumu galvene -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 fw-700" style="font-weight:700">
+                {{ category.name }}
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge rounded-pill" style="background:#f4f5f7;color:#6c757d;font-size:.82rem;font-weight:600;padding:.35rem .75rem">
+                    {{ listings.count }} sludinājumi
+                </span>
+                <button class="layout-btn active" id="btn-grid3" onclick="setLayout('grid3')" title="3 kolonnas">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                </button>
+                <button class="layout-btn" id="btn-grid4" onclick="setLayout('grid4')" title="4 kolonnas">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </button>
+                <button class="layout-btn" id="btn-grid5" onclick="setLayout('grid5')" title="5 kolonnas">
+                    <i class="bi bi-grid-fill"></i>
+                </button>
+                <button class="layout-btn" id="btn-list" onclick="setLayout('list')" title="Rindas">
+                    <i class="bi bi-list-ul"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sludinājumu saraksts -->
+        <div class="row g-3" id="listings-grid">
+            {% for listing in listings %}
+            <div class="col">
+                <div class="listing-card h-100 d-flex flex-column position-relative">
+                {% if user.is_authenticated %}
+                <button onclick="toggleFav({{ listing.pk }}, this)"
+                    class="fav-btn {% if listing.pk in fav_ids %}active{% endif %}"
+                    data-pk="{{ listing.pk }}" title="Pievienot favorītiem">
+                    <i class="bi {% if listing.pk in fav_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                </button>
+                {% endif %}
+                <a href="{% url 'listing_detail' listing.pk %}" class="text-decoration-none text-dark d-flex flex-column flex-grow-1">
+                    <div class="lc-img">
+                        {% with listing.get_main_image as img %}
+                        {% if img %}<img src="{{ img.image.url }}" alt="{{ listing.title }}">
+                        {% else %}<div class="no-img"><i class="bi bi-image text-secondary fs-2"></i></div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="lc-body">
+                        <div class="lc-info">
+                            <div class="lc-title-block">
+                                <div class="mb-1">
+                                    {% if listing.is_featured %}<span class="badge me-1" style="background:#fef9c3;color:#92400e;border-radius:20px;font-size:.7rem"><i class="bi bi-star-fill me-1"></i>TOP</span>{% endif %}
+                                    {% if listing.is_auction %}<span class="auction-badge me-1">IZSOLE</span>{% endif %}
+                                </div>
+                                <div class="fw-600 mb-1" style="font-size:.87rem;line-height:1.35;font-weight:600">{{ listing.title|truncatechars:60 }}</div>
+                                <div class="text-muted" style="font-size:.76rem"><i class="bi bi-geo-alt me-1"></i>{% if listing.city and listing.country %}{{ listing.city }}, {{ listing.country }}{% elif listing.location %}{{ listing.location }}{% else %}—{% endif %}</div>
+                            </div>
+                            <div class="text-muted lc-desc" style="font-size:.78rem;line-height:1.5;display:none">
+                                {% with listing.auto_details as ad %}
+                                {% if ad %}
+                                <span class="me-2"><i class="bi bi-calendar2 me-1"></i>{{ listing.year }}</span>
+                                <span class="me-2"><i class="bi bi-speedometer2 me-1"></i>{{ ad.mileage|floatformat:0 }} km</span>
+                                <span class="me-2"><i class="bi bi-gear me-1"></i>{{ ad.engine_volume }} L</span>
+                                {% else %}
+                                {{ listing.description|truncatechars:140 }}
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                        <div class="lc-price">
+                            {% if listing.price %}
+                            <div class="fw-bold" style="color:#16a34a;font-size:.98rem">€{{ listing.price }}</div>
+                            {% else %}
+                            <div class="text-muted" style="font-size:.78rem">Pēc vienošanās</div>
+                            {% endif %}
+                            <div class="d-flex gap-1 mt-1" style="flex-wrap:nowrap">
+                                <span class="btn btn-sm btn-outline-danger" style="font-size:.72rem;padding:.25rem .5rem;flex:1;white-space:nowrap">Skatīt</span>
+                                <button type="button" onclick="event.preventDefault();toggleCompare({{ listing.pk }},this)"
+                                    class="btn btn-sm btn-outline-secondary cmp-btn" data-pk="{{ listing.pk }}"
+                                    style="font-size:.72rem;padding:.25rem .4rem" title="Salīdzināt">
+                                    <i class="bi bi-columns-gap"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="card p-4 text-center border-0" style="background:#f8f9fa">
+                    <i class="bi bi-inbox text-muted fs-2 mb-2"></i>
+                    <p class="text-muted mb-0">Šajā kategorijā vēl nav sludinājumu.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginācija -->
+        {% if paginator.num_pages > 1 or per_page %}
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mt-4 pt-3" style="border-top:1px solid #e9ecef">
+
+            <!-- Lappušu navigācija -->
+            {% if paginator.num_pages > 1 %}
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for k,v in f.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% for num in paginator.page_range %}
+                        {% if num == page_obj.number %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% elif num == 1 or num == paginator.num_pages or num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for k,v in f.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for k,v in f.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% else %}
+            <div></div>
+            {% endif %}
+
+            <!-- Skaita ierobežotājs -->
+            <div class="d-flex align-items-center gap-2" style="font-size:.85rem">
+                <span class="text-muted">Lapā:</span>
+                {% for opt in per_page_options %}
+                <a href="?{% for k,v in f.items %}{% if k != 'per_page' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}per_page={{ opt }}"
+                   class="px-2 py-1 rounded text-decoration-none {% if per_page == opt %}fw-700 text-danger{% else %}text-muted{% endif %}"
+                   style="border:1px solid {% if per_page == opt %}#e63946{% else %}#dee2e6{% endif %};font-size:.82rem">
+                    {{ opt }}
+                </a>
+                {% endfor %}
+                <span class="text-muted ms-1">/ {{ paginator.count }} kopā</span>
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- Peldošā salīdzināšanas josla -->
+<div id="compare-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:1050;background:white;border-top:2px solid #e63946;box-shadow:0 -4px 20px rgba(0,0,0,.12);padding:.75rem 1.5rem">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+        <span class="fw-700" style="font-weight:700;font-size:.88rem;white-space:nowrap">
+            <i class="bi bi-columns-gap text-danger me-2"></i>Salīdzināt:
+        </span>
+        <div id="compare-items" class="d-flex gap-2 flex-wrap flex-grow-1"></div>
+        <div class="d-flex gap-2 ms-auto">
+            <a href="{% url 'compare_page' %}" id="compare-go-btn" class="btn btn-danger btn-sm" style="white-space:nowrap">
+                <i class="bi bi-arrow-right me-1"></i>Salīdzināt
+            </a>
+            <button onclick="clearCompare()" class="btn btn-outline-secondary btn-sm" style="white-space:nowrap">
+                <i class="bi bi-x-lg me-1"></i>Notīrīt
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let compareIds = [];
+
+function getCsrf() {
+    return document.cookie.split('; ').find(r => r.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+
+function toggleFav(pk, btn) {
+    fetch(`/api/favoriti/${pk}/`, {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
+    .then(r => r.json()).then(d => {
+        btn.classList.toggle('active', d.favorited);
+        btn.innerHTML = `<i class="bi ${d.favorited ? 'bi-heart-fill' : 'bi-heart'}"></i>`;
+    });
+}
+
+function toggleCompare(pk, btn) {
+    fetch(`/api/salidzinat/${pk}/`, {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
+    .then(r => {
+        if (!r.ok) return r.json().then(d => { alert(d.error || 'Kļūda'); throw new Error(); });
+        return r.json();
+    })
+    .then(data => {
+        compareIds = data.ids;
+        updateCompareBar();
+        const added = data.added;
+        btn.classList.toggle('btn-outline-secondary', !added);
+        btn.classList.toggle('btn-danger', added);
+        btn.innerHTML = added
+            ? '<i class="bi bi-check-lg me-1"></i>Pievienots'
+            : '<i class="bi bi-columns-gap me-1"></i>Salīdzināt';
+    }).catch(() => {});
+}
+
+function clearCompare() {
+    fetch('/api/salidzinat/dzest/', {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
+    .then(() => {
+        compareIds = [];
+        updateCompareBar();
+        document.querySelectorAll('.cmp-btn').forEach(b => {
+            b.classList.remove('btn-danger');
+            b.classList.add('btn-outline-secondary');
+            b.innerHTML = '<i class="bi bi-columns-gap me-1"></i>Salīdzināt';
+        });
+    });
+}
+
+function updateCompareBar() {
+    const bar = document.getElementById('compare-bar');
+    const items = document.getElementById('compare-items');
+    if (compareIds.length === 0) {
+        bar.style.display = 'none';
+        return;
+    }
+    bar.style.display = 'block';
+    items.innerHTML = compareIds.map(id =>
+        `<span class="badge d-flex align-items-center gap-1" style="background:#f4f5f7;color:#374151;border-radius:20px;padding:.35rem .75rem;font-size:.8rem;font-weight:600">
+            #${String(id).padStart(6,'0')}
+            <button onclick="toggleCompare(${id}, document.querySelector('.cmp-btn[data-pk=\\'${id}\\']'))"
+                style="background:none;border:none;padding:0;cursor:pointer;color:#6c757d;font-size:.9rem;line-height:1" title="Noņemt">
+                <i class="bi bi-x"></i>
+            </button>
+        </span>`
+    ).join('');
+    document.getElementById('compare-go-btn').style.display = compareIds.length >= 2 ? 'inline-flex' : 'none';
+}
+
+// Inicializē no sesijas
+compareIds = {{ compare_ids|default:"[]" }};
+updateCompareBar();
+document.querySelectorAll('.cmp-btn').forEach(b => {
+    const pk = parseInt(b.getAttribute('data-pk'));
+    if (compareIds.includes(pk)) {
+        b.classList.remove('btn-outline-secondary');
+        b.classList.add('btn-danger');
+        b.innerHTML = '<i class="bi bi-check-lg me-1"></i>Pievienots';
+    }
+});
+
+function setLayout(mode) {
+    const grid = document.getElementById('listings-grid');
+    ['btn-grid3','btn-grid4','btn-grid5','btn-list'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.classList.remove('active');
+    });
+    const btn = document.getElementById('btn-' + mode);
+    if (btn) btn.classList.add('active');
+
+    grid.classList.remove('list-view', 'cols-3', 'cols-4', 'cols-5');
+    if (mode === 'list') {
+        grid.classList.add('list-view');
+    } else {
+        grid.classList.add(mode === 'grid3' ? 'cols-3' : mode === 'grid4' ? 'cols-4' : 'cols-5');
+    }
+    localStorage.setItem('listingLayout', mode);
+}
+const saved = localStorage.getItem('listingLayout');
+setLayout(saved && ['grid3','grid4','grid5','list'].includes(saved) ? saved : 'grid3');
+</script>
+{% endblock %}

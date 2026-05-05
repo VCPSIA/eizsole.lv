@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Iesūtne{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h5 class="mb-0 fw-800" style="font-weight:800"><i class="bi bi-chat-dots text-danger me-2"></i>Iesūtne</h5>
+    <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-secondary ms-auto">
+        <i class="bi bi-arrow-left me-1"></i>Profils
+    </a>
+</div>
+
+{% if conversations %}
+<div class="card p-0" style="border-radius:12px;overflow:hidden">
+    {% for conv in conversations %}
+    <a href="{% url 'conversation' conv.listing.pk conv.other.pk %}"
+       class="text-decoration-none d-flex align-items-center gap-3 px-4 py-3 border-bottom"
+       style="color:#212529;background:{% if conv.unread %}#fff8f8{% else %}white{% endif %};transition:background .15s"
+       onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='{% if conv.unread %}#fff8f8{% else %}white{% endif %}'">
+
+        <!-- Avatars -->
+        <div style="width:44px;height:44px;background:#e63946;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.1rem;flex-shrink:0">
+            {{ conv.other.username|first|upper }}
+        </div>
+
+        <div class="flex-grow-1 overflow-hidden">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-700" style="font-weight:{% if conv.unread %}700{% else %}500{% endif %}">{{ conv.other.username }}</span>
+                <span class="text-muted" style="font-size:.75rem">{{ conv.last_msg.created_at|date:"d.m.Y H:i" }}</span>
+            </div>
+            <div class="text-muted text-truncate" style="font-size:.8rem">
+                <span style="color:#e63946;font-size:.72rem">{{ conv.listing.title|truncatechars:30 }}</span>
+            </div>
+            <div class="text-truncate" style="font-size:.83rem;color:#374151">
+                {% if conv.last_msg.sender == request.user %}<span class="text-muted">Jūs: </span>{% endif %}
+                {{ conv.last_msg.content|truncatechars:60 }}
+            </div>
+        </div>
+
+        {% if conv.unread %}
+        <span class="badge rounded-pill" style="background:#e63946;font-size:.72rem">{{ conv.unread }}</span>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card p-5 text-center border-0" style="background:#f8f9fa;border-radius:12px">
+    <i class="bi bi-chat text-muted" style="font-size:2.5rem"></i>
+    <p class="text-muted mt-2 mb-0">Nav ziņojumu.</p>
+</div>
+{% endif %}
+
+</div>
+</div>
+{% endblock %}

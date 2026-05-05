@@ -1,0 +1,31 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('kategorija/<slug:slug>/', views.category, name='category'),
+    path('sludinajums/<int:pk>/', views.listing_detail, name='listing_detail'),
+    path('sludinajums/<int:pk>/labot/', views.listing_edit, name='listing_edit'),
+    path('sludinajums/<int:pk>/zinot/', views.report_listing, name='report_listing'),
+    path('sludinajums/<int:pk>/dzest/', views.delete_listing, name='delete_listing'),
+    path('sludinajums/<int:pk>/sazinaties/', views.contact_seller, name='contact_seller'),
+    path('sludinajums/<int:pk>/pagarināt/', views.extend_listing, name='extend_listing'),
+    path('sludinajums/<int:pk>/top/', views.listing_promote, name='listing_promote'),
+    path('publicet/', views.listing_create, name='listing_create'),
+    path('api/subcategories/<int:pk>/', views.subcategories_json, name='subcategories_json'),
+    path('api/discount-code/', views.discount_code_check, name='discount_code_check'),
+    path('meklet/', views.search, name='search'),
+    path('moderacija/', views.moderation_panel, name='moderation_panel'),
+    path('moderacija/<int:pk>/', views.moderate_listing, name='moderate_listing'),
+    path('sludinajums/<int:pk>/vin/', views.vin_report, name='vin_report'),
+    path('iesutne/', views.inbox, name='inbox'),
+    path('saruna/<int:listing_pk>/<int:user_pk>/', views.conversation, name='conversation'),
+    path('salidzinat/', views.compare_page, name='compare_page'),
+    path('api/salidzinat/<int:pk>/', views.compare_toggle, name='compare_toggle'),
+    path('api/salidzinat/dzest/', views.compare_clear, name='compare_clear'),
+    path('api/favoriti/<int:pk>/', views.favorite_toggle, name='favorite_toggle'),
+    path('favoriti/', views.favorites_list, name='favorites_list'),
+    path('privatuma-politika/', views.privacy_policy, name='privacy_policy'),
+    path('lietosanas-noteikumi/', views.terms, name='terms'),
+    path('robots.txt', views.robots_txt, name='robots_txt'),
+]

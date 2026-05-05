@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% block title %}Labot sludinājumu{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="card shadow-sm">
+<div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0"><i class="bi bi-pencil-square text-danger me-2"></i>Labot sludinājumu</h5>
+    <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-sm btn-outline-secondary">Atcelt</a>
+</div>
+<div class="card-body">
+
+{% if messages %}
+{% for msg in messages %}
+<div class="alert alert-danger py-2 mb-3" style="border-radius:8px;font-size:.84rem">{{ msg }}</div>
+{% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Virsraksts *</label>
+        <input type="text" name="title" class="form-control" required maxlength="200"
+               value="{{ post.title|default:listing.title }}">
+    </div>
+
+    <!-- Kategorija -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Kategorija *</label>
+        <select id="cat-1" class="form-select mb-2" required>
+            <option value="">— Izvēlieties kategoriju —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.pk }}" data-slug="{{ cat.slug }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <select id="cat-2" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties apakškategoriju —</option>
+        </select>
+        <select id="cat-3" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties apakškategoriju —</option>
+        </select>
+        <select id="cat-4" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties modeli —</option>
+        </select>
+        <input type="hidden" name="category" id="cat-final" value="{{ listing.category.pk }}" required>
+        <div id="cat-hint" class="form-text text-muted"></div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Apraksts *</label>
+        <textarea name="description" class="form-control" rows="5" required>{{ post.description|default:listing.description }}</textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold">Stāvoklis</label>
+            <select name="condition" class="form-select">
+                <option value="used" {% if listing.condition == 'used' %}selected{% endif %}>Lietots</option>
+                <option value="new" {% if listing.condition == 'new' %}selected{% endif %}>Jauns</option>
+                <option value="damaged" {% if listing.condition == 'damaged' %}selected{% endif %}>Bojāts</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold" id="year-label">Izgatavošanas gads{% if is_auto or is_year_required %} <span class="text-danger">*</span>{% endif %}</label>
+            <select name="year" id="year-select" class="form-select" {% if is_auto or is_year_required %}required{% endif %}>
+                <option value="">— Nav norādīts —</option>
+                {% for y in years %}
+                <option value="{{ y }}" {% if listing.year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold">Atrašanās vieta</label>
+            <input type="text" name="location" class="form-control" placeholder="Rīga, Latvija"
+                   value="{{ post.location|default:listing.location }}">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold">Valsts <span class="text-danger">*</span></label>
+            <input type="text" name="country" class="form-control" placeholder="Latvija"
+                   value="{{ post.country|default:listing.country }}" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold">Pilsēta <span class="text-danger">*</span></label>
+            <input type="text" name="city" class="form-control" placeholder="Rīga"
+                   value="{{ post.city|default:listing.city }}" required>
+        </div>
+    </div>
+
+    <!-- Cena -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Cena (€) <span class="text-danger">*</span></label>
+        <input type="number" name="price" class="form-control" step="0.01" min="0.01" required
+               value="{{ post.price|default:listing.price }}">
+    </div>
+
+    <!-- Kontakta e-pasts -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-envelope text-danger me-1"></i>Kontakta e-pasts <span class="text-danger">*</span>
+        </label>
+        <input type="email" name="contact_email" class="form-control" required
+               value="{{ post.contact_email|default:listing.contact_email }}">
+    </div>
+
+    <!-- Esošās bildes -->
+    {% with listing.images.all as imgs %}
+    {% if imgs %}
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Esošās bildes</label>
+        <div class="d-flex flex-wrap gap-2">
+            {% for img in imgs %}
+            <img src="{{ img.image.url }}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid #e9ecef">
+            {% endfor %}
+        </div>
+        <div class="form-text">Ja augšupielādēsiet jaunas bildes — esošās tiks aizstātas.</div>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Jaunas bildes -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Nomainīt bildes <span class="text-muted fw-normal" style="font-size:.82rem">— max 8, nav obligāti</span></label>
+        <input type="file" name="images" class="form-control" multiple accept="image/*">
+    </div>
+
+    <!-- Esošais video -->
+    {% with listing.video as vid %}
+    {% if vid %}
+    <div class="mb-2">
+        <label class="form-label fw-semibold">Esošais video</label>
+        <video controls style="max-height:120px;border-radius:8px;display:block">
+            <source src="{{ vid.file.url }}">
+        </video>
+        <div class="form-text">Ja augšupielādēsiet jaunu video — esošais tiks aizstāts.</div>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Jauns video -->
+    <div class="mb-4">
+        <label class="form-label fw-semibold">Nomainīt video <span class="text-muted fw-normal" style="font-size:.82rem">— nav obligāts</span></label>
+        <input type="file" name="video" class="form-control" accept="video/*">
+    </div>
+
+    <!-- Auto detaļas -->
+    {% with listing.auto_details as ad %}
+    <div id="auto-block" class="card mb-3" style="{% if is_auto %}display:block{% else %}display:none{% endif %};border-color:#fecaca">
+        <div class="card-header fw-semibold" style="background:#fff5f5">
+            <i class="bi bi-car-front text-danger"></i> Transportlīdzekļa dati
+            <span class="text-muted fw-normal small ms-2">Obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Motora tips <span class="text-danger">*</span></label>
+                    <select name="engine_type" id="engine_type" class="form-select" {% if is_auto %}required{% endif %}>
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.engine_types %}
+                        <option value="{{ val }}" {% if ad and ad.engine_type == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Motora tilpums (L) <span class="text-danger">*</span></label>
+                    <input type="number" name="engine_volume" id="engine_volume" class="form-control"
+                           step="0.1" min="0.1" max="20" placeholder="1.6"
+                           value="{% if ad %}{{ ad.engine_volume }}{% endif %}"
+                           {% if is_auto %}required{% endif %}>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Ātrumkārba <span class="text-danger">*</span></label>
+                    <select name="transmission" id="transmission" class="form-select" {% if is_auto %}required{% endif %}>
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.transmissions %}
+                        <option value="{{ val }}" {% if ad and ad.transmission == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Virsbūves tips <span class="text-danger">*</span></label>
+                    <select name="body_type" id="body_type" class="form-select" {% if is_auto %}required{% endif %}>
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.body_types %}
+                        <option value="{{ val }}" {% if ad and ad.body_type == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Reģ. numurs <span class="text-danger">*</span></label>
+                    <input type="text" name="reg_number" id="reg_number" class="form-control"
+                           placeholder="AA-1234" maxlength="15"
+                           value="{% if ad %}{{ ad.reg_number }}{% endif %}"
+                           {% if is_auto %}required{% endif %}>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">VIN kods <span class="text-danger">*</span></label>
+                    <input type="text" name="vin" id="vin" class="form-control"
+                           placeholder="17 simboli" maxlength="17" style="font-family:monospace;text-transform:uppercase"
+                           value="{% if ad %}{{ ad.vin }}{% endif %}"
+                           {% if is_auto %}required{% endif %}>
+                </div>
+                <div class="col-12">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" name="has_inspection" id="has_inspection"
+                               {% if not ad or ad.has_inspection %}checked{% endif %}
+                               onchange="toggleInspection(this)">
+                        <label class="form-check-label fw-semibold" for="has_inspection">
+                            Ir tehniskā apskate
+                        </label>
+                    </div>
+                    <div id="inspection-date-wrap" {% if ad and not ad.has_inspection %}style="display:none"{% endif %}>
+                        <label class="form-label">Tehniskā apskate līdz <span class="text-danger">*</span></label>
+                        <input type="date" name="inspection_date" id="inspection_date" class="form-control"
+                               style="max-width:200px"
+                               value="{% if ad and ad.inspection_date %}{{ ad.inspection_date|date:'Y-m-d' }}{% endif %}"
+                               {% if is_auto %}{% if not ad or ad.has_inspection %}required{% endif %}{% endif %}>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+
+    <!-- Riepas detaļas -->
+    {% with listing.tire_details as td %}
+    <div id="tire-block" class="card mb-3" style="{% if is_tire %}display:block{% else %}display:none{% endif %};border-color:#bfdbfe">
+        <div class="card-header fw-semibold" style="background:#eff6ff">
+            <i class="bi bi-circle text-primary"></i> Riepas parametri
+            <span class="text-muted fw-normal small ms-2">* — obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Rādiuss (collas) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_radius" id="tire_radius" class="form-control"
+                           placeholder="16" min="8" max="30"
+                           value="{% if td %}{{ td.radius }}{% endif %}"
+                           {% if is_tire %}required{% endif %}>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Platums (mm) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_width" id="tire_width" class="form-control"
+                           placeholder="205" min="100" max="400" step="5"
+                           value="{% if td %}{{ td.width }}{% endif %}"
+                           {% if is_tire %}required{% endif %}>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Profils (%) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_profile" id="tire_profile" class="form-control"
+                           placeholder="55" min="20" max="100"
+                           value="{% if td %}{{ td.profile }}{% endif %}"
+                           {% if is_tire %}required{% endif %}>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Sezona <span class="text-danger">*</span></label>
+                    <select name="tire_season" id="tire_season" class="form-select" {% if is_tire %}required{% endif %}>
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in tire_season_choices %}
+                        <option value="{{ val }}" {% if td and td.season == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Ražotājs <span class="text-danger">*</span></label>
+                    <input type="text" name="tire_manufacturer" id="tire_manufacturer" class="form-control"
+                           placeholder="Michelin, Bridgestone, Nokian..."
+                           value="{% if td %}{{ td.manufacturer }}{% endif %}"
+                           {% if is_tire %}required{% endif %}>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-muted">Slodzes indekss</label>
+                    <input type="number" name="tire_load_index" class="form-control"
+                           placeholder="91" min="0" max="300"
+                           value="{% if td and td.load_index %}{{ td.load_index }}{% endif %}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-muted">Ātruma indekss</label>
+                    <input type="text" name="tire_speed_index" class="form-control"
+                           placeholder="H" maxlength="3" style="text-transform:uppercase"
+                           value="{% if td %}{{ td.speed_index }}{% endif %}">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+
+    <!-- Nekustamā īpašuma detaļas -->
+    {% with listing.re_details as rd %}
+    <div id="re-block" class="card mb-3" style="{% if is_re %}display:block{% else %}display:none{% endif %};border-color:#bbf7d0">
+        <div class="card-header fw-semibold" style="background:#f0fdf4">
+            <i class="bi bi-house text-success"></i> Nekustamā īpašuma dati
+            <span class="text-muted fw-normal small ms-2">* — obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Darījuma veids <span class="text-danger">*</span></label>
+                    <select name="re_deal_type" id="re_deal_type" class="form-select" {% if is_re %}required{% endif %}>
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in re_deal_choices %}
+                        <option value="{{ val }}" {% if rd and rd.deal_type == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Valsts <span class="text-danger">*</span></label>
+                    <input type="text" name="re_country" id="re_country" class="form-control" placeholder="Latvija"
+                           value="{% if rd %}{{ rd.country }}{% endif %}" {% if is_re %}required{% endif %}>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Rajons <span class="text-danger">*</span></label>
+                    <input type="text" name="re_district" id="re_district" class="form-control" placeholder="Rīgas rajons"
+                           value="{% if rd %}{{ rd.district }}{% endif %}" {% if is_re %}required{% endif %}>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Pilsēta <span class="text-danger">*</span></label>
+                    <input type="text" name="re_city" id="re_city" class="form-control" placeholder="Rīga"
+                           value="{% if rd %}{{ rd.city }}{% endif %}" {% if is_re %}required{% endif %}>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+
+    <!-- Aprīkojums -->
+    <div id="equipment-block" class="card mb-4" {% if not is_auto %}style="display:none"{% endif %}>
+        <div class="card-header fw-semibold">
+            <i class="bi bi-check2-square text-danger"></i> Aprīkojums
+        </div>
+        <div class="card-body">
+            {% for group_name, items in equipment_by_group.items %}
+            <div class="mb-3">
+                <h6 class="text-danger border-bottom pb-1 mb-2">{{ group_name }}</h6>
+                <div class="row g-2">
+                    {% for eq in items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="equipment" value="{{ eq.pk }}" id="eq_{{ eq.pk }}"
+                                   {% if eq in listing.equipment.all %}checked{% endif %}>
+                            <label class="form-check-label small" for="eq_{{ eq.pk }}">{{ eq.name }}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger fw-700 flex-fill" style="font-weight:700">
+            <i class="bi bi-check-lg me-2"></i>Saglabāt izmaiņas
+        </button>
+        <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-outline-secondary">Atcelt</a>
+    </div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// Kategoriju kaskāde ar iepriekšēju vērtību
+const CURRENT_CAT_ID = {{ listing.category.pk }};
+const cats = document.querySelectorAll('[id^="cat-"]');
+
+async function loadSubcategories(parentId, targetSelect) {
+    const resp = await fetch(`/api/subcategories/${parentId}/`);
+    const data = await resp.json();
+    targetSelect.innerHTML = '<option value="">— Izvēlieties apakškategoriju —</option>';
+    data.subcategories.forEach(c => {
+        const opt = new Option(c.name, c.id);
+        opt.dataset.slug = c.slug || '';
+        targetSelect.appendChild(opt);
+    });
+    targetSelect.style.display = data.subcategories.length ? 'block' : 'none';
+}
+
+document.getElementById('cat-1').addEventListener('change', async function() {
+    document.getElementById('cat-final').value = this.value;
+    ['cat-2','cat-3','cat-4'].forEach(id => { document.getElementById(id).style.display='none'; document.getElementById(id).innerHTML=''; });
+    if (this.value) await loadSubcategories(this.value, document.getElementById('cat-2'));
+    // auto block visibility handled by lower listener
+});
+document.getElementById('cat-2').addEventListener('change', async function() {
+    document.getElementById('cat-final').value = this.value || document.getElementById('cat-1').value;
+    ['cat-3','cat-4'].forEach(id => { document.getElementById(id).style.display='none'; document.getElementById(id).innerHTML=''; });
+    if (this.value) await loadSubcategories(this.value, document.getElementById('cat-3'));
+});
+document.getElementById('cat-3').addEventListener('change', async function() {
+    if (TIRE_EXCLUDE_IDS.has(parseInt(this.value))) {
+        tireBlock.style.display = 'none';
+        ['tire_radius','tire_width','tire_profile','tire_season','tire_manufacturer'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.required = false;
+        });
+    }
+    document.getElementById('cat-final').value = this.value || document.getElementById('cat-2').value;
+    document.getElementById('cat-4').style.display='none'; document.getElementById('cat-4').innerHTML='';
+    if (this.value) await loadSubcategories(this.value, document.getElementById('cat-4'));
+});
+document.getElementById('cat-4').addEventListener('change', function() {
+    document.getElementById('cat-final').value = this.value || document.getElementById('cat-3').value;
+});
+
+const equipmentBlock = document.getElementById('equipment-block');
+const autoBlock = document.getElementById('auto-block');
+const tireBlock = document.getElementById('tire-block');
+const reBlock = document.getElementById('re-block');
+const AUTO_DETAIL_IDS = new Set([{{ auto_detail_ids|join:"," }}]);
+const TIRE_DETAIL_IDS = new Set([{{ tire_detail_ids|join:"," }}]);
+const TIRE_EXCLUDE_IDS = new Set([{{ tire_exclude_ids|join:"," }}]);
+const RE_CAT_IDS = new Set([{{ re_cat_ids|join:"," }}]);
+const YEAR_REQUIRED_IDS = new Set([{{ year_required_ids|join:"," }}]);
+let isAutoDetails = autoBlock.style.display !== 'none';
+
+function setReBlockVisibility(show) {
+    reBlock.style.display = show ? 'block' : 'none';
+    ['re_deal_type','re_country','re_district','re_city'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = show;
+    });
+}
+
+function toggleInspection(cb) {
+    const wrap = document.getElementById('inspection-date-wrap');
+    wrap.style.display = cb.checked ? 'block' : 'none';
+    document.getElementById('inspection_date').required = cb.checked && isAutoDetails;
+}
+
+function setAutoBlockVisibility(show) {
+    isAutoDetails = show;
+    autoBlock.style.display = show ? 'block' : 'none';
+    equipmentBlock.style.display = show ? 'block' : 'none';
+    ['engine_type','engine_volume','transmission','body_type','reg_number','vin'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = show;
+    });
+    const yearSel = document.getElementById('year-select');
+    if (yearSel) yearSel.required = show;
+    const yearLabel = document.getElementById('year-label');
+    if (yearLabel) yearLabel.innerHTML = 'Izgatavošanas gads' + (show ? ' <span class="text-danger">*</span>' : '');
+    const insp = document.getElementById('inspection_date');
+    if (insp) insp.required = show && document.getElementById('has_inspection').checked;
+}
+
+document.getElementById('cat-1').addEventListener('change', function() {
+    setAutoBlockVisibility(false);
+    tireBlock.style.display = 'none';
+    ['tire_radius','tire_width','tire_profile','tire_season','tire_manufacturer'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.required = false;
+    });
+    setReBlockVisibility(RE_CAT_IDS.has(parseInt(this.value)));
+});
+
+function setYearRequired(show) {
+    const yearSel = document.getElementById('year-select');
+    if (yearSel) yearSel.required = show;
+    const yearLabel = document.getElementById('year-label');
+    if (yearLabel) yearLabel.innerHTML = 'Izgatavošanas gads' + (show ? ' <span class="text-danger">*</span>' : '');
+}
+
+document.getElementById('cat-2').addEventListener('change', function() {
+    const val = parseInt(this.value);
+    setAutoBlockVisibility(AUTO_DETAIL_IDS.has(val));
+    const showTire = TIRE_DETAIL_IDS.has(val);
+    tireBlock.style.display = showTire ? 'block' : 'none';
+    ['tire_radius','tire_width','tire_profile','tire_season','tire_manufacturer'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.required = showTire;
+    });
+    if (!AUTO_DETAIL_IDS.has(val)) setYearRequired(YEAR_REQUIRED_IDS.has(val));
+});
+
+document.getElementById('cat-hint').textContent = 'Pašreizējā: {{ listing.category.name }}';
+</script>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% block title %}Mans profils{% endblock %}
+
+{% block content %}
+<style>
+.profile-avatar { width: 72px; height: 72px; background: linear-gradient(135deg, #e63946, #c1121f); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.8rem; overflow:hidden; flex-shrink:0; }
+.profile-avatar img { width:100%; height:100%; object-fit:cover; }
+.avatar-upload-btn { position:relative; cursor:pointer; }
+.avatar-upload-btn input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+.stat-box { background: #f8f9fa; border-radius: 10px; padding: .75rem 1rem; text-align: center; }
+.stat-box .num { font-size: 1.4rem; font-weight: 800; color: #e63946; }
+.stat-box .lbl { font-size: .75rem; color: #6c757d; font-weight: 500; }
+.listing-row { display: flex; justify-content: space-between; align-items: center; padding: .65rem 0; border-bottom: 1px solid #f4f5f7; }
+.listing-row:last-child { border-bottom: none; }
+.listing-row a { font-weight: 500; color: #212529; text-decoration: none; font-size: .88rem; }
+.listing-row a:hover { color: #e63946; }
+</style>
+
+<div class="row g-4">
+    <!-- Profila karte -->
+    <div class="col-md-4">
+        <div class="card p-4 mb-3">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <form method="post" enctype="multipart/form-data" id="avatar-form">
+                    {% csrf_token %}
+                    <div class="profile-avatar avatar-upload-btn" title="Mainīt avatāru">
+                        {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatārs">
+                        {% else %}
+                        {{ user.username|first|upper }}
+                        {% endif %}
+                        <input type="file" name="avatar" accept="image/*" onchange="document.getElementById('avatar-form').submit()">
+                    </div>
+                </form>
+                <div>
+                    <div class="fw-800" style="font-weight:800;font-size:1.1rem">{{ user.profile.display_name }}</div>
+                    <div class="text-muted" style="font-size:.82rem">{{ user.email }}</div>
+                    <span class="badge mt-1" style="background:#f4f5f7;color:#374151;border-radius:20px;font-size:.7rem">
+                        {% if user.profile.account_type == 'company' %}
+                        <i class="bi bi-building me-1"></i>Uzņēmums
+                        {% else %}
+                        <i class="bi bi-person me-1"></i>Privātpersona
+                        {% endif %}
+                    </span>
+                    <div style="font-size:.7rem;color:#9ca3af;margin-top:2px"><i class="bi bi-pencil me-1"></i>Noklikšķini uz avatāra, lai mainītu</div>
+                </div>
+            </div>
+
+            <!-- Rekvizīti -->
+            {% if user.profile.account_type == 'company' %}
+            <div class="p-2 rounded mb-3" style="background:#f8f9fa;font-size:.78rem">
+                {% if user.profile.reg_number %}<div class="text-muted">Reģ. nr.: <strong style="color:#374151">{{ user.profile.reg_number }}</strong></div>{% endif %}
+                {% if user.profile.vat_number %}<div class="text-muted">PVN nr.: <strong style="color:#374151">{{ user.profile.vat_number }}</strong></div>{% endif %}
+                {% if user.profile.legal_address %}<div class="text-muted">Adrese: <strong style="color:#374151">{{ user.profile.legal_address }}</strong></div>{% endif %}
+                {% if user.profile.contact_person %}<div class="text-muted">Kontaktpersona: <strong style="color:#374151">{{ user.profile.contact_person }}</strong></div>{% endif %}
+            </div>
+            {% else %}
+            <div class="p-2 rounded mb-3" style="background:#f8f9fa;font-size:.78rem">
+                {% if user.profile.first_name or user.profile.last_name %}<div class="text-muted">Vārds: <strong style="color:#374151">{{ user.profile.first_name }} {{ user.profile.last_name }}</strong></div>{% endif %}
+                {% if user.profile.address %}<div class="text-muted">Adrese: <strong style="color:#374151">{{ user.profile.address }}</strong></div>{% endif %}
+            </div>
+            {% endif %}
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="num">{{ user.listings.count }}</div>
+                        <div class="lbl">Sludinājumi</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="num">{{ user.date_joined|date:"Y" }}</div>
+                        <div class="lbl">Kopš gada</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-muted" style="font-size:.8rem">
+                <i class="bi bi-calendar3 me-1"></i> Reģistrējies {{ user.date_joined|date:"d.m.Y" }}
+            </div>
+        </div>
+
+        <!-- Verifikācijas statuss -->
+        <div class="card p-3 mt-0">
+            <div class="fw-700 mb-2" style="font-weight:700;font-size:.88rem">Konta verifikācija</div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div style="font-size:.85rem">
+                    <i class="bi bi-envelope me-1 text-muted"></i>E-pasts
+                </div>
+                {% if user.profile.email_verified %}
+                <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px;font-size:.72rem">
+                    <i class="bi bi-check-lg me-1"></i>Apstiprināts
+                </span>
+                {% else %}
+                <a href="{% url 'resend_verification' %}" class="badge text-decoration-none" style="background:#fee2e2;color:#e63946;border-radius:20px;font-size:.72rem">
+                    Nav apstiprināts
+                </a>
+                {% endif %}
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div style="font-size:.85rem">
+                    <i class="bi bi-phone me-1 text-muted"></i>Telefons
+                    {% if user.profile.phone %}<span class="text-muted" style="font-size:.78rem">({{ user.profile.phone }})</span>{% endif %}
+                </div>
+                {% if user.profile.phone_verified %}
+                <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px;font-size:.72rem">
+                    <i class="bi bi-check-lg me-1"></i>Apstiprināts
+                </span>
+                {% else %}
+                <a href="{% url 'add_phone' %}" class="badge text-decoration-none" style="background:#fee2e2;color:#e63946;border-radius:20px;font-size:.72rem">
+                    {% if user.profile.phone %}Neapstiprināts{% else %}Pievienot{% endif %}
+                </a>
+                {% endif %}
+            </div>
+            <!-- Maka kopsavilkums -->
+            <div class="p-3 rounded mb-3" style="background:#f0f9ff;border:1.5px solid #bae6fd">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span style="font-size:.8rem;font-weight:600;color:#0369a1"><i class="bi bi-wallet2 me-1"></i>Maks</span>
+                    <a href="{% url 'wallet' %}" style="font-size:.75rem;color:#0369a1">Skatīt visu</a>
+                </div>
+                <div class="fw-800" style="font-weight:800;font-size:1.4rem;color:#0369a1">€{{ wallet.balance|floatformat:2 }}</div>
+                <div style="font-size:.7rem;color:#9ca3af">atlikums ar PVN</div>
+                <a href="{% url 'wallet_topup' %}" class="btn btn-sm w-100 mt-2" style="background:#0369a1;color:white;border-radius:8px;font-size:.8rem">
+                    <i class="bi bi-plus-circle me-1"></i>Papildināt
+                </a>
+            </div>
+
+            <a href="{% url 'profile_edit' %}" class="btn btn-outline-secondary w-100 mb-2">
+                <i class="bi bi-pencil me-2"></i>Labot profilu
+            </a>
+            <a href="{% url 'favorites_list' %}" target="_blank" class="btn btn-outline-danger w-100 mb-2">
+                <i class="bi bi-heart me-2"></i>Labākie sludinājumi
+            </a>
+            <a href="{% url 'inbox' %}" class="btn btn-outline-danger w-100 mb-2">
+                <i class="bi bi-chat-dots me-2"></i>Iesūtne
+                {% if unread_count %}<span class="badge bg-danger ms-1">{{ unread_count }}</span>{% endif %}
+            </a>
+            <a href="{% url 'listing_create' %}" class="btn btn-danger w-100 mb-2">
+                <i class="bi bi-plus-lg me-2"></i>Publicēt sludinājumu
+            </a>
+            <a href="{% url 'request_account_deletion' %}" class="btn btn-outline-secondary btn-sm w-100" style="font-size:.78rem;color:#9ca3af;border-color:#e9ecef">
+                <i class="bi bi-trash3 me-1"></i>Dzēst kontu
+            </a>
+        </div>
+    </div>
+
+    <!-- Sludinājumi -->
+    <div class="col-md-8">
+        <div class="card p-0" style="border-radius:12px;overflow:hidden">
+            <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-700" style="font-weight:700">Mani sludinājumi</h6>
+                <span class="badge" style="background:#f4f5f7;color:#6c757d;font-weight:600">{{ user.listings.count }}</span>
+            </div>
+            <div class="px-4 py-2">
+                {% for listing in user.listings.all %}
+                <div class="listing-row">
+                    <div class="d-flex align-items-center gap-3">
+                        {% with listing.get_main_image as img %}
+                        {% if img %}
+                        <img src="{{ img.image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">
+                        {% else %}
+                        <div style="width:44px;height:44px;background:#f4f5f7;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-image text-muted"></i>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        <div>
+                            <a href="{% url 'listing_detail' listing.pk %}">{{ listing.title|truncatechars:45 }}</a>
+                            <div class="text-muted" style="font-size:.75rem">
+                                    {% if listing.is_auction %}
+                                    {% with listing.auction as a %}{% if a %}<span style="background:#fff0f0;border-radius:4px;padding:0 4px;font-family:monospace;font-size:.7rem;color:#e63946">IZ{{ a.pk|stringformat:"06d" }}</span>{% endif %}{% endwith %}
+                                {% else %}
+                                    <span style="background:#f4f5f7;border-radius:4px;padding:0 4px;font-family:monospace;font-size:.7rem;color:#6c757d">#{{ listing.pk|stringformat:"06d" }}</span>
+                                {% endif %}
+                                {{ listing.created_at|date:"d.m.Y" }}
+                                {% if not listing.is_active %}
+                                    <span class="badge bg-secondary ms-1" style="font-size:.65rem">Neaktīvs</span>
+                                {% endif %}
+                                {% if listing.moderation_status == 'pending' %}
+                                    <span class="badge ms-1" style="background:#fef9c3;color:#854d0e;font-size:.65rem">Gaida moderāciju</span>
+                                {% endif %}
+                                {% if listing.is_auction %}
+                                    {% with listing.auction as a %}
+                                    {% if a %}
+                                        {% if a.is_finished and not a.winner %}
+                                        <span class="badge ms-1" style="background:#fee2e2;color:#e63946;font-size:.65rem">Beigusies — nav pārdota</span>
+                                        {% elif a.is_finished %}
+                                        <span class="badge ms-1" style="background:#dcfce7;color:#166534;font-size:.65rem">Pārdota</span>
+                                        {% else %}
+                                        <span class="ms-1" style="color:#e63946"><i class="bi bi-hammer"></i> beidzas {{ a.ends_at|date:"d.m.Y H:i" }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% endwith %}
+                                {% elif listing.expires_at %}
+                                    <span class="ms-1"><i class="bi bi-clock"></i> līdz {{ listing.expires_at|date:"d.m.Y" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end" style="white-space:nowrap">
+                        {% if listing.is_auction %}
+                            {% with listing.auction as a %}
+                            {% if a %}
+                            <span class="fw-700" style="font-weight:700;color:#e63946">€{{ a.current_price }}</span>
+                            {% endif %}
+                            {% endwith %}
+                        {% elif listing.price %}
+                        <span class="fw-700" style="font-weight:700;color:#16a34a">€{{ listing.price }}</span>
+                        {% endif %}
+                        {% if not listing.is_auction %}
+                        <div class="d-flex gap-1 mt-1 flex-wrap">
+                            <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-outline-secondary btn-sm" style="font-size:.72rem;padding:.2rem .5rem">
+                                <i class="bi bi-pencil"></i> Labot
+                            </a>
+                            {% if listing.expires_at %}
+                            <a href="{% url 'extend_listing' listing.pk %}" class="btn btn-outline-danger btn-sm" style="font-size:.72rem;padding:.2rem .5rem">
+                                <i class="bi bi-arrow-clockwise"></i> Pagarināt
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if listing.is_auction %}
+                            {% with listing.auction as a %}
+                            {% if a and a.is_finished and not a.winner %}
+                            <div>
+                                <a href="{% url 'restart_auction' a.pk %}" class="btn btn-outline-danger btn-sm mt-1" style="font-size:.72rem;padding:.2rem .5rem">
+                                    <i class="bi bi-arrow-clockwise"></i> Atjaunot izsoli
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                        {% if not listing.is_auction %}
+                        <div>
+                            <form method="post" action="{% url 'delete_listing' listing.pk %}"
+                                  onsubmit="return confirm('Dzēst šo sludinājumu?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary btn-sm mt-1" style="font-size:.72rem;padding:.2rem .5rem">
+                                    <i class="bi bi-trash"></i> Dzēst
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size:2.5rem"></i>
+                    <p class="text-muted mt-2 mb-0">Vēl nav sludinājumu.</p>
+                    <a href="{% url 'listing_create' %}" class="btn btn-sm btn-danger mt-2">Publicēt pirmo</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

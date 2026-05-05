@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="currentColor">
+  <!-- Stileto papēdis -->
+  <path d="M57 50 L63 50 L65 72 L55 72 Z" rx="2"/>
+  <!-- Zole -->
+  <rect x="6" y="58" width="50" height="7" rx="3.5"/>
+  <!-- Kurpes augšdaļa (siluets) -->
+  <path d="M8 58 C8 44 14 26 34 18 C48 13 58 24 58 40 L58 58 Z"/>
+</svg>

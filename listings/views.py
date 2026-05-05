@@ -1,0 +1,1199 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from django.http import JsonResponse
+from django.utils import timezone
+from django.db.models import Q, Count
+from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite
+from .profanity import contains_profanity
+from .ai_moderation import check_listing_images
+from .contact_filter import contains_contact_info
+from auctions.models import Auction
+import datetime
+from datetime import timedelta
+
+DURATION_CHOICES = [
+    ('7',  '1 nedēļa'),
+    ('14', '2 nedēļas'),
+    ('21', '3 nedēļas'),
+    ('28', '4 nedēļas'),
+]
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+
+AUTO_DETAIL_SLUGS = {'auto-automasinas', 'auto-motocikli', 'auto-kravas'}
+YEAR_REQUIRED_SLUGS = {'auto-lauksaimnieciba', 'auto-udens'}
+TIRE_SLUGS = {'auto-riepas'}
+TIRE_EXCLUDE_SLUGS = {'riepas-tela-diski', 'riepas-al-diski'}
+RE_SLUGS = {'nekustamais-ipasums'}
+
+
+def _is_auto_category(category):
+    c = category
+    while c:
+        if c.slug in AUTO_DETAIL_SLUGS:
+            return True
+        c = c.parent
+    return False
+
+
+def _is_year_required_category(category):
+    c = category
+    while c:
+        if c.slug in YEAR_REQUIRED_SLUGS:
+            return True
+        c = c.parent
+    return False
+
+
+def _is_tire_category(category):
+    c = category
+    while c:
+        if c.slug in TIRE_EXCLUDE_SLUGS:
+            return False
+        if c.slug in TIRE_SLUGS:
+            return True
+        c = c.parent
+    return False
+
+
+def _save_tire_details(listing, post):
+    TireDetails.objects.update_or_create(
+        listing=listing,
+        defaults=dict(
+            radius=post.get('tire_radius') or 0,
+            width=post.get('tire_width') or 0,
+            profile=post.get('tire_profile') or 0,
+            season=post.get('tire_season', ''),
+            manufacturer=post.get('tire_manufacturer', '').strip(),
+            load_index=post.get('tire_load_index') or None,
+            speed_index=post.get('tire_speed_index', '').strip().upper(),
+        )
+    )
+
+
+def _is_re_category(category):
+    c = category
+    while c:
+        if c.slug in RE_SLUGS:
+            return True
+        c = c.parent
+    return False
+
+
+def _save_re_details(listing, post):
+    RealEstateDetails.objects.update_or_create(
+        listing=listing,
+        defaults=dict(
+            deal_type=post.get('re_deal_type', ''),
+            country=post.get('re_country', '').strip(),
+            district=post.get('re_district', '').strip(),
+            city=post.get('re_city', '').strip(),
+        )
+    )
+
+
+def _save_auto_details(listing, post):
+    has_inspection = bool(post.get('has_inspection'))
+    inspection_date = post.get('inspection_date') or None
+    AutoDetails.objects.update_or_create(
+        listing=listing,
+        defaults=dict(
+            engine_type=post.get('engine_type', ''),
+            engine_volume=post.get('engine_volume', 0),
+            transmission=post.get('transmission', ''),
+            body_type=post.get('body_type', ''),
+            mileage=int(post.get('mileage', 0) or 0),
+            has_inspection=has_inspection,
+            inspection_date=inspection_date if has_inspection else None,
+            reg_number=post.get('reg_number', '').strip().upper(),
+            vin=post.get('vin', '').strip().upper(),
+        )
+    )
+
+
+def _active_listings():
+    return Listing.objects.filter(
+        is_active=True,
+        moderation_status='approved',
+    ).filter(Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now()))
+
+
+def home(request):
+    categories = Category.objects.filter(parent=None)
+    latest_listings = _active_listings().filter(is_auction=False).order_by('-is_featured', '-featured_at', '-created_at')[:12]
+    active_auctions = Auction.objects.filter(is_finished=False).select_related('listing').order_by('-listing__is_featured', '-listing__featured_at', 'ends_at')[:6]
+    recently_ids = request.session.get('recently_viewed', [])
+    recently_viewed = list(Listing.objects.filter(pk__in=recently_ids, is_active=True).prefetch_related('images'))
+    recently_viewed.sort(key=lambda l: recently_ids.index(l.pk) if l.pk in recently_ids else 999)
+    return render(request, 'listings/home.html', {
+        'categories': categories,
+        'latest_listings': latest_listings,
+        'active_auctions': active_auctions,
+        'recently_viewed': recently_viewed,
+    })
+
+
+def category(request, slug):
+    cat = get_object_or_404(Category, slug=slug)
+    subcategories = cat.children.all()
+
+    def collect_all(c):
+        result = [c]
+        for child in c.children.all():
+            result.extend(collect_all(child))
+        return result
+
+    all_cats = collect_all(cat)
+    listings = _active_listings().filter(category__in=all_cats).order_by('-is_featured', '-featured_at', '-created_at')
+
+    top_parent = cat
+    while top_parent.parent:
+        top_parent = top_parent.parent
+
+    active_slugs = []
+    c = cat
+    while c:
+        active_slugs.append(c.slug)
+        c = c.parent
+
+    show_auto_filters = _is_auto_category(cat)
+    show_tire_filters = _is_tire_category(cat) or cat.slug in TIRE_SLUGS
+    f = request.GET
+
+    if show_auto_filters:
+        if f.get('price_min'):
+            listings = listings.filter(price__gte=f['price_min'])
+        if f.get('price_max'):
+            listings = listings.filter(price__lte=f['price_max'])
+        if f.get('year_min'):
+            listings = listings.filter(year__gte=f['year_min'])
+        if f.get('year_max'):
+            listings = listings.filter(year__lte=f['year_max'])
+        if f.get('engine_type'):
+            listings = listings.filter(auto_details__engine_type=f['engine_type'])
+        if f.get('transmission'):
+            listings = listings.filter(auto_details__transmission=f['transmission'])
+        if f.get('body_type'):
+            listings = listings.filter(auto_details__body_type=f['body_type'])
+        if f.get('volume_min'):
+            listings = listings.filter(auto_details__engine_volume__gte=f['volume_min'])
+        if f.get('volume_max'):
+            listings = listings.filter(auto_details__engine_volume__lte=f['volume_max'])
+        if f.get('mileage_max'):
+            listings = listings.filter(auto_details__mileage__lte=f['mileage_max'])
+        if f.get('deal_type'):
+            listings = listings.filter(deal_type=f['deal_type'])
+
+    if show_tire_filters:
+        if f.get('price_min'):
+            listings = listings.filter(price__gte=f['price_min'])
+        if f.get('price_max'):
+            listings = listings.filter(price__lte=f['price_max'])
+        if f.get('condition'):
+            listings = listings.filter(condition=f['condition'])
+        if f.get('manufacturer'):
+            listings = listings.filter(tire_details__manufacturer__icontains=f['manufacturer'])
+        if f.get('season'):
+            listings = listings.filter(tire_details__season=f['season'])
+        if f.get('width'):
+            listings = listings.filter(tire_details__width=f['width'])
+        if f.get('profile'):
+            listings = listings.filter(tire_details__profile=f['profile'])
+        if f.get('radius'):
+            listings = listings.filter(tire_details__radius=f['radius'])
+        if f.get('load_min'):
+            listings = listings.filter(tire_details__load_index__gte=f['load_min'])
+        if f.get('load_max'):
+            listings = listings.filter(tire_details__load_index__lte=f['load_max'])
+        if f.get('speed_index'):
+            listings = listings.filter(tire_details__speed_index__iexact=f['speed_index'])
+
+    if not show_auto_filters and not show_tire_filters:
+        if f.get('price_min'):
+            listings = listings.filter(price__gte=f['price_min'])
+        if f.get('price_max'):
+            listings = listings.filter(price__lte=f['price_max'])
+        if f.get('condition'):
+            listings = listings.filter(condition=f['condition'])
+        if f.get('deal_type'):
+            listings = listings.filter(deal_type=f['deal_type'])
+        if f.get('country'):
+            listings = listings.filter(country__icontains=f['country'])
+        if f.get('listing_type') == 'auction':
+            listings = listings.filter(is_auction=True)
+        elif f.get('listing_type') == 'listing':
+            listings = listings.filter(is_auction=False)
+
+    per_page_options = [10, 25, 50, 100]
+    try:
+        per_page = int(f.get('per_page', 25))
+        if per_page not in per_page_options:
+            per_page = 25
+    except (ValueError, TypeError):
+        per_page = 25
+
+    from django.core.paginator import Paginator
+    paginator = Paginator(listings, per_page)
+    try:
+        page_obj = paginator.get_page(f.get('page', 1))
+    except Exception:
+        page_obj = paginator.get_page(1)
+
+    return render(request, 'listings/category.html', {
+        'category': cat,
+        'subcategories': subcategories,
+        'top_parent': top_parent,
+        'active_slugs': active_slugs,
+        'listings': page_obj,
+        'page_obj': page_obj,
+        'paginator': paginator,
+        'per_page': per_page,
+        'per_page_options': per_page_options,
+        'show_auto_filters': show_auto_filters,
+        'show_tire_filters': show_tire_filters,
+        'auto_choices': {
+            'engine_types': AutoDetails.ENGINE_CHOICES,
+            'transmissions': AutoDetails.TRANSMISSION_CHOICES,
+            'body_types': AutoDetails.BODY_CHOICES,
+        },
+        'tire_season_choices': TireDetails.SEASON_CHOICES,
+        'condition_choices': [('new','Jauns'),('used','Lietots'),('damaged','Bojāts')],
+        'f': f,
+        'compare_ids': request.session.get('compare_ids', []),
+        'fav_ids': list(Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True)) if request.user.is_authenticated else [],
+    })
+
+
+def listing_detail(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    # Rāda tikai aktīvus, izņemot pašam sludinājuma autoram un adminiem
+    if not listing.is_active and not (request.user == listing.seller or (request.user.is_authenticated and request.user.is_staff)):
+        from django.http import Http404
+        raise Http404
+    if listing.is_active:
+        Listing.objects.filter(pk=pk).update(views=listing.views + 1)
+    # Saglabā pēdējās skatītās sesijā
+    recently = request.session.get('recently_viewed', [])
+    if pk in recently:
+        recently.remove(pk)
+    recently.insert(0, pk)
+    request.session['recently_viewed'] = recently[:8]
+
+    auction = getattr(listing, 'auction', None)
+    is_favorited = request.user.is_authenticated and Favorite.objects.filter(user=request.user, listing=listing).exists()
+    related = (_active_listings()
+               .filter(category=listing.category)
+               .exclude(pk=listing.pk)
+               .order_by('-created_at')[:4])
+    return render(request, 'listings/detail.html', {
+        'listing': listing,
+        'auction': auction,
+        'site_settings': SiteSettings.get(),
+        'is_favorited': is_favorited,
+        'related': related,
+    })
+
+
+def search(request):
+    query    = request.GET.get('q', '')
+    f        = request.GET
+    listings = _active_listings()
+    if query:
+        listings = listings.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    if f.get('price_min'):
+        listings = listings.filter(price__gte=f['price_min'])
+    if f.get('price_max'):
+        listings = listings.filter(price__lte=f['price_max'])
+    if f.get('condition'):
+        listings = listings.filter(condition=f['condition'])
+    if f.get('category'):
+        try:
+            cat = Category.objects.get(pk=f['category'])
+            def collect_all(c):
+                r = [c]
+                for ch in c.children.all(): r.extend(collect_all(ch))
+                return r
+            listings = listings.filter(category__in=collect_all(cat))
+        except Category.DoesNotExist:
+            pass
+    if f.get('listing_type') == 'auction':
+        listings = listings.filter(is_auction=True)
+    elif f.get('listing_type') == 'listing':
+        listings = listings.filter(is_auction=False)
+    listings = listings.order_by('-is_featured', '-featured_at', '-created_at')
+    top_categories = Category.objects.filter(parent=None).order_by('order', 'pk')
+    return render(request, 'listings/search.html', {
+        'listings': listings,
+        'query': query,
+        'f': f,
+        'top_categories': top_categories,
+        'condition_choices': [('new','Jauns'),('used','Lietots'),('damaged','Bojāts')],
+    })
+
+
+def subcategories_json(request, pk):
+    children = Category.objects.filter(parent_id=pk).values('id', 'name', 'slug')
+    return JsonResponse({'subcategories': list(children)})
+
+
+@login_required
+def listing_create(request):
+    categories = Category.objects.filter(parent=None)
+    current_year = datetime.date.today().year
+    years = list(range(current_year, 1899, -1))
+    equipment_by_group = {}
+    for eq in Equipment.objects.all():
+        equipment_by_group.setdefault(eq.get_group_display(), []).append(eq)
+    auto_detail_ids = list(
+        Category.objects.filter(slug__in=AUTO_DETAIL_SLUGS).values_list('id', flat=True)
+    )
+    tire_detail_ids = list(
+        Category.objects.filter(slug__in=TIRE_SLUGS).values_list('id', flat=True)
+    )
+    tire_exclude_ids = list(
+        Category.objects.filter(slug__in=TIRE_EXCLUDE_SLUGS).values_list('id', flat=True)
+    )
+    re_cat_ids = list(
+        Category.objects.filter(slug__in=RE_SLUGS).values_list('id', flat=True)
+    )
+    year_required_ids = list(
+        Category.objects.filter(slug__in=YEAR_REQUIRED_SLUGS).values_list('id', flat=True)
+    )
+
+    def ctx(extra=None):
+        base = {'categories': categories, 'years': years,
+                'equipment_by_group': equipment_by_group,
+                'duration_choices': DURATION_CHOICES,
+                'auto_detail_ids': auto_detail_ids,
+                'tire_detail_ids': tire_detail_ids,
+                'tire_exclude_ids': tire_exclude_ids,
+                're_cat_ids': re_cat_ids,
+                'year_required_ids': year_required_ids,
+                'auto_choices': {
+                    'engine_types': AutoDetails.ENGINE_CHOICES,
+                    'transmissions': AutoDetails.TRANSMISSION_CHOICES,
+                    'body_types': AutoDetails.BODY_CHOICES,
+                },
+                'tire_season_choices': TireDetails.SEASON_CHOICES,
+                're_deal_choices': RealEstateDetails.DEAL_CHOICES,
+                'deal_type_choices': Listing.DEAL_TYPE_CHOICES,
+                'site_settings': SiteSettings.get(),
+                'profile_country': request.user.profile.country if hasattr(request.user, 'profile') else '',
+                'profile_city': request.user.profile.city if hasattr(request.user, 'profile') else '',
+                'google_maps_api_key': getattr(__import__('django.conf', fromlist=['settings']).settings, 'GOOGLE_MAPS_API_KEY', ''),
+                }
+        if extra:
+            base.update(extra)
+        return base
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '')
+        description = request.POST.get('description', '')
+
+        if contains_profanity(title) or contains_profanity(description):
+            messages.error(request, 'Sludinājumā konstatēts nepiemērots saturs. Lūdzu pārbaudiet tekstu un mēģiniet vēlreiz.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        # Auto obligātie lauki
+        cat_pk = request.POST.get('category')
+        if cat_pk:
+            try:
+                cat_obj = Category.objects.get(pk=cat_pk)
+                if _is_auto_category(cat_obj):
+                    auto_required = ['engine_type', 'engine_volume', 'transmission', 'body_type', 'mileage', 'reg_number', 'vin', 'year']
+                    missing = [f for f in auto_required if not request.POST.get(f, '').strip()]
+                    if missing:
+                        messages.error(request, 'Lūdzu aizpildiet visus obligātos auto lauksus (ieskaitot izgatavošanas gadu).')
+                        return render(request, 'listings/create.html', ctx({'post': request.POST}))
+                if _is_tire_category(cat_obj):
+                    tire_required = ['tire_radius', 'tire_width', 'tire_profile', 'tire_season', 'tire_manufacturer']
+                    missing = [f for f in tire_required if not request.POST.get(f, '').strip()]
+                    if missing:
+                        messages.error(request, 'Lūdzu aizpildiet visus obligātos riepas lauksus.')
+                        return render(request, 'listings/create.html', ctx({'post': request.POST}))
+                if _is_re_category(cat_obj):
+                    re_required = ['re_deal_type', 're_country', 're_district', 're_city']
+                    missing = [f for f in re_required if not request.POST.get(f, '').strip()]
+                    if missing:
+                        messages.error(request, 'Lūdzu aizpildiet visus obligātos nekustamā īpašuma lauksus.')
+                        return render(request, 'listings/create.html', ctx({'post': request.POST}))
+                if _is_year_required_category(cat_obj):
+                    if not request.POST.get('year', '').strip():
+                        messages.error(request, 'Lūdzu norādiet izgatavošanas gadu.')
+                        return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            except Category.DoesNotExist:
+                pass
+
+        # Kontaktinformācija obligāta
+        contact_phone = request.POST.get('contact_phone', '').strip()
+        contact_email = request.POST.get('contact_email', '').strip()
+        if not contact_phone:
+            messages.error(request, 'Tālruņa numurs ir obligāts.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        if not contact_email:
+            messages.error(request, 'E-pasta adrese ir obligāta.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        # Vismaz viena bilde obligāta
+        if not request.FILES.getlist('images'):
+            messages.error(request, 'Lūdzu pievienojiet vismaz vienu fotogrāfiju.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        is_auction = 'is_auction' in request.POST
+
+        # Atlaižu kods
+        promo_code_str = request.POST.get('promo_code', '').strip().upper()
+        promo_obj = None
+        promo_saved = None
+        if promo_code_str:
+            try:
+                promo_obj = DiscountCode.objects.get(code__iexact=promo_code_str)
+                valid, err = promo_obj.is_valid()
+                if not valid:
+                    messages.error(request, f'Atlaižu kods: {err}')
+                    return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            except DiscountCode.DoesNotExist:
+                messages.error(request, 'Atlaižu kods nav atrasts.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        # Maksu pārbaude
+        settings = SiteSettings.get()
+        from accounts.models import Wallet, WalletTransaction
+        wallet, _ = Wallet.objects.get_or_create(user=request.user)
+        if is_auction and settings.auction_fee_enabled and settings.auction_fee > 0:
+            base_fee = settings.auction_fee
+        elif not is_auction and settings.listing_fee_enabled and settings.listing_fee > 0:
+            base_fee = settings.listing_fee
+        else:
+            base_fee = None
+
+        if base_fee:
+            if promo_obj:
+                fee, promo_saved = promo_obj.apply(base_fee)
+            else:
+                fee = base_fee
+            if wallet.balance < fee:
+                orig = f' (sākotnēji €{base_fee})' if promo_saved else ''
+                messages.error(request, f'Nepietiek līdzekļu makā. Maksa ir €{fee}{orig}. Jūsu atlikums: €{wallet.balance}.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        else:
+            fee = None
+
+        # TOP maksu pārbaude
+        want_featured = 'want_featured' in request.POST
+        if want_featured:
+            if is_auction and settings.featured_auction_enabled and settings.featured_auction_fee > 0:
+                featured_fee = settings.featured_auction_fee
+            elif not is_auction and settings.featured_listing_enabled and settings.featured_listing_fee > 0:
+                featured_fee = settings.featured_listing_fee
+            else:
+                featured_fee = None
+                want_featured = False
+            if featured_fee and wallet.balance < (fee or 0) + featured_fee:
+                messages.error(request, f'Nepietiek līdzekļu TOP vietai. TOP maksa ir €{featured_fee}. Jūsu atlikums: €{wallet.balance}.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        else:
+            featured_fee = None
+
+        if is_auction:
+            expires_at = None
+        else:
+            duration_days = int(request.POST.get('duration', 7))
+            if duration_days not in [7, 14, 21, 28]:
+                duration_days = 7
+            expires_at = timezone.now() + timedelta(days=duration_days)
+
+        year_val = request.POST.get('year') or None
+        listing = Listing.objects.create(
+            title=title,
+            description=description,
+            category=get_object_or_404(Category, pk=request.POST['category']),
+            seller=request.user,
+            price=request.POST.get('price') or None,
+            condition=request.POST.get('condition', 'used'),
+            deal_type=request.POST.get('deal_type', '') if not is_auction else '',
+            year=year_val,
+            location=request.POST.get('location', ''),
+            country=request.POST.get('country', '').strip(),
+            city=request.POST.get('city', '').strip(),
+            is_auction=is_auction,
+            expires_at=expires_at,
+            contact_email=contact_email,
+            contact_phone=contact_phone,
+        )
+        equipment_ids = request.POST.getlist('equipment')
+        if equipment_ids:
+            listing.equipment.set(Equipment.objects.filter(pk__in=equipment_ids))
+
+        # Auto / riepas / NĪ detaļas
+        if _is_auto_category(listing.category):
+            _save_auto_details(listing, request.POST)
+        elif _is_tire_category(listing.category):
+            _save_tire_details(listing, request.POST)
+        elif _is_re_category(listing.category):
+            _save_re_details(listing, request.POST)
+
+        # Bildes — max 8
+        images = request.FILES.getlist('images')[:8]
+        for i, img in enumerate(images):
+            ListingImage.objects.create(listing=listing, image=img, order=i)
+
+        # AI bilžu moderācija
+        mod_result = check_listing_images(listing)
+        if not mod_result['safe']:
+            listing.moderation_status = 'pending'
+            listing.is_active = False
+            if mod_result['flags']:
+                reasons = '; '.join(f['reason'] for f in mod_result['flags'] if f.get('reason'))
+                listing.moderation_note = f'AI karodziņš: {reasons}'
+            listing.save()
+            messages.warning(request, 'Jūsu sludinājums gaida moderatora apstiprināšanu. Mēs to izskatīsim pēc iespējas ātrāk.')
+            return redirect('listing_detail', pk=listing.pk)
+
+        # Video — max 1
+        video_file = request.FILES.get('video')
+        if video_file:
+            allowed = ['video/mp4', 'video/webm', 'video/quicktime', 'video/avi', 'video/x-matroska']
+            if video_file.content_type in allowed or video_file.name.lower().endswith(('.mp4', '.webm', '.mov', '.avi', '.mkv')):
+                ListingVideo.objects.create(listing=listing, file=video_file)
+
+        if listing.is_auction:
+            ends_at_raw = request.POST.get('ends_at', '')
+            try:
+                from django.utils.dateparse import parse_datetime
+                ends_at_dt = parse_datetime(ends_at_raw)
+                if ends_at_dt is None:
+                    raise ValueError
+                import pytz
+                if timezone.is_naive(ends_at_dt):
+                    ends_at_dt = timezone.make_aware(ends_at_dt)
+                max_ends = timezone.now() + timedelta(days=30)
+                min_ends = timezone.now() + timedelta(hours=1)
+                if ends_at_dt > max_ends:
+                    ends_at_dt = max_ends
+                if ends_at_dt < min_ends:
+                    ends_at_dt = min_ends
+            except (ValueError, Exception):
+                ends_at_dt = timezone.now() + timedelta(days=7)
+            Auction.objects.create(
+                listing=listing,
+                starting_price=request.POST['starting_price'],
+                current_price=request.POST['starting_price'],
+                min_bid_increment=request.POST.get('min_bid_increment', 1),
+                ends_at=ends_at_dt,
+                buy_now_price=request.POST.get('buy_now_price') or None,
+                reserve_price=request.POST.get('reserve_price') or None,
+            )
+
+        # Novilkt maksu no maka
+        if fee:
+            desc = 'Izsoles publicēšanas maksa' if is_auction else 'Sludinājuma publicēšanas maksa'
+            if promo_saved:
+                desc += f' (atlaide €{promo_saved}, kods: {promo_obj.code})'
+            WalletTransaction.make_spend(wallet, fee, description=desc, reference=f'LIST-{listing.pk}')
+            if promo_obj:
+                DiscountCode.objects.filter(pk=promo_obj.pk).update(used_count=promo_obj.used_count + 1)
+
+        # TOP sludinājums
+        if want_featured and featured_fee:
+            Listing.objects.filter(is_auction=is_auction, is_featured=True).update(is_featured=False, featured_at=None)
+            listing.is_featured = True
+            listing.featured_at = timezone.now()
+            listing.save(update_fields=['is_featured', 'featured_at'])
+            desc = 'TOP izsole' if is_auction else 'TOP sludinājums'
+            WalletTransaction.make_spend(wallet, featured_fee, description=desc, reference=f'TOP-{listing.pk}')
+
+        return redirect('listing_detail', pk=listing.pk)
+    try:
+        profile = request.user.profile
+        profile_country = profile.country
+        profile_city = profile.city
+    except Exception:
+        profile_country = ''
+        profile_city = ''
+    return render(request, 'listings/create.html', ctx({'profile_country': profile_country, 'profile_city': profile_city}))
+
+
+@login_required
+def listing_edit(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_auction=False)
+    categories = Category.objects.filter(parent=None)
+    current_year = datetime.date.today().year
+    years = list(range(current_year, 1899, -1))
+    equipment_by_group = {}
+    for eq in Equipment.objects.all():
+        equipment_by_group.setdefault(eq.get_group_display(), []).append(eq)
+    is_auto = _is_auto_category(listing.category)
+    auto_detail_ids = list(
+        Category.objects.filter(slug__in=AUTO_DETAIL_SLUGS).values_list('id', flat=True)
+    )
+    tire_detail_ids = list(
+        Category.objects.filter(slug__in=TIRE_SLUGS).values_list('id', flat=True)
+    )
+    tire_exclude_ids = list(
+        Category.objects.filter(slug__in=TIRE_EXCLUDE_SLUGS).values_list('id', flat=True)
+    )
+    is_tire = _is_tire_category(listing.category)
+    is_re = _is_re_category(listing.category)
+    is_year_required = _is_year_required_category(listing.category)
+    re_cat_ids = list(
+        Category.objects.filter(slug__in=RE_SLUGS).values_list('id', flat=True)
+    )
+    year_required_ids = list(
+        Category.objects.filter(slug__in=YEAR_REQUIRED_SLUGS).values_list('id', flat=True)
+    )
+
+    def ctx(extra=None):
+        base = {
+            'listing': listing,
+            'categories': categories,
+            'years': years,
+            'equipment_by_group': equipment_by_group,
+            'is_auto': is_auto,
+            'is_tire': is_tire,
+            'is_re': is_re,
+            'is_year_required': is_year_required,
+            'auto_detail_ids': auto_detail_ids,
+            'tire_detail_ids': tire_detail_ids,
+            'tire_exclude_ids': tire_exclude_ids,
+            're_cat_ids': re_cat_ids,
+            'year_required_ids': year_required_ids,
+            'auto_choices': {
+                'engine_types': AutoDetails.ENGINE_CHOICES,
+                'transmissions': AutoDetails.TRANSMISSION_CHOICES,
+                'body_types': AutoDetails.BODY_CHOICES,
+            },
+            'tire_season_choices': TireDetails.SEASON_CHOICES,
+            're_deal_choices': RealEstateDetails.DEAL_CHOICES,
+            'editing': True,
+        }
+        if extra:
+            base.update(extra)
+        return base
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+
+        if contains_profanity(title) or contains_profanity(description):
+            messages.error(request, 'Sludinājumā konstatēts nepiemērots saturs.')
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+
+        new_category = get_object_or_404(Category, pk=request.POST['category'])
+
+        if _is_year_required_category(new_category) and not request.POST.get('year', '').strip():
+            messages.error(request, 'Lūdzu norādiet izgatavošanas gadu.')
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+
+        listing.title = title
+        listing.description = description
+        listing.category = new_category
+        listing.price = request.POST.get('price') or None
+        listing.condition = request.POST.get('condition', 'used')
+        listing.year = request.POST.get('year') or None
+        listing.location = request.POST.get('location', '')
+        listing.country = request.POST.get('country', '').strip()
+        listing.city = request.POST.get('city', '').strip()
+        listing.contact_email = request.POST.get('contact_email', '').strip()
+
+        equipment_ids = request.POST.getlist('equipment')
+        listing.equipment.set(Equipment.objects.filter(pk__in=equipment_ids))
+
+        if _is_auto_category(new_category):
+            _save_auto_details(listing, request.POST)
+            TireDetails.objects.filter(listing=listing).delete()
+            RealEstateDetails.objects.filter(listing=listing).delete()
+        elif _is_tire_category(new_category):
+            _save_tire_details(listing, request.POST)
+            AutoDetails.objects.filter(listing=listing).delete()
+            RealEstateDetails.objects.filter(listing=listing).delete()
+        elif _is_re_category(new_category):
+            _save_re_details(listing, request.POST)
+            AutoDetails.objects.filter(listing=listing).delete()
+            TireDetails.objects.filter(listing=listing).delete()
+        else:
+            AutoDetails.objects.filter(listing=listing).delete()
+            TireDetails.objects.filter(listing=listing).delete()
+            RealEstateDetails.objects.filter(listing=listing).delete()
+
+        # Jaunas bildes (ja augšupielādētas)
+        new_images = request.FILES.getlist('images')
+        if new_images:
+            listing.images.all().delete()
+            for i, img in enumerate(new_images[:8]):
+                ListingImage.objects.create(listing=listing, image=img, order=i)
+
+        # Jauns video (ja augšupielādēts)
+        video_file = request.FILES.get('video')
+        if video_file:
+            allowed_ext = ('.mp4', '.webm', '.mov', '.avi', '.mkv')
+            allowed_ct = ['video/mp4', 'video/webm', 'video/quicktime', 'video/avi', 'video/x-matroska']
+            if video_file.content_type in allowed_ct or video_file.name.lower().endswith(allowed_ext):
+                try:
+                    listing.video.delete()
+                except Exception:
+                    pass
+                ListingVideo.objects.create(listing=listing, file=video_file)
+
+        listing.save()
+        messages.success(request, 'Sludinājums atjaunināts.')
+        return redirect('listing_detail', pk=listing.pk)
+
+    return render(request, 'listings/edit.html', ctx())
+
+
+@login_required
+def delete_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_auction=False)
+    if request.method == 'POST':
+        listing.delete()
+        messages.success(request, 'Sludinājums dzēsts.')
+        return redirect('profile')
+    return redirect('profile')
+
+
+@login_required
+def extend_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
+    if request.method == 'POST':
+        days = int(request.POST.get('duration', 7))
+        if days not in [7, 14, 21, 28]:
+            days = 7
+        base = max(listing.expires_at, timezone.now()) if listing.expires_at else timezone.now()
+        listing.expires_at = base + timedelta(days=days)
+        listing.is_active = True
+        listing.save()
+        messages.success(request, f'Sludinājums pagarināts līdz {listing.expires_at.strftime("%d.%m.%Y")}.')
+        return redirect('listing_detail', pk=pk)
+    return render(request, 'listings/extend.html', {
+        'listing': listing,
+        'duration_choices': DURATION_CHOICES,
+    })
+
+
+@login_required
+def listing_promote(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_active=True)
+    settings = SiteSettings.get()
+    is_auction = listing.is_auction
+    if is_auction:
+        enabled = settings.featured_auction_enabled
+        fee = settings.featured_auction_fee
+    else:
+        enabled = settings.featured_listing_enabled
+        fee = settings.featured_listing_fee
+
+    if not enabled or fee <= 0:
+        messages.error(request, 'TOP pakalpojums pašlaik nav pieejams.')
+        return redirect('listing_detail', pk=pk)
+
+    from accounts.models import Wallet, WalletTransaction
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        if wallet.balance < fee:
+            messages.error(request, f'Nepietiek līdzekļu makā. TOP maksa ir €{fee}. Jūsu atlikums: €{wallet.balance}.')
+            return redirect('listing_detail', pk=pk)
+        Listing.objects.filter(is_auction=is_auction, is_featured=True).update(is_featured=False, featured_at=None)
+        listing.is_featured = True
+        listing.featured_at = timezone.now()
+        listing.save(update_fields=['is_featured', 'featured_at'])
+        desc = 'TOP izsole' if is_auction else 'TOP sludinājums'
+        WalletTransaction.make_spend(wallet, fee, description=desc, reference=f'TOP-{listing.pk}')
+        messages.success(request, f'Sludinājums paaugstināts uz TOP vietu!')
+        return redirect('listing_detail', pk=pk)
+
+    return render(request, 'listings/promote.html', {
+        'listing': listing,
+        'fee': fee,
+        'wallet': wallet,
+    })
+
+
+@login_required
+def contact_seller(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    if request.user == listing.seller:
+        messages.error(request, 'Nevarat sazināties ar sevi.')
+        return redirect('listing_detail', pk=pk)
+    if request.method == 'POST':
+        content = request.POST.get('message', '').strip()
+        if not content:
+            messages.error(request, 'Lūdzu ievadiet ziņojumu.')
+            return redirect('listing_detail', pk=pk)
+        blocked = contains_contact_info(content)
+        if blocked:
+            messages.error(request, f'Ziņojums nedrīkst saturēt {blocked}. Sazinieties caur platformu.')
+            return redirect('listing_detail', pk=pk)
+        Message.objects.create(
+            listing=listing,
+            sender=request.user,
+            recipient=listing.seller,
+            content=content,
+        )
+        from accounts.notifications import notify as _notify
+        _notify(listing.seller, 'message',
+                f'Jauna ziņa no {request.user.username} par "{listing.title}"',
+                url=f'/saruna/{listing.pk}/{request.user.pk}/')
+        messages.success(request, 'Ziņojums nosūtīts pārdevējam.')
+        return redirect('conversation', listing_pk=pk, user_pk=listing.seller.pk)
+    return redirect('listing_detail', pk=pk)
+
+
+@login_required
+def inbox(request):
+    from django.db.models import Max, Q as Qm
+    user = request.user
+    all_msgs = Message.objects.filter(
+        Q(sender=user) | Q(recipient=user)
+    ).select_related('listing', 'sender', 'recipient').order_by('-created_at')
+
+    # Grupē pa sarunām (listing + otrs lietotājs)
+    seen = set()
+    conversations = []
+    for msg in all_msgs:
+        other = msg.recipient if msg.sender == user else msg.sender
+        key = (msg.listing_id, other.pk)
+        if key not in seen:
+            seen.add(key)
+            unread = Message.objects.filter(
+                listing=msg.listing, sender=other, recipient=user, is_read=False
+            ).count()
+            conversations.append({
+                'listing': msg.listing,
+                'other': other,
+                'last_msg': msg,
+                'unread': unread,
+            })
+
+    return render(request, 'listings/inbox.html', {'conversations': conversations})
+
+
+@login_required
+def conversation(request, listing_pk, user_pk):
+    from django.contrib.auth.models import User as AuthUser
+    listing = get_object_or_404(Listing, pk=listing_pk)
+    other = get_object_or_404(AuthUser, pk=user_pk)
+    user = request.user
+
+    if user != listing.seller and user != other and user.pk != user_pk:
+        from django.http import Http404
+        raise Http404
+
+    thread = Message.objects.filter(
+        listing=listing
+    ).filter(
+        Q(sender=user, recipient=other) | Q(sender=other, recipient=user)
+    ).select_related('sender', 'recipient')
+
+    # Atzīmē kā lasītus
+    thread.filter(recipient=user, is_read=False).update(is_read=True)
+
+    if request.method == 'POST':
+        content = request.POST.get('message', '').strip()
+        if content:
+            blocked = contains_contact_info(content)
+            if blocked:
+                messages.error(request, f'Ziņojums nedrīkst saturēt {blocked}.')
+            else:
+                Message.objects.create(
+                    listing=listing,
+                    sender=user,
+                    recipient=other,
+                    content=content,
+                )
+        return redirect('conversation', listing_pk=listing_pk, user_pk=user_pk)
+
+    return render(request, 'listings/conversation.html', {
+        'listing': listing,
+        'other': other,
+        'thread': thread,
+    })
+
+
+@login_required
+def report_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    if request.user == listing.seller:
+        messages.error(request, 'Nevarat ziņot par savu sludinājumu.')
+        return redirect('listing_detail', pk=pk)
+    if Report.objects.filter(listing=listing, reporter=request.user).exists():
+        messages.warning(request, 'Jūs jau esat ziņojis par šo sludinājumu.')
+        return redirect('listing_detail', pk=pk)
+    if request.method == 'POST':
+        Report.objects.create(
+            listing=listing,
+            reporter=request.user,
+            reason=request.POST.get('reason', 'other'),
+            details=request.POST.get('details', ''),
+        )
+        messages.success(request, 'Paldies! Ziņojums nosūtīts moderatoram.')
+        return redirect('listing_detail', pk=pk)
+    return render(request, 'listings/report.html', {
+        'listing': listing,
+        'reasons': Report.REASON_CHOICES,
+    })
+
+
+@user_passes_test(is_admin, login_url='/accounts/login/')
+def moderation_panel(request):
+    reports = Report.objects.filter(status='new').select_related('listing', 'reporter').annotate(
+        report_count=Count('listing__reports')
+    )
+    all_reports = Report.objects.select_related('listing', 'reporter', 'resolved_by').order_by('-created_at')[:50]
+    flagged_listings = Listing.objects.annotate(report_count=Count('reports')).filter(
+        report_count__gt=0, is_active=True
+    ).order_by('-report_count')[:20]
+    pending_listings = Listing.objects.filter(moderation_status='pending').select_related('seller', 'category').order_by('-created_at')
+    return render(request, 'moderation/panel.html', {
+        'reports': reports,
+        'all_reports': all_reports,
+        'flagged_listings': flagged_listings,
+        'pending_listings': pending_listings,
+    })
+
+
+@user_passes_test(is_admin, login_url='/accounts/login/')
+def moderate_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    action = request.POST.get('action')
+    note = request.POST.get('admin_note', '')
+
+    if action == 'approve':
+        listing.moderation_status = 'approved'
+        listing.is_active = True
+        listing.moderation_note = note or ''
+        listing.save()
+        Report.objects.filter(listing=listing, status='new').update(
+            status='resolved', resolved_by=request.user, resolved_at=timezone.now()
+        )
+        messages.success(request, f'Sludinājums "{listing.title}" apstiprināts.')
+
+    elif action == 'reject':
+        listing.moderation_status = 'rejected'
+        listing.is_active = False
+        listing.moderation_note = note or 'Noraidīts moderācijas rezultātā.'
+        listing.save()
+        Report.objects.filter(listing=listing, status='new').update(
+            status='resolved', resolved_by=request.user,
+            resolved_at=timezone.now(), admin_note=note or 'Noraidīts.'
+        )
+        messages.warning(request, f'Sludinājums "{listing.title}" noraidīts.')
+
+    elif action == 'deactivate':
+        listing.is_active = False
+        listing.save()
+        Report.objects.filter(listing=listing, status='new').update(
+            status='resolved', resolved_by=request.user,
+            resolved_at=timezone.now(), admin_note=note or 'Sludinājums deaktivēts.'
+        )
+        messages.success(request, f'Sludinājums "{listing.title}" deaktivēts.')
+
+    elif action == 'delete':
+        title = listing.title
+        listing.delete()
+        Report.objects.filter(listing=listing, status='new').update(
+            status='resolved', resolved_by=request.user, resolved_at=timezone.now()
+        )
+        messages.success(request, f'Sludinājums "{title}" dzēsts.')
+        return redirect('moderation_panel')
+
+    elif action == 'dismiss':
+        Report.objects.filter(listing=listing, status='new').update(
+            status='reviewed', resolved_by=request.user,
+            resolved_at=timezone.now(), admin_note=note or 'Ziņojums noraidīts.'
+        )
+        messages.info(request, f'Ziņojumi par "{listing.title}" noraidīti.')
+
+    return redirect('moderation_panel')
+
+
+def discount_code_check(request):
+    code = request.GET.get('code', '').strip().upper()
+    if not code:
+        return JsonResponse({'valid': False, 'error': 'Nav ievadīts kods.'})
+    try:
+        obj = DiscountCode.objects.get(code__iexact=code)
+    except DiscountCode.DoesNotExist:
+        return JsonResponse({'valid': False, 'error': 'Kods nav atrasts.'})
+    valid, err = obj.is_valid()
+    if not valid:
+        return JsonResponse({'valid': False, 'error': err})
+    return JsonResponse({
+        'valid': True,
+        'discount_type': obj.discount_type,
+        'discount_value': str(obj.discount_value),
+        'label': str(obj),
+    })
+
+
+# ── VIN atskaite ────────────────────────────────────────────────────────────
+
+from decimal import Decimal as D
+
+VIN_PRICE_NET   = D('15.00')
+VIN_VAT_RATE    = D('0.21')
+VIN_PRICE_GROSS = (VIN_PRICE_NET * (1 + VIN_VAT_RATE)).quantize(D('0.01'))  # 18.15
+
+
+@login_required
+def vin_report(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    try:
+        vin = listing.auto_details.vin.strip().upper()
+    except Exception:
+        messages.error(request, 'Šim sludinājumam nav VIN koda.')
+        return redirect('listing_detail', pk=pk)
+
+    if not vin or len(vin) != 17:
+        messages.error(request, 'VIN kods nav derīgs.')
+        return redirect('listing_detail', pk=pk)
+
+    # Vai lietotājs jau ir saņēmis atskaiti par šo VIN (30 dienas)
+    cutoff = timezone.now() - timedelta(days=30)
+    existing = VinReport.objects.filter(
+        purchased_by=request.user, vin=vin, created_at__gte=cutoff
+    ).first()
+    if existing and not existing.api_error:
+        return render(request, 'listings/vin_report.html', {
+            'listing': listing,
+            'report': existing,
+            'reused': True,
+        })
+
+    if request.method == 'POST':
+        is_eu_vat = request.POST.get('is_eu_vat') == '1'
+        eu_vat_number = request.POST.get('eu_vat_number', '').strip().upper()
+
+        if is_eu_vat and len(eu_vat_number) < 5:
+            messages.error(request, 'Lūdzu ievadiet derīgu ES PVN reģistrācijas numuru.')
+            return redirect('listing_detail', pk=pk)
+
+        price_net   = VIN_PRICE_NET
+        vat_amount  = D('0.00') if is_eu_vat else (VIN_PRICE_NET * VIN_VAT_RATE).quantize(D('0.01'))
+        price_total = price_net + vat_amount
+
+        from accounts.models import Wallet, WalletTransaction
+        wallet, _ = Wallet.objects.get_or_create(user=request.user)
+        if wallet.balance < price_total:
+            messages.error(request, f'Nepietiek līdzekļu makā. Nepieciešami €{price_total}. Atlikums: €{wallet.balance}.')
+            return redirect('listing_detail', pk=pk)
+
+        from .vin_service import fetch_report
+        data = fetch_report(vin)
+        api_error = data.get('error', '') if isinstance(data, dict) else 'Nezināma kļūda'
+        if api_error:
+            messages.error(request, f'VIN atskaites kļūda: {api_error}')
+            return redirect('listing_detail', pk=pk)
+
+        WalletTransaction.make_spend(
+            wallet, price_total,
+            description=f'VIN atskaite {vin}',
+            reference=f'VIN-{vin}',
+        )
+
+        rep = VinReport.objects.create(
+            vin=vin,
+            listing=listing,
+            purchased_by=request.user,
+            price_net=price_net,
+            vat_amount=vat_amount,
+            price_total=price_total,
+            is_eu_vat=is_eu_vat,
+            eu_vat_number=eu_vat_number if is_eu_vat else '',
+            report_data=data,
+        )
+        return render(request, 'listings/vin_report.html', {
+            'listing': listing,
+            'report': rep,
+            'reused': False,
+        })
+
+    # GET — apstiprinājuma lapa
+    return render(request, 'listings/vin_confirm.html', {
+        'listing': listing,
+        'vin': vin,
+        'price_net': VIN_PRICE_NET,
+        'price_gross': VIN_PRICE_GROSS,
+        'vat_rate': int(VIN_VAT_RATE * 100),
+    })
+
+
+def compare_toggle(request, pk):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+    get_object_or_404(Listing, pk=pk, is_active=True)
+    ids = request.session.get('compare_ids', [])
+    if pk in ids:
+        ids.remove(pk)
+        added = False
+    else:
+        if len(ids) >= 4:
+            return JsonResponse({'error': 'Var salīdzināt maks. 4 sludinājumus.'}, status=400)
+        ids.append(pk)
+        added = True
+    request.session['compare_ids'] = ids
+    request.session.modified = True
+    return JsonResponse({'added': added, 'count': len(ids), 'ids': ids})
+
+
+def compare_clear(request):
+    request.session['compare_ids'] = []
+    request.session.modified = True
+    return JsonResponse({'count': 0})
+
+
+def compare_page(request):
+    ids = request.session.get('compare_ids', [])
+    listings = list(
+        Listing.objects.filter(pk__in=ids, is_active=True)
+        .select_related('category', 'seller', 'seller__profile')
+        .prefetch_related('images', 'auto_details', 'tire_details', 're_details')
+    )
+    listings.sort(key=lambda l: ids.index(l.pk) if l.pk in ids else 999)
+    return render(request, 'listings/compare.html', {'listings': listings})
+
+
+@login_required
+def favorite_toggle(request, pk):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    fav, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
+    if not created:
+        fav.delete()
+    return JsonResponse({'favorited': created, 'count': listing.favorited_by.count()})
+
+
+@login_required
+def favorites_list(request):
+    cutoff = timezone.now() - timedelta(days=30)
+    favs = (Favorite.objects
+            .filter(user=request.user, created_at__gte=cutoff)
+            .select_related('listing', 'listing__category', 'listing__seller')
+            .prefetch_related('listing__images'))
+    return render(request, 'listings/favorites.html', {'favs': favs})
+
+
+def privacy_policy(request):
+    return render(request, 'listings/privacy_policy.html')
+
+
+def terms(request):
+    return render(request, 'listings/terms.html')
+
+
+def robots_txt(request):
+    from django.http import HttpResponse
+    content = (
+        "User-agent: *\n"
+        "Disallow: /admin/\n"
+        "Disallow: /accounts/\n"
+        "Disallow: /moderacija/\n"
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml\n"
+    )
+    return HttpResponse(content, content_type='text/plain')

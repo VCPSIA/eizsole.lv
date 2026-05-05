@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% block title %}Moderācijas panelis{% endblock %}
+
+{% block content %}
+<style>
+.stat-card { border-radius: 12px; border: 1px solid #e9ecef; background: white; padding: 1.25rem; text-align: center; }
+.stat-card .num { font-size: 2rem; font-weight: 800; }
+.stat-card .lbl { font-size: .78rem; color: #6c757d; font-weight: 500; margin-top: .15rem; }
+.report-card { border-radius: 12px; border: 1.5px solid #fecaca; background: white; margin-bottom: .75rem; overflow: hidden; }
+.report-card-header { background: #fff5f5; padding: .75rem 1rem; border-bottom: 1px solid #fecaca; }
+.report-card-body { padding: 1rem; }
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h4 class="mb-0 fw-800" style="font-weight:800">
+        <i class="bi bi-shield-check text-danger me-2"></i>Moderācijas panelis
+    </h4>
+    {% if reports.count %}
+    <span class="badge" style="background:#fee2e2;color:#e63946;font-size:.85rem;padding:.4rem .9rem;font-weight:700;border-radius:20px">
+        {{ reports.count }} jauns
+    </span>
+    {% endif %}
+</div>
+
+<!-- Statistika -->
+<div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="num text-danger">{{ reports.count }}</div>
+            <div class="lbl">Jauni ziņojumi</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="num" style="color:#f59e0b">{{ pending_listings.count }}</div>
+            <div class="lbl">Gaida AI moderāciju</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="num" style="color:#f59e0b">{{ flagged_listings.count }}</div>
+            <div class="lbl">Atzīmēti sludinājumi</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="num" style="color:#6c757d">{{ all_reports.count }}</div>
+            <div class="lbl">Kopā ziņojumi</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card" style="display:flex;align-items:center;justify-content:center">
+            <a href="/admin/" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-gear me-2"></i>Django Admin
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- AI moderācija — gaida apstiprināšanu -->
+{% if pending_listings %}
+<div class="section-heading">
+    <i class="bi bi-robot text-warning"></i> AI atzīmēti — gaida apstiprināšanu
+</div>
+<div class="mb-5">
+    {% for listing in pending_listings %}
+    <div class="report-card" style="border-color:#fde68a">
+        <div class="report-card-header d-flex justify-content-between align-items-start flex-wrap gap-2" style="background:#fffbeb">
+            <div>
+                <a href="{% url 'listing_detail' listing.pk %}" target="_blank" class="fw-700 text-dark text-decoration-none" style="font-weight:700">
+                    {{ listing.title }}
+                </a>
+                {% if listing.is_auction %}
+                    {% with listing.auction as a %}{% if a %}<span style="background:#fff0f0;border-radius:4px;padding:0 5px;font-family:monospace;font-size:.72rem;color:#e63946;margin-left:6px">IZ{{ a.pk|stringformat:"06d" }}</span>{% endif %}{% endwith %}
+                {% else %}
+                    <span style="background:#f4f5f7;border-radius:4px;padding:0 5px;font-family:monospace;font-size:.72rem;color:#6c757d;margin-left:6px">#{{ listing.pk|stringformat:"06d" }}</span>
+                {% endif %}
+                {% if listing.is_auction %}<span class="auction-badge ms-2">IZSOLE</span>{% endif %}
+                <div class="mt-1" style="font-size:.8rem;color:#6c757d">
+                    Pārdevējs: <strong>{{ listing.seller.username }}</strong> &nbsp;·&nbsp;
+                    {{ listing.category.name }} &nbsp;·&nbsp;
+                    {{ listing.created_at|date:"d.m.Y H:i" }}
+                </div>
+            </div>
+            <span class="badge" style="background:#fef9c3;color:#854d0e;font-weight:600;border-radius:20px">
+                <i class="bi bi-robot me-1"></i>AI karodziņš
+            </span>
+        </div>
+        <div class="report-card-body">
+            <div class="row g-3 align-items-start">
+                <div class="col-md-6">
+                    {% if listing.moderation_note %}
+                    <div class="mb-2 p-2 rounded" style="background:#fef9c3;font-size:.83rem;color:#374151;border-left:3px solid #f59e0b">
+                        {{ listing.moderation_note }}
+                    </div>
+                    {% endif %}
+                    {% with listing.get_main_image as img %}
+                    {% if img %}
+                    <img src="{{ img.image.url }}" style="max-height:100px;border-radius:8px;object-fit:cover" class="mt-1">
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="col-md-6">
+                    <form method="post" action="{% url 'moderate_listing' listing.pk %}">
+                        {% csrf_token %}
+                        <textarea name="admin_note" class="form-control mb-2" rows="2" placeholder="Admina piezīme..." style="font-size:.83rem;border-radius:8px"></textarea>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">
+                                <i class="bi bi-check-lg me-1"></i>Apstiprināt
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">
+                                <i class="bi bi-x-lg me-1"></i>Noraidīt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Jaunie ziņojumi -->
+{% if reports %}
+<div class="section-heading">
+    <i class="bi bi-exclamation-triangle text-danger"></i> Nepieciešama darbība
+</div>
+<div class="mb-5">
+    {% for report in reports %}
+    <div class="report-card">
+        <div class="report-card-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <a href="{% url 'listing_detail' report.listing.pk %}" target="_blank" class="fw-700 text-dark text-decoration-none" style="font-weight:700">
+                    {{ report.listing.title }}
+                </a>
+                {% if report.listing.is_auction %}
+                    {% with report.listing.auction as a %}{% if a %}<span style="background:#fff0f0;border-radius:4px;padding:0 5px;font-family:monospace;font-size:.72rem;color:#e63946;margin-left:6px">IZ{{ a.pk|stringformat:"06d" }}</span>{% endif %}{% endwith %}
+                {% else %}
+                    <span style="background:#f4f5f7;border-radius:4px;padding:0 5px;font-family:monospace;font-size:.72rem;color:#6c757d;margin-left:6px">#{{ report.listing.pk|stringformat:"06d" }}</span>
+                {% endif %}
+                {% if report.listing.is_auction %}<span class="auction-badge ms-2">IZSOLE</span>{% endif %}
+                <div class="mt-1" style="font-size:.8rem;color:#6c757d">
+                    Pārdevējs: <strong>{{ report.listing.seller.username }}</strong> &nbsp;·&nbsp;
+                    {{ report.listing.category.name }}
+                </div>
+            </div>
+            <div class="text-end">
+                <span class="badge" style="background:#fef9c3;color:#854d0e;font-weight:600;border-radius:20px">{{ report.get_reason_display }}</span>
+                <div class="mt-1" style="font-size:.75rem;color:#9ca3af">{{ report.created_at|date:"d.m.Y H:i" }}</div>
+            </div>
+        </div>
+        <div class="report-card-body">
+            <div class="row g-3 align-items-start">
+                <div class="col-md-6">
+                    {% if report.details %}
+                    <div class="mb-2 p-2 rounded" style="background:#f9fafb;font-size:.83rem;color:#374151;font-style:italic;border-left:3px solid #e63946">
+                        "{{ report.details|truncatechars:200 }}"
+                    </div>
+                    {% endif %}
+                    <div style="font-size:.78rem;color:#9ca3af">
+                        Ziņoja: <strong style="color:#374151">{{ report.reporter.username }}</strong> &nbsp;·&nbsp;
+                        <span class="text-danger fw-600" style="font-weight:600">{{ report.report_count }} ziņojumi par šo sludinājumu</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <form method="post" action="{% url 'moderate_listing' report.listing.pk %}">
+                        {% csrf_token %}
+                        <textarea name="admin_note" class="form-control mb-2" rows="2" placeholder="Admina piezīme (nav obligāti)..." style="font-size:.83rem;border-radius:8px"></textarea>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="submit" name="action" value="deactivate" class="btn btn-warning btn-sm">
+                                <i class="bi bi-eye-slash me-1"></i>Deaktivēt
+                            </button>
+                            <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Dzēst sludinājumu?')">
+                                <i class="bi bi-trash me-1"></i>Dzēst
+                            </button>
+                            <button type="submit" name="action" value="dismiss" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-check me-1"></i>Noraidīt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card p-4 text-center border-0 mb-5" style="background:#f0fdf4;border-radius:12px">
+    <i class="bi bi-check-circle text-success" style="font-size:2rem"></i>
+    <p class="mb-0 mt-2 text-success fw-600" style="font-weight:600">Nav jaunu ziņojumu. Lielisks darbs!</p>
+</div>
+{% endif %}
+
+<!-- Atzīmētie sludinājumi -->
+{% if flagged_listings %}
+<div class="section-heading">
+    <i class="bi bi-flag text-danger"></i> Visbiežāk ziņotie
+</div>
+<div class="card mb-5" style="border-radius:12px;overflow:hidden">
+    <table class="table table-hover align-middle mb-0" style="font-size:.86rem">
+        <thead style="background:#f8f9fa">
+            <tr>
+                <th class="px-3 py-2">Sludinājums</th>
+                <th>Pārdevējs</th>
+                <th>Kategorija</th>
+                <th>Ziņojumi</th>
+                <th>Statuss</th>
+                <th>Darbības</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for listing in flagged_listings %}
+            <tr>
+                <td class="px-3">
+                    <a href="{% url 'listing_detail' listing.pk %}" target="_blank" class="fw-500" style="font-weight:500;color:#212529;text-decoration:none">
+                        {{ listing.title|truncatechars:40 }}
+                    </a>
+                    {% if listing.is_auction %}<span class="auction-badge ms-1">IZSOLE</span>{% endif %}
+                </td>
+                <td>{{ listing.seller.username }}</td>
+                <td class="text-muted">{{ listing.category.name }}</td>
+                <td><span class="badge" style="background:#fee2e2;color:#e63946;font-weight:700;border-radius:20px">{{ listing.report_count }}</span></td>
+                <td>
+                    {% if listing.is_active %}
+                    <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px">Aktīvs</span>
+                    {% else %}
+                    <span class="badge" style="background:#f4f5f7;color:#6c757d;border-radius:20px">Deaktivēts</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'moderate_listing' listing.pk %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="deactivate" class="btn btn-sm btn-warning me-1" {% if not listing.is_active %}disabled{% endif %}>
+                            <i class="bi bi-eye-slash"></i>
+                        </button>
+                        <button type="submit" name="action" value="delete" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Dzēst šo sludinājumu?')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Ziņojumu vēsture -->
+<div class="section-heading">
+    <i class="bi bi-clock-history text-muted"></i> Ziņojumu vēsture
+</div>
+<div class="card" style="border-radius:12px;overflow:hidden">
+    <table class="table table-sm table-hover align-middle mb-0" style="font-size:.83rem">
+        <thead style="background:#f8f9fa">
+            <tr>
+                <th class="px-3 py-2">Datums</th>
+                <th>Sludinājums</th>
+                <th>Iemesls</th>
+                <th>Ziņotājs</th>
+                <th>Statuss</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in all_reports %}
+            <tr>
+                <td class="px-3 text-muted">{{ report.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'listing_detail' report.listing.pk %}" target="_blank" style="color:#212529;text-decoration:none">
+                        {{ report.listing.title|truncatechars:35 }}
+                    </a>
+                </td>
+                <td>
+                    <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px;font-size:.72rem">{{ report.get_reason_display }}</span>
+                </td>
+                <td>{{ report.reporter.username|default:"—" }}</td>
+                <td>
+                    {% if report.status == 'new' %}
+                    <span class="badge" style="background:#fee2e2;color:#e63946;border-radius:20px;font-size:.72rem">Jauns</span>
+                    {% elif report.status == 'reviewed' %}
+                    <span class="badge" style="background:#f4f5f7;color:#6c757d;border-radius:20px;font-size:.72rem">Noraidīts</span>
+                    {% else %}
+                    <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px;font-size:.72rem">Atrisināts</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

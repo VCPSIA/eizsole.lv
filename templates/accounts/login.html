@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Pieteikties{% endblock %}
+
+{% block content %}
+<style>
+.auth-card { max-width: 420px; margin: 2rem auto; background: white; border-radius: 16px; border: 1px solid #e9ecef; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.auth-header { background: linear-gradient(135deg, #1a1d23, #e63946); padding: 2rem; text-align: center; }
+.auth-body { padding: 2rem; }
+</style>
+
+<div class="auth-card">
+    <div class="auth-header">
+        <i class="bi bi-hammer text-white" style="font-size:2rem"></i>
+        <h4 class="text-white fw-800 mt-2 mb-0" style="font-weight:800">Pieteikties</h4>
+        <p class="mb-0 mt-1" style="color:rgba(255,255,255,.7);font-size:.85rem">eizsole.lv kontā</p>
+    </div>
+    <div class="auth-body">
+        {% if form.errors %}
+        <div class="alert alert-danger mb-3">
+            <i class="bi bi-exclamation-circle me-2"></i>Nepareizs lietotājvārds vai parole.
+        </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Lietotājvārds</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person text-muted"></i></span>
+                    <input type="text" name="username" class="form-control" autofocus required placeholder="Ievadi lietotājvārdu">
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label class="form-label mb-1">Parole</label>
+                    <a href="{% url 'password_reset' %}" class="text-muted text-decoration-none" style="font-size:.8rem">Aizmirsāt paroli?</a>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock text-muted"></i></span>
+                    <input type="password" name="password" class="form-control" required placeholder="Ievadi paroli">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-danger w-100 fw-700 py-2" style="font-weight:700;border-radius:10px">
+                Pieteikties
+            </button>
+        </form>
+        <hr class="my-3">
+        <p class="text-center mb-0" style="font-size:.88rem">
+            Nav konta? <a href="{% url 'register' %}" class="text-danger fw-600" style="font-weight:600">Reģistrēties</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,865 @@
+{% extends 'base.html' %}
+{% block title %}Publicēt sludinājumu{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="card shadow-sm">
+<div class="card-header"><h5 class="mb-0"><i class="bi bi-plus-lg"></i> Publicēt sludinājumu</h5></div>
+<div class="card-body">
+<form method="post" enctype="multipart/form-data" id="listing-form">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Virsraksts *</label>
+        <input type="text" name="title" class="form-control" required maxlength="200" value="{{ post.title }}">
+    </div>
+
+    <!-- Kaskādes kategoriju izvēlnes -->
+    <div class="mb-1">
+        <label class="form-label fw-semibold">Kategorija *</label>
+        <select id="cat-1" class="form-select mb-2" required>
+            <option value="">— Izvēlieties kategoriju —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.pk }}" data-slug="{{ cat.slug }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <select id="cat-2" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties apakškategoriju —</option>
+        </select>
+        <select id="cat-3" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties apakškategoriju —</option>
+        </select>
+        <select id="cat-4" class="form-select mb-2" style="display:none">
+            <option value="">— Izvēlieties modeli —</option>
+        </select>
+        <!-- Slēptais lauks, kas nosūta faktisko kategorijas ID -->
+        <input type="hidden" name="category" id="cat-final" required>
+        <div id="cat-hint" class="form-text text-muted"></div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Apraksts *</label>
+        <textarea name="description" class="form-control" rows="5" required></textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold">Stāvoklis</label>
+            <select name="condition" class="form-select">
+                <option value="used">Lietots</option>
+                <option value="new">Jauns</option>
+                <option value="damaged">Bojāts</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold" id="year-label">Izgatavošanas gads</label>
+            <select name="year" id="year-select" class="form-select">
+                <option value="">— Nav norādīts —</option>
+                {% for y in years %}
+                <option value="{{ y }}" {% if post.year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label fw-semibold" for="address-input">
+                Adrese <span class="text-danger">*</span>
+                {% if not google_maps_api_key %}
+                <span class="text-muted fw-normal" style="font-size:.78rem">(Google Maps API atslēga nav iestatīta)</span>
+                {% endif %}
+            </label>
+            <div class="position-relative">
+                <i class="bi bi-geo-alt-fill position-absolute" style="left:.85rem;top:50%;transform:translateY(-50%);color:#e63946;font-size:.9rem;pointer-events:none"></i>
+                <input type="text" id="address-input" class="form-control" placeholder="Sāciet rakstīt adresi..."
+                    style="padding-left:2.4rem"
+                    value="{{ post.location|default:'' }}" autocomplete="off">
+            </div>
+            <input type="hidden" name="location" id="location-val" value="{{ post.location|default:'' }}">
+            <input type="hidden" name="country"  id="country-val"  value="{{ post.country|default:profile_country }}">
+            <input type="hidden" name="city"     id="city-val"     value="{{ post.city|default:profile_city }}">
+            <input type="hidden" name="lat"      id="lat-val"      value="">
+            <input type="hidden" name="lng"      id="lng-val"      value="">
+            <div id="address-hint" class="form-text" style="display:none;color:#e63946">
+                <i class="bi bi-exclamation-circle me-1"></i>Lūdzu izvēlieties adresi no saraksta.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bildes -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Bildes <span class="text-danger">*</span> <span class="text-muted fw-normal" style="font-size:.82rem">— vismaz 1, max 8</span></label>
+        <div id="image-drop-zone" class="drop-zone" onclick="document.getElementById('image-input').click()">
+            <i class="bi bi-images" style="font-size:2rem;color:#9ca3af"></i>
+            <div class="mt-1" style="font-size:.88rem;color:#6c757d">Spied vai velc bildes šeit</div>
+            <div style="font-size:.75rem;color:#9ca3af">JPG, PNG, WEBP · max 8 bildes</div>
+        </div>
+        <input type="file" id="image-input" name="images" multiple accept="image/*"
+               style="display:none" onchange="handleImages(this.files)">
+        <div id="image-preview" class="d-flex flex-wrap gap-2 mt-2"></div>
+        <div id="image-count" class="form-text"></div>
+    </div>
+
+    <!-- Video -->
+    <div class="mb-4">
+        <label class="form-label fw-semibold">Video <span class="text-muted fw-normal" style="font-size:.82rem">— nav obligāts, max 1</span></label>
+        <div id="video-drop-zone" class="drop-zone" onclick="document.getElementById('video-input').click()">
+            <i class="bi bi-camera-video" style="font-size:2rem;color:#9ca3af"></i>
+            <div class="mt-1" style="font-size:.88rem;color:#6c757d">Spied vai velc video šeit</div>
+            <div style="font-size:.75rem;color:#9ca3af">MP4, WEBM, MOV · max 1 video</div>
+        </div>
+        <input type="file" id="video-input" name="video" accept="video/*"
+               style="display:none" onchange="handleVideo(this.files[0])">
+        <div id="video-preview" class="mt-2"></div>
+    </div>
+
+    <style>
+    .drop-zone {
+        border: 2px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color .2s, background .2s;
+        background: #fafafa;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+        border-color: #e63946;
+        background: #fff5f5;
+    }
+    .img-thumb {
+        width: 80px; height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        position: relative;
+    }
+    .thumb-wrap { position: relative; display: inline-block; }
+    .thumb-remove {
+        position: absolute; top: -6px; right: -6px;
+        width: 20px; height: 20px;
+        background: #e63946; color: white;
+        border: none; border-radius: 50%;
+        font-size: 11px; line-height: 20px; text-align: center;
+        cursor: pointer; padding: 0;
+    }
+    </style>
+
+    <!-- Auto detaļas (tikai Transports kategorija) -->
+    <div id="auto-block" class="card mb-3" style="display:none;border-color:#fecaca">
+        <div class="card-header fw-semibold" style="background:#fff5f5">
+            <i class="bi bi-car-front text-danger"></i> Transportlīdzekļa dati
+            <span class="text-muted fw-normal small ms-2">Obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Motora tips <span class="text-danger">*</span></label>
+                    <select name="engine_type" id="engine_type" class="form-select">
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.engine_types %}
+                        <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Motora tilpums (L) <span class="text-danger">*</span></label>
+                    <input type="number" name="engine_volume" id="engine_volume" class="form-control"
+                           step="0.1" min="0.1" max="20" placeholder="1.6">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Ātrumkārba <span class="text-danger">*</span></label>
+                    <select name="transmission" id="transmission" class="form-select">
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.transmissions %}
+                        <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Virsbūves tips <span class="text-danger">*</span></label>
+                    <select name="body_type" id="body_type" class="form-select">
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in auto_choices.body_types %}
+                        <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nobraukums (km) <span class="text-danger">*</span></label>
+                    <input type="number" name="mileage" id="mileage" class="form-control"
+                           placeholder="150000" min="0" max="9999999">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Reģ. numurs <span class="text-danger">*</span></label>
+                    <input type="text" name="reg_number" id="reg_number" class="form-control"
+                           placeholder="AA-1234" maxlength="15">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">VIN kods <span class="text-danger">*</span></label>
+                    <input type="text" name="vin" id="vin" class="form-control"
+                           placeholder="17 simboli" maxlength="17" style="font-family:monospace;text-transform:uppercase">
+                </div>
+                <div class="col-12">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" name="has_inspection" id="has_inspection"
+                               checked onchange="toggleInspection(this)">
+                        <label class="form-check-label fw-semibold" for="has_inspection">
+                            Ir tehniskā apskate
+                        </label>
+                    </div>
+                    <div id="inspection-date-wrap">
+                        <label class="form-label">Tehniskā apskate līdz <span class="text-danger">*</span></label>
+                        <input type="date" name="inspection_date" id="inspection_date" class="form-control"
+                               style="max-width:200px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Riepas detaļas -->
+    <div id="tire-block" class="card mb-3" style="display:none;border-color:#bfdbfe">
+        <div class="card-header fw-semibold" style="background:#eff6ff">
+            <i class="bi bi-circle text-primary"></i> Riepas parametri
+            <span class="text-muted fw-normal small ms-2">* — obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Rādiuss (collas) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_radius" id="tire_radius" class="form-control"
+                           placeholder="16" min="8" max="30">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Platums (mm) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_width" id="tire_width" class="form-control"
+                           placeholder="205" min="100" max="400" step="5">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Profils (%) <span class="text-danger">*</span></label>
+                    <input type="number" name="tire_profile" id="tire_profile" class="form-control"
+                           placeholder="55" min="20" max="100">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Sezona <span class="text-danger">*</span></label>
+                    <select name="tire_season" id="tire_season" class="form-select">
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in tire_season_choices %}
+                        <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Ražotājs <span class="text-danger">*</span></label>
+                    <input type="text" name="tire_manufacturer" id="tire_manufacturer" class="form-control"
+                           placeholder="Michelin, Bridgestone, Nokian...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-muted">Slodzes indekss</label>
+                    <input type="number" name="tire_load_index" class="form-control"
+                           placeholder="91" min="0" max="300">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-muted">Ātruma indekss</label>
+                    <input type="text" name="tire_speed_index" class="form-control"
+                           placeholder="H" maxlength="3" style="text-transform:uppercase">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nekustamā īpašuma detaļas -->
+    <div id="re-block" class="card mb-3" style="display:none;border-color:#bbf7d0">
+        <div class="card-header fw-semibold" style="background:#f0fdf4">
+            <i class="bi bi-house text-success"></i> Nekustamā īpašuma dati
+            <span class="text-muted fw-normal small ms-2">* — obligāti lauki</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Darījuma veids <span class="text-danger">*</span></label>
+                    <select name="re_deal_type" id="re_deal_type" class="form-select">
+                        <option value="">— Izvēlieties —</option>
+                        {% for val, label in re_deal_choices %}
+                        <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Valsts <span class="text-danger">*</span></label>
+                    <input type="text" name="re_country" id="re_country" class="form-control" placeholder="Latvija">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Rajons <span class="text-danger">*</span></label>
+                    <input type="text" name="re_district" id="re_district" class="form-control" placeholder="Rīgas rajons">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Pilsēta <span class="text-danger">*</span></label>
+                    <input type="text" name="re_city" id="re_city" class="form-control" placeholder="Rīga">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aprīkojums (tikai Auto) -->
+    <div id="equipment-block" class="card mb-3" style="display:none">
+        <div class="card-header fw-semibold">
+            <i class="bi bi-check2-square text-danger"></i> Aprīkojums
+            <span class="text-muted fw-normal small ms-2">Atzīmējiet visu pieejamo aprīkojumu</span>
+        </div>
+        <div class="card-body">
+            {% for group_name, items in equipment_by_group.items %}
+            <div class="mb-4">
+                <h6 class="text-danger border-bottom pb-1 mb-3">{{ group_name }}</h6>
+                <div class="row g-2">
+                    {% for eq in items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="equipment" value="{{ eq.pk }}" id="eq_{{ eq.pk }}">
+                            <label class="form-check-label small" for="eq_{{ eq.pk }}">
+                                {{ eq.name }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Izsoles opcija -->
+    <div class="card bg-light mb-3">
+        <div class="card-body">
+            <div class="form-check mb-3">
+                <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input" onchange="toggleAuction(this)">
+                <label for="is_auction" class="form-check-label fw-semibold">
+                    <i class="bi bi-hammer text-danger"></i> Publicēt kā izsoli
+                </label>
+            </div>
+            <div id="auction_fields" style="display:none">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Sākuma cena (€) *</label>
+                        <input type="number" name="starting_price" class="form-control" step="0.01" min="0.01">
+                        <div class="form-text" style="font-size:.75rem">Solījuma solis tiek aprēķināts automātiski pēc cenas.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Izsole beidzas *</label>
+                        <input type="datetime-local" name="ends_at" id="ends_at" class="form-control">
+                        <div class="form-text">Minimums: 1 stunda. Maksimums: 1 mēnesis.</div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-1">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded" style="background:#f0fdf4;border:1.5px solid #bbf7d0;height:100%">
+                            <label class="form-label fw-semibold mb-1" style="color:#166534;font-size:.88rem">
+                                <i class="bi bi-bag-check me-1"></i>Pērc tūlīt cena (€)
+                                <span class="fw-normal text-muted">— nav obligāta</span>
+                            </label>
+                            <input type="number" name="buy_now_price" class="form-control" step="0.01" min="0.01"
+                                placeholder="Piemērs: 150.00">
+                            <div class="form-text" style="font-size:.75rem;color:#166534">
+                                Pircējs var nopirkt uzreiz bez solīšanas.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded" style="background:#fefce8;border:1.5px solid #fde68a;height:100%">
+                            <label class="form-label fw-semibold mb-1" style="color:#854d0e;font-size:.88rem">
+                                <i class="bi bi-shield-lock me-1"></i>Rezerves cena (€)
+                                <span class="fw-normal text-muted">— nav obligāta</span>
+                            </label>
+                            <input type="number" name="reserve_price" class="form-control" step="0.01" min="0.01"
+                                placeholder="Piemērs: 80.00">
+                            <div class="form-text" style="font-size:.75rem;color:#854d0e">
+                                Slēptā min. cena. Pircēji neredz summu, tikai statusu.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="deal_type_field" class="mb-3">
+                <label class="form-label fw-semibold">Darījuma veids <span class="text-danger">*</span></label>
+                <div class="d-flex gap-2">
+                    {% for val, label in deal_type_choices %}
+                    <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required>
+                    <label class="btn btn-outline-danger btn-sm px-4" for="dt_{{ val }}">{{ label }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="price_field">
+                <label class="form-label fw-semibold">Cena (€) <span class="text-danger">*</span></label>
+                <input type="number" name="price" id="price_input" class="form-control" step="0.01" min="0.01" placeholder="0.00" required>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontaktinformācija -->
+    <div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
+        <div class="card-body">
+            <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-person-lines-fill text-danger me-2"></i>Kontaktinformācija</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-600" style="font-weight:600">
+                        <i class="bi bi-telephone me-1"></i>Tālrunis <span class="text-danger">*</span>
+                    </label>
+                    <input type="tel" name="contact_phone" class="form-control" required
+                        value="{% if post %}{{ post.contact_phone }}{% else %}{{ user.profile.phone }}{% endif %}"
+                        placeholder="+37126000000">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-600" style="font-weight:600">
+                        <i class="bi bi-envelope me-1"></i>E-pasts <span class="text-danger">*</span>
+                    </label>
+                    <input type="email" name="contact_email" class="form-control" required
+                        value="{% if post %}{{ post.contact_email }}{% else %}{{ user.email }}{% endif %}"
+                        placeholder="jusu@epasts.lv">
+                </div>
+            </div>
+            <div class="form-text mt-2"><i class="bi bi-eye-slash me-1"></i>Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski redzams.</div>
+        </div>
+    </div>
+
+    <!-- Publicēšanas ilgums (tikai sludinājumiem, ne izsolēm) -->
+    <div id="duration-block" class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
+        <div class="card-body">
+            <label class="form-label fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock text-danger me-2"></i>Publicēšanas ilgums <span class="text-danger">*</span></label>
+            <div class="row g-2">
+                {% for val, label in duration_choices %}
+                <div class="col-6 col-md-3">
+                    <input type="radio" class="btn-check" name="duration" id="dur{{ val }}" value="{{ val }}" {% if val == "7" %}checked{% endif %} required>
+                    <label class="btn btn-outline-danger w-100" for="dur{{ val }}">{{ label }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt jebkurā laikā.</div>
+        </div>
+    </div>
+
+    <!-- Atlaižu kods -->
+    <div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
+        <div class="card-body">
+            <label class="form-label fw-700" style="font-weight:700">
+                <i class="bi bi-tag text-danger me-2"></i>Atlaižu kods
+                <span class="text-muted fw-normal" style="font-size:.82rem">— nav obligāts</span>
+            </label>
+            <div class="input-group">
+                <input type="text" name="promo_code" id="promo_code" class="form-control text-uppercase"
+                       placeholder="Ievadiet kodu..." maxlength="30"
+                       autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+                <button type="button" class="btn btn-outline-secondary" onclick="checkPromoCode()">
+                    <i class="bi bi-check-lg me-1"></i>Pārbaudīt
+                </button>
+            </div>
+            <div id="promo-result" class="form-text mt-1" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- TOP sludinājums -->
+    {% if site_settings.featured_listing_enabled and site_settings.featured_listing_fee > 0 or site_settings.featured_auction_enabled and site_settings.featured_auction_fee > 0 %}
+    <div id="featured-block" class="card p-3 mb-3" style="border:2px solid #fbbf24;border-radius:12px;background:#fffbeb;display:none">
+        <div class="form-check mb-0">
+            <input type="checkbox" name="want_featured" id="want_featured" class="form-check-input" value="1">
+            <label class="form-check-label fw-700" for="want_featured" style="font-weight:700">
+                <i class="bi bi-star-fill text-warning me-1"></i>TOP vieta — <span id="featured-fee-label"></span>
+            </label>
+            <div class="text-muted mt-1" style="font-size:.8rem">Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP vietu.</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary btn-lg w-100" id="submit-btn" disabled>
+        <i class="bi bi-check-lg"></i> Publicēt
+    </button>
+    <div id="submit-hint" class="form-text text-danger text-center mt-1" style="display:none">
+        Lūdzu izvēlieties kategoriju pirms publicēšanas.
+    </div>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function checkPromoCode() {
+    const code = document.getElementById('promo_code').value.trim();
+    const result = document.getElementById('promo-result');
+    if (!code) { result.style.display = 'none'; return; }
+    result.style.display = 'block';
+    result.className = 'form-text mt-1 text-muted';
+    result.textContent = 'Pārbauda...';
+    fetch('/api/discount-code/?code=' + encodeURIComponent(code))
+        .then(r => r.json())
+        .then(data => {
+            if (data.valid) {
+                result.className = 'form-text mt-1 text-success';
+                const type = data.discount_type === 'percent'
+                    ? data.discount_value + '% atlaide'
+                    : '€' + data.discount_value + ' atlaide';
+                result.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Kods derīgs — ' + type + ' uz sludinājuma maksu.';
+            } else {
+                result.className = 'form-text mt-1 text-danger';
+                result.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i>' + data.error;
+            }
+        })
+        .catch(() => {
+            result.className = 'form-text mt-1 text-danger';
+            result.textContent = 'Savienojuma kļūda.';
+        });
+}
+
+document.getElementById('promo_code').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); checkPromoCode(); }
+});
+
+function toggleAuction(cb) {
+    document.getElementById('auction_fields').style.display = cb.checked ? 'block' : 'none';
+    document.getElementById('price_field').style.display = cb.checked ? 'none' : 'block';
+    document.getElementById('deal_type_field').style.display = cb.checked ? 'none' : 'block';
+    document.getElementById('price_input').required = !cb.checked;
+    document.querySelectorAll('input[name="deal_type"]').forEach(r => r.required = !cb.checked);
+    const durBlock = document.getElementById('duration-block');
+    durBlock.style.display = cb.checked ? 'none' : 'block';
+    durBlock.querySelectorAll('input[name="duration"]').forEach(r => r.required = !cb.checked);
+    if (cb.checked) {
+        const now = new Date();
+        const min = new Date(now.getTime() + 60 * 60 * 1000);
+        const max = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const fmt = d => d.toISOString().slice(0, 16);
+        const endsAt = document.getElementById('ends_at');
+        endsAt.min = fmt(min);
+        endsAt.max = fmt(max);
+    }
+}
+
+const equipmentBlock = document.getElementById('equipment-block');
+const autoBlock = document.getElementById('auto-block');
+const tireBlock = document.getElementById('tire-block');
+const reBlock = document.getElementById('re-block');
+const AUTO_DETAIL_IDS = new Set([{{ auto_detail_ids|join:"," }}]);
+const TIRE_DETAIL_IDS = new Set([{{ tire_detail_ids|join:"," }}]);
+const TIRE_EXCLUDE_IDS = new Set([{{ tire_exclude_ids|join:"," }}]);
+const RE_CAT_IDS = new Set([{{ re_cat_ids|join:"," }}]);
+const YEAR_REQUIRED_IDS = new Set([{{ year_required_ids|join:"," }}]);
+let isAutoDetails = false;
+
+function setAutoBlockVisibility(show) {
+    isAutoDetails = show;
+    autoBlock.style.display = show ? 'block' : 'none';
+    equipmentBlock.style.display = show ? 'block' : 'none';
+    ['engine_type','engine_volume','transmission','body_type','mileage','reg_number','vin'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = show;
+    });
+    const yearSel = document.getElementById('year-select');
+    if (yearSel) yearSel.required = show;
+    const yearLabel = document.getElementById('year-label');
+    if (yearLabel) yearLabel.innerHTML = 'Izgatavošanas gads' + (show ? ' <span class="text-danger">*</span>' : '');
+    const inspDate = document.getElementById('inspection_date');
+    if (inspDate) inspDate.required = show && document.getElementById('has_inspection').checked;
+    if (!show) {
+        equipmentBlock.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    }
+}
+
+function setTireBlockVisibility(show) {
+    tireBlock.style.display = show ? 'block' : 'none';
+    ['tire_radius','tire_width','tire_profile','tire_season','tire_manufacturer'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = show;
+    });
+}
+
+function setReBlockVisibility(show) {
+    reBlock.style.display = show ? 'block' : 'none';
+    ['re_deal_type','re_country','re_district','re_city'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = show;
+    });
+}
+
+function toggleInspection(cb) {
+    const wrap = document.getElementById('inspection-date-wrap');
+    wrap.style.display = cb.checked ? 'block' : 'none';
+    document.getElementById('inspection_date').required = cb.checked && isAutoDetails;
+}
+
+function setYearRequired(show) {
+    const yearSel = document.getElementById('year-select');
+    if (yearSel) yearSel.required = show;
+    const yearLabel = document.getElementById('year-label');
+    if (yearLabel) yearLabel.innerHTML = 'Izgatavošanas gads' + (show ? ' <span class="text-danger">*</span>' : '');
+}
+
+function checkCat2(select) {
+    const val = parseInt(select.value);
+    setAutoBlockVisibility(AUTO_DETAIL_IDS.has(val));
+    setTireBlockVisibility(TIRE_DETAIL_IDS.has(val));
+    if (!AUTO_DETAIL_IDS.has(val)) setYearRequired(YEAR_REQUIRED_IDS.has(val));
+}
+
+// Kaskādes kategoriju loģika
+const selects = {
+    1: document.getElementById('cat-1'),
+    2: document.getElementById('cat-2'),
+    3: document.getElementById('cat-3'),
+    4: document.getElementById('cat-4'),
+};
+const finalInput = document.getElementById('cat-final');
+const hint = document.getElementById('cat-hint');
+const submitBtn = document.getElementById('submit-btn');
+const submitHint = document.getElementById('submit-hint');
+
+function updateFinal(level, selectedId, selectedName) {
+    // Paslēpj visus zemākos līmeņus
+    for (let l = level + 1; l <= 4; l++) {
+        selects[l].style.display = 'none';
+        selects[l].innerHTML = '<option value="">— Izvēlieties apakškategoriju —</option>';
+    }
+
+    if (!selectedId) {
+        finalInput.value = '';
+        hint.textContent = '';
+        submitBtn.disabled = true;
+        submitHint.style.display = 'block';
+        return;
+    }
+
+    // Ielādē apakškategorijas
+    fetch(`/api/subcategories/${selectedId}/`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.subcategories.length > 0) {
+                const next = selects[level + 1];
+                next.innerHTML = '<option value="">— Izvēlieties apakškategoriju —</option>';
+                data.subcategories.forEach(sub => {
+                    const opt = new Option(sub.name, sub.id);
+                    opt.dataset.slug = sub.slug || '';
+                    next.appendChild(opt);
+                });
+                next.style.display = 'block';
+                // Pašreizējā kategorija vēl nav galīgā
+                finalInput.value = '';
+                hint.textContent = 'Izvēlieties precīzāku apakškategoriju.';
+                submitBtn.disabled = true;
+                submitHint.style.display = 'block';
+            } else {
+                // Nav apakškategoriju — šī ir galīgā
+                finalInput.value = selectedId;
+                hint.textContent = 'Kategorija izvēlēta: ' + selectedName;
+                submitBtn.disabled = false;
+                submitHint.style.display = 'none';
+                updateFeaturedBlock();
+            }
+        });
+}
+
+selects[1].addEventListener('change', function() {
+    setAutoBlockVisibility(false);
+    setTireBlockVisibility(false);
+    setReBlockVisibility(RE_CAT_IDS.has(parseInt(this.value)));
+    updateFinal(1, this.value, this.options[this.selectedIndex].text);
+});
+selects[2].addEventListener('change', function() {
+    checkCat2(this);
+    updateFinal(2, this.value, this.options[this.selectedIndex].text);
+});
+selects[3].addEventListener('change', function() {
+    if (TIRE_EXCLUDE_IDS.has(parseInt(this.value))) setTireBlockVisibility(false);
+    updateFinal(3, this.value, this.options[this.selectedIndex].text);
+});
+selects[4].addEventListener('change', function() {
+    if (this.value) {
+        finalInput.value = this.value;
+        hint.textContent = 'Kategorija izvēlēta: ' + this.options[this.selectedIndex].text;
+        submitBtn.disabled = false;
+        submitHint.style.display = 'none';
+    } else {
+        finalInput.value = '';
+        submitBtn.disabled = true;
+    }
+});
+
+// TOP bloka loģika
+const featuredBlock = document.getElementById('featured-block');
+const featuredFeeLabel = document.getElementById('featured-fee-label');
+const FEATURED_LISTING_ENABLED = {{ site_settings.featured_listing_enabled|yesno:"true,false" }};
+const FEATURED_LISTING_FEE = parseFloat("{{ site_settings.featured_listing_fee }}".replace(',', '.'));
+const FEATURED_AUCTION_ENABLED = {{ site_settings.featured_auction_enabled|yesno:"true,false" }};
+const FEATURED_AUCTION_FEE = parseFloat("{{ site_settings.featured_auction_fee }}".replace(',', '.'));
+const isAuctionCb = document.getElementById('is_auction');
+
+function updateFeaturedBlock() {
+    if (!featuredBlock) return;
+    const isAuction = isAuctionCb && isAuctionCb.checked;
+    const enabled = isAuction ? FEATURED_AUCTION_ENABLED : FEATURED_LISTING_ENABLED;
+    const fee = isAuction ? FEATURED_AUCTION_FEE : FEATURED_LISTING_FEE;
+    if (enabled && fee > 0 && finalInput.value) {
+        featuredFeeLabel.textContent = '€' + fee.toFixed(2);
+        featuredBlock.style.display = 'block';
+    } else {
+        featuredBlock.style.display = 'none';
+        if (document.getElementById('want_featured')) document.getElementById('want_featured').checked = false;
+    }
+}
+if (isAuctionCb) isAuctionCb.addEventListener('change', updateFeaturedBlock);
+
+// Validācija pirms iesniegšanas
+document.getElementById('listing-form').addEventListener('submit', function(e) {
+    if (!finalInput.value) {
+        e.preventDefault();
+        submitHint.style.display = 'block';
+        selects[1].focus();
+    }
+});
+
+// ── MEDIA UPLOAD ──
+let selectedImages = [];
+
+function handleImages(files) {
+    const remaining = 8 - selectedImages.length;
+    const toAdd = Array.from(files).slice(0, remaining);
+    toAdd.forEach(f => {
+        if (f.type.startsWith('image/')) selectedImages.push(f);
+    });
+    if (selectedImages.length > 8) selectedImages = selectedImages.slice(0, 8);
+    renderImagePreviews();
+    syncImageInput();
+}
+
+function renderImagePreviews() {
+    const wrap = document.getElementById('image-preview');
+    const count = document.getElementById('image-count');
+    wrap.innerHTML = '';
+    selectedImages.forEach((f, i) => {
+        const url = URL.createObjectURL(f);
+        wrap.innerHTML += `
+            <div class="thumb-wrap">
+                <img src="${url}" class="img-thumb">
+                <button type="button" class="thumb-remove" onclick="removeImage(${i})">×</button>
+            </div>`;
+    });
+    count.textContent = selectedImages.length
+        ? `${selectedImages.length}/8 bilde${selectedImages.length > 1 ? 's' : ''} izvēlēta`
+        : '';
+}
+
+function removeImage(idx) {
+    selectedImages.splice(idx, 1);
+    renderImagePreviews();
+    syncImageInput();
+}
+
+function syncImageInput() {
+    const dt = new DataTransfer();
+    selectedImages.forEach(f => dt.items.add(f));
+    document.getElementById('image-input').files = dt.files;
+}
+
+function handleVideo(file) {
+    if (!file) return;
+    const preview = document.getElementById('video-preview');
+    const url = URL.createObjectURL(file);
+    preview.innerHTML = `
+        <div class="position-relative d-inline-block">
+            <video src="${url}" controls style="max-width:100%;max-height:200px;border-radius:10px;border:2px solid #e9ecef"></video>
+            <button type="button" class="thumb-remove" style="top:-8px;right:-8px;width:24px;height:24px;font-size:13px;line-height:24px"
+                onclick="removeVideo()">×</button>
+        </div>
+        <div class="text-muted mt-1" style="font-size:.78rem">${file.name}</div>`;
+    document.getElementById('video-drop-zone').style.display = 'none';
+}
+
+function removeVideo() {
+    document.getElementById('video-input').value = '';
+    document.getElementById('video-preview').innerHTML = '';
+    document.getElementById('video-drop-zone').style.display = '';
+}
+
+// Drag & drop bildes
+const imgZone = document.getElementById('image-drop-zone');
+imgZone.addEventListener('dragover', e => { e.preventDefault(); imgZone.classList.add('dragover'); });
+imgZone.addEventListener('dragleave', () => imgZone.classList.remove('dragover'));
+imgZone.addEventListener('drop', e => {
+    e.preventDefault(); imgZone.classList.remove('dragover');
+    handleImages(e.dataTransfer.files);
+});
+
+// Drag & drop video
+const vidZone = document.getElementById('video-drop-zone');
+vidZone.addEventListener('dragover', e => { e.preventDefault(); vidZone.classList.add('dragover'); });
+vidZone.addEventListener('dragleave', () => vidZone.classList.remove('dragover'));
+vidZone.addEventListener('drop', e => {
+    e.preventDefault(); vidZone.classList.remove('dragover');
+    const f = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('video/'));
+    if (f) { document.getElementById('video-input').files = new DataTransfer().files; handleVideo(f); }
+});
+
+// --- Google Maps Places Autocomplete ---
+{% if google_maps_api_key %}
+let addressConfirmed = false;
+
+function initAddressAutocomplete() {
+    const input = document.getElementById('address-input');
+    const ac = new google.maps.places.Autocomplete(input, {
+        types: ['geocode', 'establishment'],
+    });
+    ac.addListener('place_changed', () => {
+        const place = ac.getPlace();
+        if (!place.geometry) return;
+        addressConfirmed = true;
+        document.getElementById('address-hint').style.display = 'none';
+        document.getElementById('location-val').value = place.formatted_address || input.value;
+        input.value = place.formatted_address || input.value;
+
+        let city = '', country = '';
+        (place.address_components || []).forEach(c => {
+            if (c.types.includes('locality') || c.types.includes('postal_town')) city = c.long_name;
+            if (c.types.includes('country')) country = c.long_name;
+        });
+        document.getElementById('city-val').value    = city;
+        document.getElementById('country-val').value = country;
+
+        const geo = place.geometry.location;
+        document.getElementById('lat-val').value = geo.lat();
+        document.getElementById('lng-val').value = geo.lng();
+    });
+
+    // Brīdinājums ja teksts mainīts bez izvēles
+    input.addEventListener('input', () => {
+        addressConfirmed = false;
+        document.getElementById('location-val').value = input.value;
+    });
+    input.addEventListener('blur', () => {
+        if (!addressConfirmed && input.value.trim()) {
+            document.getElementById('address-hint').style.display = 'block';
+        } else if (!input.value.trim()) {
+            document.getElementById('address-hint').style.display = 'none';
+        }
+    });
+}
+{% else %}
+// Bez API atslēgas — parastais teksta lauks
+(function() {
+    const input = document.getElementById('address-input');
+    input.addEventListener('input', () => {
+        document.getElementById('location-val').value = input.value;
+        // Mēģina izvilkt pilsētu no "Pilsēta, Valsts" formāta
+        const parts = input.value.split(',').map(s => s.trim());
+        if (parts.length >= 2) {
+            document.getElementById('city-val').value    = parts[0];
+            document.getElementById('country-val').value = parts[parts.length - 1];
+        } else if (parts.length === 1 && parts[0]) {
+            document.getElementById('city-val').value = parts[0];
+        }
+    });
+})();
+{% endif %}
+</script>
+
+{% if google_maps_api_key %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAddressAutocomplete" async defer></script>
+{% endif %}
+{% endblock %}

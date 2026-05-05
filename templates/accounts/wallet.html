@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Mans maks{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h5 class="mb-0 fw-800" style="font-weight:800"><i class="bi bi-wallet2 text-danger me-2"></i>Mans maks</h5>
+    <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-secondary ms-auto">
+        <i class="bi bi-arrow-left me-1"></i>Profils
+    </a>
+</div>
+
+<!-- Kopsavilkuma kartes -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 text-center" style="border-radius:12px;border:2px solid #dcfce7">
+            <div style="font-size:.75rem;color:#6c757d;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Iemaksāts</div>
+            <div class="fw-800 mt-1" style="font-size:1.6rem;font-weight:800;color:#16a34a">€{{ wallet.total_deposited|floatformat:2 }}</div>
+            <div style="font-size:.7rem;color:#9ca3af">ieskaitot PVN 21%</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center" style="border-radius:12px;border:2px solid #fee2e2">
+            <div style="font-size:.75rem;color:#6c757d;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Iztērēts</div>
+            <div class="fw-800 mt-1" style="font-size:1.6rem;font-weight:800;color:#e63946">€{{ wallet.total_spent|floatformat:2 }}</div>
+            <div style="font-size:.7rem;color:#9ca3af">ieskaitot PVN 21%</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center" style="border-radius:12px;border:2px solid #e0f2fe;background:#f0f9ff">
+            <div style="font-size:.75rem;color:#6c757d;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Atlikums</div>
+            <div class="fw-800 mt-1" style="font-size:1.6rem;font-weight:800;color:#0369a1">€{{ wallet.balance|floatformat:2 }}</div>
+            <div style="font-size:.7rem;color:#9ca3af">ieskaitot PVN 21%</div>
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'wallet_topup' %}" class="btn btn-danger w-100 mb-4 fw-700" style="font-weight:700;border-radius:10px">
+    <i class="bi bi-plus-circle me-2"></i>Papildināt maku
+</a>
+
+<!-- Darījumu vēsture -->
+<div class="card p-0" style="border-radius:12px;overflow:hidden">
+    <div class="px-4 py-3 border-bottom">
+        <h6 class="mb-0 fw-700" style="font-weight:700">Darījumu vēsture</h6>
+    </div>
+    {% if transactions %}
+    <table class="table table-hover align-middle mb-0" style="font-size:.85rem">
+        <thead style="background:#f8f9fa">
+            <tr>
+                <th class="px-4 py-2">Datums</th>
+                <th>Apraksts</th>
+                <th class="text-end">Summa ar PVN</th>
+                <th class="text-end">PVN (21%)</th>
+                <th class="text-end px-4"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td class="px-4 text-muted" style="font-size:.78rem">{{ tx.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    {% if tx.tx_type == 'deposit' %}
+                    <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px;font-size:.72rem">
+                        <i class="bi bi-arrow-down-circle me-1"></i>Iemaksa
+                    </span>
+                    {% elif tx.tx_type == 'spend' %}
+                    <span class="badge" style="background:#fee2e2;color:#e63946;border-radius:20px;font-size:.72rem">
+                        <i class="bi bi-arrow-up-circle me-1"></i>Tēriņš
+                    </span>
+                    {% else %}
+                    <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px;font-size:.72rem">
+                        <i class="bi bi-arrow-return-left me-1"></i>Atmaksa
+                    </span>
+                    {% endif %}
+                    <span class="ms-1 text-muted">{{ tx.description }}</span>
+                </td>
+                <td class="text-end fw-700" style="font-weight:700;color:{% if tx.tx_type == 'deposit' or tx.tx_type == 'refund' %}#16a34a{% else %}#e63946{% endif %}">
+                    {% if tx.tx_type == 'deposit' or tx.tx_type == 'refund' %}+{% else %}-{% endif %}€{{ tx.amount|floatformat:2 }}
+                </td>
+                <td class="text-end text-muted" style="font-size:.78rem">€{{ tx.vat_amount|floatformat:2 }}</td>
+                <td class="text-end px-4">
+                    <a href="{% url 'invoice' tx.pk %}" class="btn btn-sm btn-outline-secondary" style="font-size:.72rem;padding:.2rem .5rem" title="Drukāt rēķinu">
+                        <i class="bi bi-receipt"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-receipt" style="font-size:2.5rem"></i>
+        <p class="mt-2 mb-0">Nav darījumu.</p>
+    </div>
+    {% endif %}
+</div>
+
+</div>
+</div>
+{% endblock %}

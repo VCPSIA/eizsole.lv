@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Pērc tūlīt — {{ auction.listing.title }}{% endblock %}
+
+{% block content %}
+<style>
+.confirm-card { max-width: 500px; margin: 2rem auto; background: white; border-radius: 16px; border: 1px solid #e9ecef; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.confirm-header { background: linear-gradient(135deg, #1a1d23, #16a34a); padding: 2rem; text-align: center; }
+.confirm-body { padding: 2rem; }
+</style>
+
+<div class="confirm-card">
+    <div class="confirm-header">
+        <i class="bi bi-bag-check text-white" style="font-size:2.5rem"></i>
+        <h4 class="text-white fw-800 mt-2 mb-1" style="font-weight:800">Pērc tūlīt</h4>
+        <p class="mb-0" style="color:rgba(255,255,255,.75);font-size:.88rem">Apstipriniet pirkumu</p>
+    </div>
+    <div class="confirm-body">
+
+        <!-- Prece -->
+        <div class="d-flex gap-3 align-items-center mb-4 p-3 rounded" style="background:#f8f9fa">
+            {% with auction.listing.get_main_image as img %}
+            {% if img %}
+            <img src="{{ img.image.url }}" style="width:64px;height:64px;object-fit:cover;border-radius:8px">
+            {% else %}
+            <div style="width:64px;height:64px;background:#e9ecef;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                <i class="bi bi-image text-muted"></i>
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div>
+                <div class="fw-700" style="font-weight:700;font-size:.95rem">{{ auction.listing.title|truncatechars:50 }}</div>
+                <div class="text-muted" style="font-size:.8rem">Pārdevējs: {{ auction.listing.seller.username }}</div>
+            </div>
+        </div>
+
+        <!-- Cenas salīdzinājums -->
+        <div class="row g-2 mb-4">
+            <div class="col-6">
+                <div class="p-3 rounded text-center" style="background:#f8f9fa">
+                    <div class="text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase">Pašreizējā cena</div>
+                    <div class="fw-700 text-danger" style="font-size:1.3rem;font-weight:700">€{{ auction.current_price }}</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="p-3 rounded text-center" style="background:#f0fdf4;border:2px solid #bbf7d0">
+                    <div class="text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase">Pērc tūlīt</div>
+                    <div class="fw-800 text-success" style="font-size:1.3rem;font-weight:800">€{{ auction.buy_now_price }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maka atlikums -->
+        <div class="d-flex justify-content-between align-items-center p-3 rounded mb-3" style="background:#f0f9ff;border:1px solid #bae6fd">
+            <div style="font-size:.85rem">
+                <i class="bi bi-wallet2 text-primary me-2"></i>
+                <span class="text-muted">Maka atlikums:</span>
+                <strong class="ms-1">€{{ wallet.balance|floatformat:2 }}</strong>
+            </div>
+            {% if wallet.balance < auction.buy_now_price %}
+            <a href="{% url 'wallet_topup' %}" class="btn btn-sm btn-primary" style="font-size:.78rem">Papildināt</a>
+            {% endif %}
+        </div>
+
+        {% if wallet.balance < auction.buy_now_price %}
+        <div class="alert alert-danger mb-4" style="border-radius:10px;font-size:.85rem">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Nepietiek maka atlikuma. Trūkst: <strong>€{{ auction.buy_now_price|floatformat:2 }}</strong>.
+            Lūdzu <a href="{% url 'wallet_topup' %}">papildiniet maku</a>.
+        </div>
+        {% else %}
+        <div class="alert mb-4" style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;font-size:.85rem;color:#854d0e">
+            <i class="bi bi-info-circle me-2"></i>
+            Pēc pirkuma €{{ auction.buy_now_price }} tiks norakstīti no jūsu maka. Šo darbību nevar atcelt.
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success w-100 fw-700 py-2 mb-2" style="font-weight:700;border-radius:10px;font-size:1.05rem"
+                {% if wallet.balance < auction.buy_now_price %}disabled{% endif %}>
+                <i class="bi bi-bag-check me-2"></i>Apstiprināt pirkumu par €{{ auction.buy_now_price }}
+            </button>
+        </form>
+        <a href="{% url 'auction_detail' auction.pk %}" class="btn btn-outline-secondary w-100" style="border-radius:10px">
+            Atcelt
+        </a>
+    </div>
+</div>
+{% endblock %}

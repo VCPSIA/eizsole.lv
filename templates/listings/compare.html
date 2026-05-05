@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title %}Salīdzināt sludinājumus{% endblock %}
+
+{% block content %}
+<style>
+.cmp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.cmp-table th, .cmp-table td { padding: .7rem 1rem; vertical-align: top; border-bottom: 1px solid #f0f0f0; }
+.cmp-table th { background: #f8f9fa; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #6c757d; width: 140px; min-width: 120px; }
+.cmp-table td { min-width: 200px; }
+.cmp-table tr:last-child th, .cmp-table tr:last-child td { border-bottom: none; }
+.cmp-col-head { text-align: center; padding: 1rem; border-bottom: 2px solid #e9ecef; }
+.cmp-col-head img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; }
+.cmp-col-head .no-img { height: 160px; background: #f4f5f7; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.cmp-title { font-weight: 700; font-size: .95rem; margin-top: .5rem; }
+.cmp-price { font-size: 1.2rem; font-weight: 800; color: #16a34a; }
+.diff-cell { background: #fff9f0; }
+.empty-state { text-align: center; padding: 4rem 1rem; }
+</style>
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 fw-800" style="font-weight:800"><i class="bi bi-columns-gap text-danger me-2"></i>Salīdzināt sludinājumus</h4>
+    {% if listings %}
+    <button onclick="clearCompare()" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-trash me-1"></i>Notīrīt visu
+    </button>
+    {% endif %}
+</div>
+
+{% if not listings %}
+<div class="card empty-state">
+    <i class="bi bi-columns-gap text-muted" style="font-size:3rem"></i>
+    <p class="mt-3 text-muted">Nav izvēlēts neviens sludinājums salīdzināšanai.</p>
+    <a href="{% url 'home' %}" class="btn btn-danger mt-1">Atpakaļ uz sākumu</a>
+</div>
+{% elif listings|length == 1 %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>Pievienojiet vēl vismaz vienu sludinājumu salīdzināšanai.
+    <a href="javascript:history.back()" class="ms-2">Atpakaļ</a>
+</div>
+{% endif %}
+
+{% if listings|length >= 2 %}
+<div class="card p-0" style="overflow-x:auto;border-radius:12px">
+<table class="cmp-table">
+    <!-- Galvene ar bildēm un nosaukumiem -->
+    <thead>
+        <tr>
+            <th style="background:white;border-bottom:2px solid #e9ecef"></th>
+            {% for l in listings %}
+            <td class="cmp-col-head">
+                {% with l.get_main_image as img %}
+                {% if img %}
+                <img src="{{ img.image.url }}" alt="{{ l.title }}">
+                {% else %}
+                <div class="no-img"><i class="bi bi-image text-secondary fs-2"></i></div>
+                {% endif %}
+                {% endwith %}
+                <div class="cmp-title">
+                    {% if l.is_featured %}<span class="badge me-1" style="background:#fef9c3;color:#92400e;font-size:.7rem"><i class="bi bi-star-fill"></i> TOP</span>{% endif %}
+                    <a href="{% url 'listing_detail' l.pk %}" class="text-dark text-decoration-none">{{ l.title|truncatechars:50 }}</a>
+                </div>
+                {% if l.price %}
+                <div class="cmp-price mt-1">€{{ l.price }}</div>
+                {% else %}
+                <div class="text-muted mt-1" style="font-size:.85rem">Pēc vienošanās</div>
+                {% endif %}
+                <button onclick="removeFromCompare({{ l.pk }}, this)" class="btn btn-outline-secondary btn-sm mt-2" style="font-size:.75rem">
+                    <i class="bi bi-x-lg me-1"></i>Noņemt
+                </button>
+            </td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Kategorija -->
+        <tr>
+            <th>Kategorija</th>
+            {% for l in listings %}
+            <td>{{ l.category.name }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Stāvoklis -->
+        <tr>
+            <th>Stāvoklis</th>
+            {% for l in listings %}
+            <td>{{ l.get_condition_display }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Atrašanās vieta -->
+        <tr>
+            <th>Atrašanās vieta</th>
+            {% for l in listings %}
+            <td>{% if l.city and l.country %}{{ l.city }}, {{ l.country }}{% elif l.location %}{{ l.location }}{% else %}—{% endif %}</td>
+            {% endfor %}
+        </tr>
+        <!-- Gads (ja ir) -->
+        {% if listings|dictsort:"year"|last %}
+        <tr>
+            <th>Gads</th>
+            {% for l in listings %}
+            <td>{% if l.year %}{{ l.year }}{% else %}—{% endif %}</td>
+            {% endfor %}
+        </tr>
+        {% endif %}
+        <!-- Auto detaļas (ja kaut vienam ir) -->
+        {% for l in listings %}{% if l.auto_details %}{% with l.auto_details as _ad %}
+        {% if forloop.first %}
+        <tr><th colspan="{{ listings|length|add:1 }}" style="background:#fff0f0;color:#e63946;font-size:.75rem;padding:.4rem 1rem">AUTO DATI</th></tr>
+        <tr>
+            <th>Motors</th>
+            {% for li in listings %}<td>{% if li.auto_details %}{{ li.auto_details.get_engine_type_display }}, {{ li.auto_details.engine_volume }} L{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Ātrumkārba</th>
+            {% for li in listings %}<td>{% if li.auto_details %}{{ li.auto_details.get_transmission_display }}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Virsbūve</th>
+            {% for li in listings %}<td>{% if li.auto_details %}{{ li.auto_details.get_body_type_display }}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Nobraukums</th>
+            {% for li in listings %}<td>{% if li.auto_details %}{{ li.auto_details.mileage|floatformat:0 }} km{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Tehniskā apskate</th>
+            {% for li in listings %}<td>{% if li.auto_details %}{% if li.auto_details.has_inspection %}<span class="text-success"><i class="bi bi-check-circle me-1"></i>Ir{% if li.auto_details.inspection_date %} līdz {{ li.auto_details.inspection_date|date:"d.m.Y" }}{% endif %}</span>{% else %}<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Nav</span>{% endif %}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        {% endif %}
+        {% endwith %}{% endif %}{% endfor %}
+        <!-- Riepas (ja kaut vienam ir) -->
+        {% for l in listings %}{% if l.tire_details %}
+        {% if forloop.first %}
+        <tr><th colspan="{{ listings|length|add:1 }}" style="background:#f0f7ff;color:#1d4ed8;font-size:.75rem;padding:.4rem 1rem">RIEPAS DATI</th></tr>
+        <tr>
+            <th>Izmērs</th>
+            {% for li in listings %}<td>{% if li.tire_details %}{{ li.tire_details.width }}/{{ li.tire_details.profile }}R{{ li.tire_details.radius }}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Sezona</th>
+            {% for li in listings %}<td>{% if li.tire_details %}{{ li.tire_details.get_season_display }}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        <tr>
+            <th>Ražotājs</th>
+            {% for li in listings %}<td>{% if li.tire_details %}{{ li.tire_details.manufacturer }}{% else %}—{% endif %}</td>{% endfor %}
+        </tr>
+        {% endif %}
+        {% endif %}{% endfor %}
+        <!-- Apraksts -->
+        <tr>
+            <th>Apraksts</th>
+            {% for l in listings %}
+            <td style="font-size:.83rem;color:#374151;line-height:1.6">{{ l.description|truncatechars:200 }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Pārdevējs -->
+        <tr>
+            <th>Pārdevējs</th>
+            {% for l in listings %}
+            <td style="font-size:.85rem">{{ l.seller.username }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Datums -->
+        <tr>
+            <th>Publicēts</th>
+            {% for l in listings %}
+            <td style="font-size:.85rem">{{ l.created_at|date:"d.m.Y" }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Poga -->
+        <tr>
+            <th></th>
+            {% for l in listings %}
+            <td>
+                <a href="{% url 'listing_detail' l.pk %}" class="btn btn-danger btn-sm w-100">
+                    <i class="bi bi-eye me-1"></i>Skatīt sludinājumu
+                </a>
+            </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<script>
+function removeFromCompare(pk, btn) {
+    fetch(`/api/salidzinat/${pk}/`, {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
+    .then(r => r.json()).then(() => location.reload());
+}
+function clearCompare() {
+    fetch('/api/salidzinat/dzest/', {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
+    .then(() => location.reload());
+}
+function getCsrf() {
+    return document.cookie.split('; ').find(r => r.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+</script>
+{% endblock %}

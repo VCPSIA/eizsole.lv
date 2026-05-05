@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Labot profilu{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-7">
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+    <h4 class="mb-0 fw-800" style="font-weight:800">Labot profilu</h4>
+</div>
+
+<form method="post" class="card p-4" style="border-radius:14px">
+    {% csrf_token %}
+    <h6 class="fw-700 mb-3" style="font-weight:700;color:#6c757d;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px">Konta dati</h6>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">E-pasts</label>
+            <input type="email" name="email" class="form-control" value="{{ user.email }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Tālrunis</label>
+            <input type="tel" name="phone" class="form-control" value="{{ profile.phone }}">
+        </div>
+    </div>
+
+    {% if profile.account_type == 'private' %}
+    <h6 class="fw-700 mb-3" style="font-weight:700;color:#6c757d;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px">Personas dati</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Vārds</label>
+            <input type="text" name="first_name" class="form-control" value="{{ profile.first_name }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Uzvārds</label>
+            <input type="text" name="last_name" class="form-control" value="{{ profile.last_name }}">
+        </div>
+    </div>
+    {% else %}
+    <h6 class="fw-700 mb-3" style="font-weight:700;color:#6c757d;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px">Uzņēmuma dati</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Uzņēmuma nosaukums</label>
+            <input type="text" name="company_name" class="form-control" value="{{ profile.company_name }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">PVN numurs</label>
+            <input type="text" name="vat_number" class="form-control" value="{{ profile.vat_number }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Juridiskā adrese</label>
+            <input type="text" name="legal_address" class="form-control" value="{{ profile.legal_address }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Kontaktpersona</label>
+            <input type="text" name="contact_person" class="form-control" value="{{ profile.contact_person }}">
+        </div>
+    </div>
+    {% endif %}
+
+    <h6 class="fw-700 mb-3" style="font-weight:700;color:#6c757d;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px">Adrese</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Valsts</label>
+            <input type="text" name="country" class="form-control" value="{{ profile.country }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-600" style="font-weight:600">Pilsēta</label>
+            <input type="text" name="city" class="form-control" value="{{ profile.city }}">
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-600" style="font-weight:600">Adrese</label>
+            <input type="text" name="address" class="form-control" value="{{ profile.address }}">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-danger fw-700 w-100" style="font-weight:700">
+        <i class="bi bi-check-lg me-2"></i>Saglabāt izmaiņas
+    </button>
+</form>
+</div>
+</div>
+{% endblock %}

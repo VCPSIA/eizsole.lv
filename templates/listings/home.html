@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}eizsole.lv — Sākumlapa{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div class="hero-section mb-5">
+    <div class="hero-inner">
+        <h1 class="hero-title"><img src="{% static 'icons/amurs_balts.svg' %}" style="width:2.4rem;height:2.4rem;vertical-align:-.2em;object-fit:contain"> eizsole.lv</h1>
+        <p class="hero-sub">Lētākā izsoļu un sludinājumu platforma</p>
+        <div class="hero-actions">
+            <a href="{% url 'auction_list' %}" class="btn btn-danger btn-lg px-4">
+                <img src="{% static 'icons/amurs_balts.svg' %}" style="width:.9rem;height:.9rem;vertical-align:-.1em;object-fit:contain" class="me-2">Skatīt izsoles
+            </a>
+            <a href="{% url 'listing_create' %}" class="btn btn-light btn-lg px-4">
+                <i class="bi bi-plus-lg me-2"></i>Publicēt
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #1a1d23 0%, #2d1f1f 50%, #e63946 100%);
+    border-radius: 16px;
+    padding: 3.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+.hero-sub {
+    color: rgba(255,255,255,0.75);
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+/* Categories */
+.cat-card {
+    background: white;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.1rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all .18s;
+    height: 100%;
+}
+.cat-card:hover {
+    border-color: #e63946;
+    box-shadow: 0 4px 16px rgba(230,57,70,.15);
+    transform: translateY(-2px);
+}
+.cat-card .cat-icon { font-size: 1.8rem; color: #e63946; margin-bottom: 0.4rem; display: block; text-align: center; width: 100%; }
+.cat-card .cat-name { font-size: 0.8rem; font-weight: 600; color: #212529; line-height: 1.3; }
+
+.category-wrapper { position: relative; }
+.subcategory-dropdown {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1000;
+    width: 230px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.14);
+    padding: 0.6rem;
+}
+.category-wrapper:hover .subcategory-dropdown { display: block; }
+.sub-link {
+    display: block;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #374151;
+    text-decoration: none;
+    transition: background .12s;
+}
+.sub-link:hover { background: #f8f9fa; color: #e63946; }
+@media (max-width: 768px) {
+    .subcategory-dropdown { left: 0; top: 100%; width: 100%; }
+}
+
+/* Listing cards */
+.listing-card { border-radius: 12px; overflow: hidden; border: 1px solid #e9ecef; background: white; transition: all .2s; }
+.listing-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-3px); }
+.listing-card .card-img-top { height: 180px; object-fit: cover; }
+.listing-card .no-img { height: 180px; background: #f4f5f7; display: flex; align-items: center; justify-content: center; }
+.listing-card .card-body { padding: 0.9rem; }
+.listing-card .card-footer { background: white; border-top: 1px solid #f4f5f7; padding: 0.7rem 0.9rem; }
+
+/* Auction cards */
+.auction-card { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid #e9ecef; background: white; transition: all .2s; }
+.auction-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-3px); }
+.auction-card .card-img-top { height: 160px; object-fit: cover; }
+.auction-card .no-img { height: 160px; background: #f4f5f7; display: flex; align-items: center; justify-content: center; }
+.auction-card .overlay-badge { position: absolute; top: 0.6rem; left: 0.6rem; }
+</style>
+
+<!-- Kategorijas -->
+<div class="section-heading">
+    <i class="bi bi-grid-3x3-gap text-danger"></i> Kategorijas
+</div>
+<div class="row g-2 mb-5 justify-content-center">
+    {% for cat in categories %}
+    <div class="col-4 col-md-2 col-lg-2 category-wrapper">
+        <a href="{% url 'category' cat.slug %}" class="text-decoration-none">
+            <div class="cat-card">
+                <div class="cat-icon">
+                    {% if cat.icon|slice:":4" == "svg:" %}
+                        {% with name=cat.icon|slice:'4:' %}
+                        {% if name|slice:"-4:" == ".png" %}
+                        <img src="{% static 'icons/' %}{{ name }}" style="width:1.8rem;height:1.8rem;object-fit:contain">
+                        {% else %}
+                        <img src="{% static 'icons/' %}{{ name }}.svg" style="width:1.8rem;height:1.8rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
+                        {% endif %}
+                        {% endwith %}
+                    {% elif cat.icon|slice:":3" == "ti-" %}
+                    <i class="ti {{ cat.icon }}"></i>
+                    {% else %}
+                    <i class="bi bi-{{ cat.icon|default:'tag' }}"></i>
+                    {% endif %}
+                </div>
+                <div class="cat-name">{{ cat.name }}</div>
+            </div>
+        </a>
+        {% if cat.children.exists %}
+        <div class="subcategory-dropdown">
+            <div class="fw-semibold text-danger small border-bottom pb-1 mb-1 px-1">{{ cat.name }}</div>
+            {% for sub in cat.children.all %}
+            <a href="{% url 'category' sub.slug %}" class="sub-link">
+                <i class="bi bi-chevron-right me-1" style="font-size:.65rem;color:#9ca3af"></i>{{ sub.name }}
+            </a>
+            {% endfor %}
+            <div class="border-top mt-1 pt-1 px-1">
+                <a href="{% url 'category' cat.slug %}" class="small text-danger fw-semibold">Skatīt visu &rsaquo;</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="col-12 text-muted small">Nav kategoriju.</div>
+    {% endfor %}
+</div>
+
+{% if recently_viewed %}
+<div class="mt-5">
+    <h5 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock-history text-danger me-2"></i>Pēdējās skatītās</h5>
+    <div class="row g-3">
+        {% for l in recently_viewed %}
+        <div class="col-6 col-md-3 col-lg-2">
+            <a href="{% url 'listing_detail' l.pk %}" class="text-decoration-none text-dark">
+                <div class="card h-100" style="border-radius:10px;overflow:hidden;border:1px solid #e9ecef;transition:all .18s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.09)'" onmouseout="this.style.boxShadow='none'">
+                    {% with l.get_main_image as img %}
+                    {% if img %}<img src="{{ img.image.url }}" style="width:100%;height:110px;object-fit:cover">
+                    {% else %}<div style="height:110px;background:#f4f5f7;display:flex;align-items:center;justify-content:center"><i class="bi bi-image text-muted"></i></div>{% endif %}
+                    {% endwith %}
+                    <div class="p-2">
+                        <div style="font-size:.78rem;font-weight:600;line-height:1.3">{{ l.title|truncatechars:35 }}</div>
+                        {% if l.price %}<div style="color:#16a34a;font-weight:700;font-size:.85rem">€{{ l.price }}</div>
+                        {% else %}<div class="text-muted" style="font-size:.72rem">Pēc vienošanās</div>{% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

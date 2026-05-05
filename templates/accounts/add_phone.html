@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Pievienot telefonu{% endblock %}
+
+{% block content %}
+<style>
+.verify-card { max-width: 460px; margin: 2rem auto; background: white; border-radius: 16px; border: 1px solid #e9ecef; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.verify-header { background: linear-gradient(135deg, #1a1d23, #e63946); padding: 2rem; text-align: center; }
+.verify-body { padding: 2rem; }
+</style>
+
+<div class="verify-card">
+    <div class="verify-header">
+        <i class="bi bi-phone text-white" style="font-size:2.2rem"></i>
+        <h4 class="text-white fw-800 mt-2 mb-1" style="font-weight:800">Telefona verifikācija</h4>
+        <p class="mb-0" style="color:rgba(255,255,255,.75);font-size:.85rem">Ievadiet savu telefona numuru</p>
+    </div>
+    <div class="verify-body">
+        {% if error %}
+        <div class="alert alert-danger mb-3" style="border-radius:8px;font-size:.88rem">
+            <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+        </div>
+        {% endif %}
+
+        {% if current_phone and profile.phone_verified %}
+        <div class="alert mb-4" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;color:#166534;font-size:.85rem">
+            <i class="bi bi-check-circle me-2"></i>
+            Jūsu telefons <strong>{{ current_phone }}</strong> ir apstiprināts.
+        </div>
+        {% endif %}
+
+        <p class="text-muted mb-4" style="font-size:.88rem">
+            Ievadiet telefona numuru starptautiskā formātā.
+            Jūs saņemsiet īsziņu ar 6 ciparu kodu.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="form-label">Telefona numurs</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-phone text-muted"></i></span>
+                    <input type="tel" name="phone" class="form-control"
+                        placeholder="+37126000000" required
+                        value="{{ current_phone }}">
+                </div>
+                <div class="form-text" style="font-size:.78rem">Piemērs: +37126000000 (Latvija)</div>
+            </div>
+            <button type="submit" class="btn btn-danger w-100 fw-700 py-2" style="font-weight:700;border-radius:10px">
+                <i class="bi bi-send me-2"></i>Nosūtīt kodu
+            </button>
+        </form>
+        <a href="{% url 'profile' %}" class="d-block text-center mt-3 text-muted" style="font-size:.85rem">
+            Atcelt
+        </a>
+    </div>
+</div>
+{% endblock %}

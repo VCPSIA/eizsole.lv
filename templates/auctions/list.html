@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Aktīvās izsoles{% endblock %}
+
+{% block content %}
+<style>
+/* ── Kartes bāze ── */
+.auction-card { border-radius: 12px; overflow: hidden; border: 1px solid #e9ecef; background: white; transition: all .2s; position: relative; display: flex; flex-direction: column; }
+.auction-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-3px); }
+.ac-img { padding: 2.5%; }
+.ac-img img { height: 145px; object-fit: contain; width: 95%; display: block; border-radius: 8px; background: #f4f5f7; }
+.ac-img .no-img { height: 145px; width: 95%; background: #f4f5f7; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.overlay-badge { position: absolute; top: .7rem; left: .7rem; }
+.bid-count { background: #f4f5f7; border-radius: 8px; padding: .25rem .6rem; font-size: .78rem; font-weight: 600; color: #6c757d; }
+
+/* ── Kolonnu izkārtojums ── */
+#auctions-grid { display: flex; flex-wrap: wrap; }
+#auctions-grid > div { flex: 0 0 33.333%; width: 33.333%; max-width: 33.333%; padding: .75rem; box-sizing: border-box; }
+#auctions-grid.cols-3 > div { flex: 0 0 33.333% !important; width: 33.333% !important; max-width: 33.333% !important; }
+#auctions-grid.cols-4 > div { flex: 0 0 25% !important; width: 25% !important; max-width: 25% !important; }
+#auctions-grid.cols-5 > div { flex: 0 0 20% !important; width: 20% !important; max-width: 20% !important; }
+#auctions-grid.cols-4 .ac-img img,
+#auctions-grid.cols-4 .ac-img .no-img { height: 116px; }
+#auctions-grid.cols-5 .ac-img img,
+#auctions-grid.cols-5 .ac-img .no-img { height: 101px; }
+
+/* ── Rindu izkārtojums ── */
+#auctions-grid.list-view { display: flex !important; flex-direction: column; gap: 0; }
+#auctions-grid.list-view > div { flex: 0 0 100% !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin-top: 0 !important; }
+#auctions-grid.list-view .auction-card { flex-direction: row !important; border-radius: 10px; min-height: 85px; }
+#auctions-grid.list-view .auction-card:hover { transform: none; }
+#auctions-grid.list-view .ac-img { width: 100px; min-width: 100px; flex-shrink: 0; padding: 4px; display: flex; align-items: center; }
+#auctions-grid.list-view .ac-img img,
+#auctions-grid.list-view .ac-img .no-img { width: 100px; height: 80px; border-radius: 8px; object-fit: contain; background: #f4f5f7; }
+#auctions-grid.list-view .ac-body { display: flex; flex-direction: row !important; align-items: center; flex: 1; padding: .5rem .85rem; gap: 1rem; }
+#auctions-grid.list-view .ac-info { flex: 1; min-width: 0; display: flex; flex-direction: row; gap: 1rem; align-items: center; }
+#auctions-grid.list-view .ac-title-block { min-width: 180px; max-width: 260px; flex-shrink: 0; }
+#auctions-grid.list-view .ac-meta { display: flex !important; flex: 1; min-width: 0; gap: .5rem; flex-wrap: wrap; align-items: center; }
+#auctions-grid.list-view .ac-price-block { min-width: 140px; text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: .3rem; }
+#auctions-grid.list-view .ac-price-block .btn { width: auto; }
+#auctions-grid.list-view .ac-grid-only { display: none !important; }
+#auctions-grid.list-view .overlay-badge { display: none; }
+
+/* ── Pogas ── */
+.layout-btn { border: 1.5px solid #e9ecef; background: white; border-radius: 8px; padding: .3rem .55rem; cursor: pointer; color: #6c757d; font-size: .82rem; transition: all .15s; }
+.layout-btn:hover { border-color: #e63946; color: #e63946; }
+.layout-btn.active { border-color: #e63946; background: #e63946; color: white; }
+
+@media (max-width: 768px) {
+    #auctions-grid > div { flex: 0 0 50% !important; width: 50% !important; max-width: 50% !important; }
+    #auctions-grid.cols-3 > div,
+    #auctions-grid.cols-4 > div,
+    #auctions-grid.cols-5 > div { flex: 0 0 50% !important; width: 50% !important; max-width: 50% !important; }
+    #auctions-grid.list-view > div { flex: 0 0 100% !important; width: 100% !important; max-width: 100% !important; }
+}
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+    <h4 class="mb-0 fw-800" style="font-weight:800"><img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:1.3rem;height:1.3rem;vertical-align:-.15em;object-fit:contain" class="me-2">Aktīvās izsoles</h4>
+    <span class="badge rounded-pill" style="background:#fee2e2;color:#e63946;font-size:.82rem;padding:.35rem .85rem;font-weight:700">
+        {{ auctions|length }} aktīvas
+    </span>
+    <div class="ms-auto d-flex gap-1">
+        <button class="layout-btn" id="btn-grid3" onclick="setLayout('grid3')" title="3 kolonnas">
+            <i class="bi bi-grid-3x3-gap"></i> 3
+        </button>
+        <button class="layout-btn" id="btn-grid4" onclick="setLayout('grid4')" title="4 kolonnas">
+            <i class="bi bi-grid-3x3-gap"></i> 4
+        </button>
+        <button class="layout-btn" id="btn-grid5" onclick="setLayout('grid5')" title="5 kolonnas">
+            <i class="bi bi-grid-3x3-gap"></i> 5
+        </button>
+        <button class="layout-btn" id="btn-list" onclick="setLayout('list')" title="Rindas">
+            <i class="bi bi-list-ul"></i>
+        </button>
+    </div>
+</div>
+
+<div id="auctions-grid">
+    {% for auction in auctions %}
+    <div>
+        <div class="auction-card h-100">
+            <div class="ac-img" style="position:relative">
+                {% with auction.listing.get_main_image as img %}
+                {% if img %}
+                <img src="{{ img.image.url }}" alt="{{ auction.listing.title }}">
+                {% else %}
+                <div class="no-img"><i class="bi bi-image text-secondary fs-1"></i></div>
+                {% endif %}
+                {% endwith %}
+                <span class="overlay-badge auction-badge">IZSOLE</span>
+            </div>
+
+            <div class="ac-body p-3 d-flex flex-column flex-grow-1">
+                <div class="ac-info">
+                    <div class="ac-title-block">
+                        <div class="fw-700 mb-1" style="font-weight:700;font-size:.92rem;line-height:1.35">
+                            {{ auction.listing.title|truncatechars:60 }}
+                        </div>
+                        <div class="text-muted" style="font-size:.76rem">
+                            <i class="bi bi-geo-alt me-1"></i>{{ auction.listing.location }}
+                        </div>
+                    </div>
+                    <div class="ac-meta">
+                        <span class="bid-count"><img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.8rem;height:.8rem;vertical-align:-.05em;object-fit:contain" class="me-1">{{ auction.bid_count }} solījumi</span>
+                        <span class="countdown-badge fw-700"
+                              data-ends="{{ auction.ends_at|date:'c' }}"
+                              style="font-size:.82rem;font-variant-numeric:tabular-nums;color:#16a34a">
+                            --:--
+                        </span>
+                        {% if auction.buy_now_price %}
+                        <span class="px-2 py-1 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0;font-size:.78rem;color:#166534">
+                            <i class="bi bi-bag-check"></i> €{{ auction.buy_now_price }}
+                        </span>
+                        {% endif %}
+                        {% if auction.reserve_price %}
+                            {% if auction.reserve_met %}
+                            <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px;font-size:.72rem">
+                                <i class="bi bi-shield-check me-1"></i>Rezerve sasniegta
+                            </span>
+                            {% else %}
+                            <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px;font-size:.72rem">
+                                <i class="bi bi-shield me-1"></i>Rezerve nav sasniegta
+                            </span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="ac-price-block mt-auto ac-grid-only">
+                    <div class="text-muted" style="font-size:.72rem;font-weight:500">PAŠREIZĒJĀ CENA</div>
+                    <div class="fw-800 text-danger" style="font-size:1.5rem;font-weight:800;line-height:1">
+                        €{{ auction.current_price }}
+                    </div>
+                </div>
+
+                <div class="ac-price-block">
+                    <div class="fw-800 text-danger" style="font-size:1.1rem;font-weight:800">€{{ auction.current_price }}</div>
+                    <div class="d-flex gap-2 mt-1">
+                        <a href="{% url 'auction_detail' auction.pk %}" class="btn btn-danger btn-sm fw-700" style="font-weight:700">
+                            <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain;filter:brightness(0) invert(1)" class="me-1">Solīt
+                        </a>
+                        {% if auction.buy_now_price %}
+                        <a href="{% url 'buy_now' auction.pk %}" class="btn btn-success btn-sm fw-700" style="font-weight:700">
+                            <i class="bi bi-bag-check"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="flex:0 0 100%;width:100%;padding:.75rem">
+        <div class="card p-5 text-center border-0" style="background:#f8f9fa;border-radius:16px">
+            <img src="{% static 'icons/amurs_melns.svg' %}" style="width:3rem;height:3rem;object-fit:contain;opacity:.35">
+            <h5 class="mt-3 text-muted">Pašlaik nav aktīvu izsolu</h5>
+            <p class="text-muted mb-0">Esi pirmais, kas publicē izsoli!</p>
+            <a href="{% url 'listing_create' %}" class="btn btn-danger mt-3 px-4">Publicēt izsoli</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.countdown-badge').forEach(el => {
+    const ends = new Date(el.dataset.ends);
+    function tick() {
+        const diff = Math.floor((ends - new Date()) / 1000);
+        if (diff <= 0) { el.textContent = 'Beigusies'; el.style.color = '#6c757d'; return; }
+        const h = Math.floor(diff / 3600);
+        const m = Math.floor((diff % 3600) / 60);
+        const s = diff % 60;
+        el.textContent = h > 0
+            ? `${h}h ${String(m).padStart(2,'0')}m`
+            : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        el.style.color = diff <= 60 ? '#e63946' : diff <= 300 ? '#f59e0b' : '#16a34a';
+        setTimeout(tick, 1000);
+    }
+    tick();
+});
+
+function setLayout(mode) {
+    const grid = document.getElementById('auctions-grid');
+    ['btn-grid3','btn-grid4','btn-grid5','btn-list'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.classList.remove('active');
+    });
+    const btn = document.getElementById('btn-' + mode);
+    if (btn) btn.classList.add('active');
+    grid.classList.remove('cols-3','cols-4','cols-5','list-view');
+    if (mode === 'list') grid.classList.add('list-view');
+    else if (mode === 'grid3') grid.classList.add('cols-3');
+    else if (mode === 'grid4') grid.classList.add('cols-4');
+    else if (mode === 'grid5') grid.classList.add('cols-5');
+    localStorage.setItem('auction-layout', mode);
+}
+
+const saved = localStorage.getItem('auction-layout') || 'grid3';
+setLayout(saved);
+</script>
+{% endblock %}

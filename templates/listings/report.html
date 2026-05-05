@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Ziņot par sludinājumu{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-flag text-danger"></i> Ziņot par sludinājumu</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-light border mb-4">
+            <strong>Sludinājums:</strong> {{ listing.title }}
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Iemesls *</label>
+                {% for value, label in reasons %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="reason" value="{{ value }}" id="r_{{ value }}" required>
+                    <label class="form-check-label" for="r_{{ value }}">{{ label }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Papildu informācija</label>
+                <textarea name="details" class="form-control" rows="3" placeholder="Paskaidrojiet sīkāk (nav obligāti)..."></textarea>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-flag"></i> Nosūtīt ziņojumu
+                </button>
+                <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-outline-secondary">Atcelt</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

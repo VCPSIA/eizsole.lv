@@ -1,0 +1,100 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Ģenerēt atlaižu kodus{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Sākums</a>
+    &rsaquo; <a href="{% url 'admin:listings_discountcode_changelist' %}">Atlaižu kodi</a>
+    &rsaquo; Ģenerēt kodus
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Ģenerēt atlaižu kodus</h1>
+
+<div style="max-width:600px">
+    <form method="post">
+        {% csrf_token %}
+
+        <fieldset class="module aligned">
+            <h2>Atlaides nosacījumi</h2>
+
+            <div class="form-row">
+                <label for="discount_type" class="required">Atlaides veids:</label>
+                <select name="discount_type" id="discount_type" required>
+                    <option value="percent">Procenti (%)</option>
+                    <option value="fixed">Fiksēta summa (€)</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="discount_value" class="required">Atlaides vērtība:</label>
+                <input type="number" name="discount_value" id="discount_value"
+                       step="0.01" min="0.01" required style="width:120px">
+                <span class="help" id="value-hint" style="margin-left:8px">% (0–100)</span>
+            </div>
+
+            <div class="form-row">
+                <label for="valid_from">Derīgs no:</label>
+                <input type="datetime-local" name="valid_from" id="valid_from">
+            </div>
+
+            <div class="form-row">
+                <label for="valid_until">Derīgs līdz:</label>
+                <input type="datetime-local" name="valid_until" id="valid_until">
+            </div>
+
+            <div class="form-row">
+                <label for="is_active">Aktīvs uzreiz:</label>
+                <input type="checkbox" name="is_active" id="is_active" value="1" checked>
+            </div>
+        </fieldset>
+
+        <fieldset class="module aligned" style="margin-top:16px">
+            <h2>Kodu parametri</h2>
+
+            <div class="form-row">
+                <label for="count" class="required">Kodu skaits:</label>
+                <input type="number" name="count" id="count"
+                       min="1" max="500" value="10" required style="width:100px">
+                <span class="help" style="margin-left:8px">maks. 500</span>
+            </div>
+
+            <div class="form-row">
+                <label for="prefix">Prefikss (neobligāts):</label>
+                <input type="text" name="prefix" id="prefix"
+                       maxlength="6" style="width:100px; text-transform:uppercase"
+                       placeholder="piem. VASARA">
+                <span class="help" style="margin-left:8px">maks. 6 burti, pievieno priekšā katram kodam</span>
+            </div>
+        </fieldset>
+
+        <div style="margin-top:20px; display:flex; gap:10px">
+            <button type="submit" name="action" value="save"
+                    class="default" style="padding:8px 20px">
+                Saglabāt DB
+            </button>
+            <button type="submit" name="action" value="download"
+                    style="padding:8px 20px">
+                Lejupielādēt CSV
+            </button>
+            <a href="{% url 'admin:listings_discountcode_changelist' %}"
+               style="padding:8px 16px; display:inline-block">
+                Atcelt
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('discount_type').addEventListener('change', function() {
+    var hint = document.getElementById('value-hint');
+    hint.textContent = this.value === 'percent' ? '% (0–100)' : '€ summa';
+});
+document.getElementById('prefix').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+});
+</script>
+{% endblock %}

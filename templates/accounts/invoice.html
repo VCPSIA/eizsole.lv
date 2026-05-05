@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Rēķins {{ invoice_nr }}{% endblock %}
+
+{% block content %}
+<style>
+@media print {
+    .no-print { display: none !important; }
+    body { background: white !important; }
+    .invoice-wrap { box-shadow: none !important; border: none !important; max-width: 100% !important; }
+}
+.invoice-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    overflow: hidden;
+}
+.inv-header {
+    background: linear-gradient(135deg, #1a1d23, #e63946);
+    padding: 2rem 2.5rem;
+    color: white;
+}
+.inv-body { padding: 2rem 2.5rem; }
+.inv-table th { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #9ca3af; padding: .5rem .75rem; border: none; }
+.inv-table td { padding: .6rem .75rem; border-top: 1px solid #f4f5f7; font-size: .9rem; }
+.inv-total { background: #f8f9fa; border-radius: 8px; padding: 1rem 1.25rem; }
+.info-col { font-size: .85rem; }
+.info-col .label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #9ca3af; margin-bottom: .15rem; }
+.info-col .value { font-weight: 600; color: #212529; }
+</style>
+
+<div class="no-print mb-3 d-flex gap-2 align-items-center">
+    <a href="{% url 'wallet' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Atpakaļ uz maku
+    </a>
+    <button onclick="window.print()" class="btn btn-sm btn-danger ms-auto">
+        <i class="bi bi-printer me-1"></i>Drukāt / Saglabāt PDF
+    </button>
+</div>
+
+<div class="invoice-wrap">
+    <!-- Galvene -->
+    <div class="inv-header d-flex justify-content-between align-items-start">
+        <div>
+            <div class="fw-800" style="font-size:1.6rem;font-weight:800;letter-spacing:-1px">eizsole.lv</div>
+            <div style="color:rgba(255,255,255,.7);font-size:.82rem">SIA Olaintrans · Reģ. nr. 40203230849</div>
+            <div style="color:rgba(255,255,255,.7);font-size:.82rem">Elijas iela 5A-18, Rīga, LV-1050</div>
+            <div style="color:rgba(255,255,255,.7);font-size:.82rem">info@eizsole.lv</div>
+        </div>
+        <div class="text-end">
+            <div class="fw-700" style="font-size:1.1rem;font-weight:700">RĒĶINS</div>
+            <div style="font-size:1.3rem;font-weight:800;letter-spacing:1px">{{ invoice_nr }}</div>
+            <div style="color:rgba(255,255,255,.7);font-size:.82rem;margin-top:.25rem">{{ tx.created_at|date:"d.m.Y" }}</div>
+        </div>
+    </div>
+
+    <div class="inv-body">
+        <!-- Pircēja info -->
+        <div class="row g-4 mb-4">
+            <div class="col-6 info-col">
+                <div class="label">Pārdevējs</div>
+                <div class="value">SIA Olaintrans</div>
+                <div class="text-muted" style="font-size:.82rem">Reģ. nr.: 40203230849</div>
+                <div class="text-muted" style="font-size:.82rem">PVN: LV40203230849</div>
+                <div class="text-muted" style="font-size:.82rem">Elijas iela 5A-18, Rīga, LV-1050</div>
+            </div>
+            <div class="col-6 info-col">
+                <div class="label">Pircējs</div>
+                {% if profile.account_type == 'company' and profile.company_name %}
+                <div class="value">{{ profile.company_name }}</div>
+                {% if profile.reg_number %}<div class="text-muted" style="font-size:.82rem">Reģ. nr.: {{ profile.reg_number }}</div>{% endif %}
+                {% if profile.vat_number %}<div class="text-muted" style="font-size:.82rem">PVN: {{ profile.vat_number }}</div>{% endif %}
+                {% if profile.legal_address %}<div class="text-muted" style="font-size:.82rem">{{ profile.legal_address }}</div>{% endif %}
+                {% else %}
+                <div class="value">{% if profile.first_name or profile.last_name %}{{ profile.first_name }} {{ profile.last_name }}{% else %}{{ tx.wallet.user.username }}{% endif %}</div>
+                {% if profile.address %}<div class="text-muted" style="font-size:.82rem">{{ profile.address }}</div>{% endif %}
+                {% endif %}
+                {% if tx.wallet.user.email %}
+                <div class="text-muted" style="font-size:.82rem">{{ tx.wallet.user.email }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Rēķina informācija -->
+        <div class="row g-2 mb-4" style="font-size:.82rem">
+            <div class="col-4 info-col">
+                <div class="label">Rēķina numurs</div>
+                <div class="value">{{ invoice_nr }}</div>
+            </div>
+            <div class="col-4 info-col">
+                <div class="label">Datums</div>
+                <div class="value">{{ tx.created_at|date:"d.m.Y" }}</div>
+            </div>
+            <div class="col-4 info-col">
+                <div class="label">Darījuma veids</div>
+                <div class="value">{{ tx.get_tx_type_display }}</div>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Pozīcijas tabula -->
+        <table class="table inv-table mb-3">
+            <thead>
+                <tr>
+                    <th>Apraksts</th>
+                    <th class="text-end">Summa bez PVN</th>
+                    <th class="text-end">PVN 21%</th>
+                    <th class="text-end">Kopā ar PVN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ tx.description }}{% if tx.reference %} <span class="text-muted" style="font-size:.78rem">({{ tx.reference }})</span>{% endif %}</td>
+                    <td class="text-end">€{{ amount_ex_vat|floatformat:2 }}</td>
+                    <td class="text-end">€{{ tx.vat_amount|floatformat:2 }}</td>
+                    <td class="text-end fw-700" style="font-weight:700">€{{ tx.amount|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Kopsumma -->
+        <div class="inv-total d-flex justify-content-end">
+            <div style="min-width:260px">
+                <div class="d-flex justify-content-between mb-1" style="font-size:.85rem">
+                    <span class="text-muted">Summa bez PVN</span>
+                    <span>€{{ amount_ex_vat|floatformat:2 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2" style="font-size:.85rem">
+                    <span class="text-muted">PVN (21%)</span>
+                    <span>€{{ tx.vat_amount|floatformat:2 }}</span>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex justify-content-between fw-800" style="font-weight:800;font-size:1.05rem">
+                    <span>Kopā</span>
+                    <span style="color:#e63946">€{{ tx.amount|floatformat:2 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Piezīme -->
+        <div class="mt-4 pt-3 border-top text-muted text-center" style="font-size:.75rem">
+            Šis dokuments ir sagatavots elektroniski un ir derīgs bez paraksta. · eizsole.lv · {{ tx.created_at|date:"Y" }}
+        </div>
+    </div>
+</div>
+{% endblock %}

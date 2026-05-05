@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Saruna — {{ other.username }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+
+<!-- Galvene -->
+<div class="d-flex align-items-center gap-3 mb-3">
+    <a href="{% url 'inbox' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div style="width:36px;height:36px;background:#e63946;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">
+        {{ other.username|first|upper }}
+    </div>
+    <div>
+        <div class="fw-700" style="font-weight:700">{{ other.username }}</div>
+        <a href="{% url 'listing_detail' listing.pk %}" class="text-muted text-decoration-none" style="font-size:.78rem">
+            <i class="bi bi-tag me-1"></i>{{ listing.title|truncatechars:50 }}
+        </a>
+    </div>
+</div>
+
+<!-- Ziņojumu lenta -->
+<div class="card p-3 mb-3" style="border-radius:12px;min-height:300px;max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem" id="msg-thread">
+    {% if not thread %}
+    <div class="text-center text-muted py-4" style="font-size:.85rem">Sarunas sākums</div>
+    {% endif %}
+    {% for msg in thread %}
+    <div class="d-flex {% if msg.sender == request.user %}justify-content-end{% endif %}">
+        <div style="max-width:75%">
+            <div class="px-3 py-2 {% if msg.sender == request.user %}bg-danger text-white{% else %}bg-light{% endif %}"
+                 style="border-radius:{% if msg.sender == request.user %}14px 14px 4px 14px{% else %}14px 14px 14px 4px{% endif %};font-size:.87rem;line-height:1.5">
+                {{ msg.content }}
+            </div>
+            <div class="text-muted mt-1" style="font-size:.7rem;text-align:{% if msg.sender == request.user %}right{% else %}left{% endif %}">
+                {{ msg.created_at|date:"d.m.Y H:i" }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Atbildes forma -->
+<form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-danger py-2 w-100 mb-0" style="font-size:.83rem;border-radius:8px">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+    <input type="text" name="message" class="form-control" placeholder="Rakstiet ziņojumu..."
+           autocomplete="off" style="border-radius:10px" required>
+    <button type="submit" class="btn btn-danger px-3" style="border-radius:10px">
+        <i class="bi bi-send-fill"></i>
+    </button>
+</form>
+<div class="text-muted mt-1" style="font-size:.72rem"><i class="bi bi-shield-check me-1"></i>Ziņojumos aizliegts norādīt telefonu, e-pastu vai mājas lapu.</div>
+
+</div>
+</div>
+
+<script>
+const t = document.getElementById('msg-thread');
+if (t) t.scrollTop = t.scrollHeight;
+</script>
+{% endblock %}
