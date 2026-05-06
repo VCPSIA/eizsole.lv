@@ -331,7 +331,7 @@
                         <select name="condition" class="form-select form-select-sm">
                             <option value="">{% trans "Visi" %}</option>
                             {% for val, label in condition_choices %}
-                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
+                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{% trans label %}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -369,7 +369,7 @@
                         <select name="condition" class="form-select form-select-sm">
                             <option value="">{% trans "Visi" %}</option>
                             {% for val, label in condition_choices %}
-                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
+                            <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{% trans label %}</option>
                             {% endfor %}
                         </select>
                     </div>
