@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="lv">
 <head>
@@ -291,24 +291,24 @@
         <div class="collapse navbar-collapse" id="nav">
             <form class="search-bar" action="{% url 'search' %}">
                 <button type="submit"><i class="bi bi-search"></i></button>
-                <input type="search" name="q" placeholder="Meklēt sludinājumus...">
+                <input type="search" name="q" placeholder="{% trans 'Meklēt sludinājumus...' %}">
             </form>
 
             <ul class="navbar-nav ms-auto align-items-center gap-1">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auction_list' %}">
-                        <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain" class="me-1">Izsoles
+                        <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain" class="me-1">{% trans "Izsoles" %}
                     </a>
                 </li>
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="btn-publish nav-link" href="{% url 'listing_create' %}">
-                        <i class="bi bi-plus-lg me-1"></i>Publicēt
+                        <i class="bi bi-plus-lg me-1"></i>{% trans "Publicēt" %}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'notifications' %}" class="nav-link position-relative" title="Paziņojumi">
+                    <a href="{% url 'notifications' %}" class="nav-link position-relative" title="{% trans 'Paziņojumi' %}">
                         <i class="bi bi-bell" style="font-size:1.1rem"></i>
                         {% if unread_notifications %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem">{{ unread_notifications }}</span>
@@ -322,15 +322,15 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">
-                            <i class="bi bi-person me-2 text-muted"></i>Mans profils
+                            <i class="bi bi-person me-2 text-muted"></i>{% trans "Mans profils" %}
                         </a></li>
                         {% if user.is_staff %}
                         <li><hr class="dropdown-divider my-1"></li>
                         <li><a class="dropdown-item text-danger" href="{% url 'moderation_panel' %}">
-                            <i class="bi bi-shield-check me-2"></i>Moderācija
+                            <i class="bi bi-shield-check me-2"></i>{% trans "Moderācija" %}
                         </a></li>
                         <li><a class="dropdown-item" href="/admin/">
-                            <i class="bi bi-gear me-2 text-muted"></i>Admin panelis
+                            <i class="bi bi-gear me-2 text-muted"></i>{% trans "Admin panelis" %}
                         </a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider my-1"></li>
@@ -338,18 +338,79 @@
                             <form method="post" action="{% url 'logout' %}" style="margin:0">
                                 {% csrf_token %}
                                 <button type="submit" class="dropdown-item border-0 bg-transparent w-100 text-start text-danger">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Iziet
+                                    <i class="bi bi-box-arrow-right me-2"></i>{% trans "Iziet" %}
                                 </button>
                             </form>
                         </li>
                     </ul>
                 </li>
+
+                <!-- Valodu pārslēdzējs -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2" href="#" data-bs-toggle="dropdown" title="{% trans 'Valoda' %}">
+                        {% get_current_language as LANG %}
+                        {% if LANG == 'ru' %}🇷🇺
+                        {% elif LANG == 'en' %}🇬🇧
+                        {% elif LANG == 'de' %}🇩🇪
+                        {% else %}🇱🇻{% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width:120px">
+                        {% get_available_languages as LANGUAGES %}
+                        {% for code, name in LANGUAGES %}
+                        <li>
+                            <form method="post" action="{% url 'set_language' %}" style="margin:0">
+                                {% csrf_token %}
+                                <input type="hidden" name="language" value="{{ code }}">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="dropdown-item border-0 bg-transparent w-100 text-start">
+                                    {% if code == 'lv' %}🇱🇻 Latviešu
+                                    {% elif code == 'ru' %}🇷🇺 Русский
+                                    {% elif code == 'en' %}🇬🇧 English
+                                    {% elif code == 'de' %}🇩🇪 Deutsch
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Pieteikties</a>
+                    <a class="nav-link" href="{% url 'login' %}">{% trans "Pieteikties" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn-publish nav-link" href="{% url 'register' %}">Reģistrēties</a>
+                    <a class="btn-publish nav-link" href="{% url 'register' %}">{% trans "Reģistrēties" %}</a>
+                </li>
+
+                <!-- Valodu pārslēdzējs (nepieteicies) -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2" href="#" data-bs-toggle="dropdown">
+                        {% get_current_language as LANG %}
+                        {% if LANG == 'ru' %}🇷🇺
+                        {% elif LANG == 'en' %}🇬🇧
+                        {% elif LANG == 'de' %}🇩🇪
+                        {% else %}🇱🇻{% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width:120px">
+                        {% get_available_languages as LANGUAGES %}
+                        {% for code, name in LANGUAGES %}
+                        <li>
+                            <form method="post" action="{% url 'set_language' %}" style="margin:0">
+                                {% csrf_token %}
+                                <input type="hidden" name="language" value="{{ code }}">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="dropdown-item border-0 bg-transparent w-100 text-start">
+                                    {% if code == 'lv' %}🇱🇻 Latviešu
+                                    {% elif code == 'ru' %}🇷🇺 Русский
+                                    {% elif code == 'en' %}🇬🇧 English
+                                    {% elif code == 'de' %}🇩🇪 Deutsch
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 {% endif %}
             </ul>
@@ -377,18 +438,18 @@
                 <p class="small mb-0">Lētākā izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši.</p>
             </div>
             <div class="col-md-2">
-                <div class="text-white fw-600 small mb-2" style="font-weight:600">Platforma</div>
+                <div class="text-white fw-600 small mb-2" style="font-weight:600">{% trans "Platforma" %}</div>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="{% url 'home' %}">Sākumlapa</a></li>
-                    <li class="mb-1"><a href="{% url 'auction_list' %}">Izsoles</a></li>
-                    <li class="mb-1"><a href="{% url 'listing_create' %}">Publicēt</a></li>
+                    <li class="mb-1"><a href="{% url 'home' %}">{% trans "Sākumlapa" %}</a></li>
+                    <li class="mb-1"><a href="{% url 'auction_list' %}">{% trans "Izsoles" %}</a></li>
+                    <li class="mb-1"><a href="{% url 'listing_create' %}">{% trans "Publicēt" %}</a></li>
                 </ul>
             </div>
             <div class="col-md-2">
-                <div class="text-white fw-600 small mb-2" style="font-weight:600">Konts</div>
+                <div class="text-white fw-600 small mb-2" style="font-weight:600">{% trans "Konts" %}</div>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="{% url 'login' %}">Pieteikties</a></li>
-                    <li class="mb-1"><a href="{% url 'register' %}">Reģistrēties</a></li>
+                    <li class="mb-1"><a href="{% url 'login' %}">{% trans "Pieteikties" %}</a></li>
+                    <li class="mb-1"><a href="{% url 'register' %}">{% trans "Reģistrēties" %}</a></li>
                 </ul>
             </div>
         </div>
@@ -404,9 +465,8 @@
 <!-- Cookie consent josla -->
 <div id="cookie-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a1d23;color:#e5e7eb;padding:1rem 1.5rem;box-shadow:0 -2px 16px rgba(0,0,0,.3)">
     <div class="container d-flex flex-wrap align-items-center gap-3 justify-content-between">
-        <p class="mb-0 small">Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi.
-            Turpinot lietot vietni, jūs piekrītat <a href="{% url 'privacy_policy' %}" class="text-warning">privātuma politikai</a>.</p>
-        <button id="cookie-accept" class="btn btn-warning btn-sm fw-600" style="white-space:nowrap">Piekrītu</button>
+        <p class="mb-0 small">{% trans "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat" %} <a href="{% url 'privacy_policy' %}" class="text-warning">{% trans "privātuma politikai" %}</a>.</p>
+        <button id="cookie-accept" class="btn btn-warning btn-sm fw-600" style="white-space:nowrap">{% trans "Piekrītu" %}</button>
     </div>
 </div>
 

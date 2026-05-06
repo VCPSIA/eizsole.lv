@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}{{ category.name }}{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans category.name %}{% endblock %}
 
 {% block content %}
 <style>
@@ -83,17 +83,17 @@
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Sākums</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Sākums" %}</a></li>
         {% if category.parent.parent.parent %}
-        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.parent.slug %}">{{ category.parent.parent.parent.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.parent.slug %}">{% trans category.parent.parent.parent.name %}</a></li>
         {% endif %}
         {% if category.parent.parent %}
-        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.slug %}">{{ category.parent.parent.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.parent.slug %}">{% trans category.parent.parent.name %}</a></li>
         {% endif %}
         {% if category.parent %}
-        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.slug %}">{{ category.parent.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'category' category.parent.slug %}">{% trans category.parent.name %}</a></li>
         {% endif %}
-        <li class="breadcrumb-item active">{{ category.name }}</li>
+        <li class="breadcrumb-item active">{% trans category.name %}</li>
     </ol>
 </nav>
 
@@ -170,13 +170,13 @@
         {% if show_auto_filters %}
         <div class="card mb-4" style="border-radius:12px;border:1.5px solid #e9ecef">
             <div class="card-header py-2 px-3" style="background:#f8f9fa;border-radius:12px 12px 0 0">
-                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>Meklēšanas filtri</span>
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>{% trans "Meklēšanas filtri" %}</span>
             </div>
             <form method="get" class="card-body pt-3 pb-3">
                 <div class="row g-3">
                     <!-- Cena -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Cena" %} (€)</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
                             <span class="input-group-text">—</span>
@@ -249,10 +249,10 @@
                 </div>
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-danger btn-sm px-4">
-                        <i class="bi bi-search me-1"></i>Meklēt
+                        <i class="bi bi-search me-1"></i>{% trans "Meklēt" %}
                     </button>
                     <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-x me-1"></i>Notīrīt
+                        <i class="bi bi-x me-1"></i>{% trans "Notīrīt" %}
                     </a>
                 </div>
             </form>
@@ -497,7 +497,7 @@
             <div class="col-12">
                 <div class="card p-4 text-center border-0" style="background:#f8f9fa">
                     <i class="bi bi-inbox text-muted fs-2 mb-2"></i>
-                    <p class="text-muted mb-0">Šajā kategorijā vēl nav sludinājumu.</p>
+                    <p class="text-muted mb-0">{% trans "Šajā kategorijā vēl nav sludinājumu." %}</p>
                 </div>
             </div>
             {% endfor %}

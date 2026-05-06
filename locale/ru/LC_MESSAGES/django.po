@@ -1,0 +1,343 @@
+# Russian translations for eizsole.lv
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+
+msgid "Meklēt sludinājumus..."
+msgstr "Поиск объявлений..."
+
+msgid "Izsoles"
+msgstr "Аукционы"
+
+msgid "Publicēt"
+msgstr "Опубликовать"
+
+msgid "Paziņojumi"
+msgstr "Уведомления"
+
+msgid "Mans profils"
+msgstr "Мой профиль"
+
+msgid "Moderācija"
+msgstr "Модерация"
+
+msgid "Admin panelis"
+msgstr "Панель администратора"
+
+msgid "Iziet"
+msgstr "Выйти"
+
+msgid "Pieteikties"
+msgstr "Войти"
+
+msgid "Reģistrēties"
+msgstr "Регистрация"
+
+msgid "Valoda"
+msgstr "Язык"
+
+msgid "Platforma"
+msgstr "Платформа"
+
+msgid "Sākumlapa"
+msgstr "Главная"
+
+msgid "Konts"
+msgstr "Аккаунт"
+
+msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
+msgstr "Мы используем файлы cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с"
+
+msgid "privātuma politikai"
+msgstr "политикой конфиденциальности"
+
+msgid "Piekrītu"
+msgstr "Принять"
+
+msgid "Lietotājvārds"
+msgstr "Имя пользователя"
+
+msgid "Parole"
+msgstr "Пароль"
+
+msgid "Pieteikties sistēmā"
+msgstr "Войти в систему"
+
+msgid "Nav konta?"
+msgstr "Нет аккаунта?"
+
+msgid "Reģistrējieties šeit"
+msgstr "Зарегистрируйтесь здесь"
+
+msgid "Aizmirsi paroli?"
+msgstr "Забыли пароль?"
+
+msgid "Izveidot kontu"
+msgstr "Создать аккаунт"
+
+msgid "Privātpersona"
+msgstr "Частное лицо"
+
+msgid "Uzņēmums"
+msgstr "Компания"
+
+msgid "Vārds"
+msgstr "Имя"
+
+msgid "Uzvārds"
+msgstr "Фамилия"
+
+msgid "E-pasta adrese"
+msgstr "Адрес электронной почты"
+
+msgid "Tālrunis"
+msgstr "Телефон"
+
+msgid "Valsts"
+msgstr "Страна"
+
+msgid "Pilsēta"
+msgstr "Город"
+
+msgid "Apstiprināt paroli"
+msgstr "Подтвердить пароль"
+
+msgid "Publicēt sludinājumu"
+msgstr "Опубликовать объявление"
+
+msgid "Virsraksts"
+msgstr "Заголовок"
+
+msgid "Apraksts"
+msgstr "Описание"
+
+msgid "Kategorija"
+msgstr "Категория"
+
+msgid "Cena"
+msgstr "Цена"
+
+msgid "Stāvoklis"
+msgstr "Состояние"
+
+msgid "Jauns"
+msgstr "Новый"
+
+msgid "Lietots"
+msgstr "Б/у"
+
+msgid "Bojāts"
+msgstr "Повреждённый"
+
+msgid "Bildes"
+msgstr "Фотографии"
+
+msgid "Publicēt!"
+msgstr "Опубликовать!"
+
+msgid "Atrašanās vieta"
+msgstr "Местоположение"
+
+msgid "Sākumcena"
+msgstr "Начальная цена"
+
+msgid "Pašreizējā cena"
+msgstr "Текущая цена"
+
+msgid "Solīt"
+msgstr "Сделать ставку"
+
+msgid "Izsole beigusies"
+msgstr "Аукцион завершён"
+
+msgid "Pērc tūlīt"
+msgstr "Купить сейчас"
+
+msgid "Laiks atlicis"
+msgstr "Времени осталось"
+
+msgid "Uzvarētājs"
+msgstr "Победитель"
+
+msgid "Solījumu vēsture"
+msgstr "История ставок"
+
+msgid "Profils"
+msgstr "Профиль"
+
+msgid "Rediģēt profilu"
+msgstr "Редактировать профиль"
+
+msgid "Mani sludinājumi"
+msgstr "Мои объявления"
+
+msgid "Maks"
+msgstr "Кошелёк"
+
+msgid "Atlikums"
+msgstr "Баланс"
+
+msgid "Papildināt maku"
+msgstr "Пополнить кошелёк"
+
+msgid "Saglabāt"
+msgstr "Сохранить"
+
+msgid "Atcelt"
+msgstr "Отмена"
+
+msgid "Dzēst"
+msgstr "Удалить"
+
+msgid "Labot"
+msgstr "Редактировать"
+
+msgid "Apstiprināt"
+msgstr "Подтвердить"
+
+msgid "Meklēt"
+msgstr "Поиск"
+
+msgid "Atpakaļ"
+msgstr "Назад"
+
+msgid "Skatīt vairāk"
+msgstr "Показать больше"
+
+msgid "Sazināties"
+msgstr "Связаться"
+
+msgid "Meklēšanas rezultāti"
+msgstr "Результаты поиска"
+
+msgid "Nav rezultātu"
+msgstr "Результатов не найдено"
+
+msgid "Visas kategorijas"
+msgstr "Все категории"
+
+msgid "Transports"
+msgstr "Транспорт"
+
+msgid "Nekustamais īpašums"
+msgstr "Недвижимость"
+
+msgid "Tehnika"
+msgstr "Техника"
+
+msgid "Sadzīves preces"
+msgstr "Товары для дома"
+
+msgid "Apģērbs"
+msgstr "Одежда"
+
+msgid "Sports"
+msgstr "Спорт"
+
+msgid "Dārzniecība"
+msgstr "Садоводство"
+
+msgid "Bērniem"
+msgstr "Детское"
+
+msgid "Dzīvnieki"
+msgstr "Животные"
+
+msgid "Lauksaimniecība"
+msgstr "Сельское хозяйство"
+
+msgid "Darbs"
+msgstr "Работа"
+
+msgid "Celtniecība"
+msgstr "Строительство"
+
+msgid "Pakalpojumi"
+msgstr "Услуги"
+
+msgid "Kolekcionēšana"
+msgstr "Коллекционирование"
+
+msgid "Lētākā izsoļu un sludinājumu platforma"
+msgstr "Самая доступная аукционная платформа"
+
+msgid "Skatīt izsoles"
+msgstr "Смотреть аукционы"
+
+msgid "Kategorijas"
+msgstr "Категории"
+
+msgid "Skatīt visu"
+msgstr "Посмотреть все"
+
+msgid "Pēdējās skatītās"
+msgstr "Недавно просмотренные"
+
+msgid "Pēc vienošanās"
+msgstr "По договорённости"
+
+msgid "Aktīvās izsoles"
+msgstr "Активные аукционы"
+
+msgid "Pašlaik nav aktīvu izsolu"
+msgstr "Сейчас нет активных аукционов"
+
+msgid "Esi pirmais, kas publicē izsoli!"
+msgstr "Будьте первым, кто создаст аукцион!"
+
+msgid "Publicēt izsoli"
+msgstr "Опубликовать аукцион"
+
+msgid "Sākums"
+msgstr "Главная"
+
+msgid "Pārdevējs"
+msgstr "Продавец"
+
+msgid "Sazināties ar pārdevēju"
+msgstr "Связаться с продавцом"
+
+msgid "Pieteikties, lai solītu"
+msgstr "Войдите, чтобы делать ставки"
+
+msgid "Solīt!"
+msgstr "Сделать ставку!"
+
+msgid "Vēl nav solījumu — esi pirmais!"
+msgstr "Ставок пока нет — будьте первым!"
+
+msgid "Rezerves cena sasniegta"
+msgstr "Резервная цена достигнута"
+
+msgid "Rezerves cena nav sasniegta"
+msgstr "Резервная цена не достигнута"
+
+msgid "Šajā kategorijā vēl nav sludinājumu."
+msgstr "В этой категории пока нет объявлений."
+
+msgid "Meklēšanas filtri"
+msgstr "Фильтры поиска"
+
+msgid "Notīrīt"
+msgstr "Очистить"
+
+msgid "Nepareizs lietotājvārds vai parole."
+msgstr "Неверное имя пользователя или пароль."
+
+msgid "Jau ir konts?"
+msgstr "Уже есть аккаунт?"
+
+msgid "Konta veids"
+msgstr "Тип аккаунта"
+
+msgid "Lūdzu aizpildiet visus laukus."
+msgstr "Пожалуйста, заполните все поля."
+
+msgid "Reģistrācija veiksmīga!"
+msgstr "Регистрация прошла успешно!"
+
+msgid "Sludinājums publicēts."
+msgstr "Объявление опубликовано."
+

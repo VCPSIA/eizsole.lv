@@ -1,0 +1,343 @@
+# German translations for eizsole.lv
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+
+msgid "Meklēt sludinājumus..."
+msgstr "Anzeigen suchen..."
+
+msgid "Izsoles"
+msgstr "Auktionen"
+
+msgid "Publicēt"
+msgstr "Anzeige aufgeben"
+
+msgid "Paziņojumi"
+msgstr "Benachrichtigungen"
+
+msgid "Mans profils"
+msgstr "Mein Profil"
+
+msgid "Moderācija"
+msgstr "Moderation"
+
+msgid "Admin panelis"
+msgstr "Admin-Panel"
+
+msgid "Iziet"
+msgstr "Abmelden"
+
+msgid "Pieteikties"
+msgstr "Anmelden"
+
+msgid "Reģistrēties"
+msgstr "Registrieren"
+
+msgid "Valoda"
+msgstr "Sprache"
+
+msgid "Platforma"
+msgstr "Plattform"
+
+msgid "Sākumlapa"
+msgstr "Startseite"
+
+msgid "Konts"
+msgstr "Konto"
+
+msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
+msgstr "Wir verwenden Cookies für eine bessere Nutzererfahrung. Durch die weitere Nutzung stimmen Sie der"
+
+msgid "privātuma politikai"
+msgstr "Datenschutzrichtlinie"
+
+msgid "Piekrītu"
+msgstr "Akzeptieren"
+
+msgid "Lietotājvārds"
+msgstr "Benutzername"
+
+msgid "Parole"
+msgstr "Passwort"
+
+msgid "Pieteikties sistēmā"
+msgstr "Anmelden"
+
+msgid "Nav konta?"
+msgstr "Kein Konto?"
+
+msgid "Reģistrējieties šeit"
+msgstr "Hier registrieren"
+
+msgid "Aizmirsi paroli?"
+msgstr "Passwort vergessen?"
+
+msgid "Izveidot kontu"
+msgstr "Konto erstellen"
+
+msgid "Privātpersona"
+msgstr "Privatperson"
+
+msgid "Uzņēmums"
+msgstr "Unternehmen"
+
+msgid "Vārds"
+msgstr "Vorname"
+
+msgid "Uzvārds"
+msgstr "Nachname"
+
+msgid "E-pasta adrese"
+msgstr "E-Mail-Adresse"
+
+msgid "Tālrunis"
+msgstr "Telefon"
+
+msgid "Valsts"
+msgstr "Land"
+
+msgid "Pilsēta"
+msgstr "Stadt"
+
+msgid "Apstiprināt paroli"
+msgstr "Passwort bestätigen"
+
+msgid "Publicēt sludinājumu"
+msgstr "Anzeige aufgeben"
+
+msgid "Virsraksts"
+msgstr "Titel"
+
+msgid "Apraksts"
+msgstr "Beschreibung"
+
+msgid "Kategorija"
+msgstr "Kategorie"
+
+msgid "Cena"
+msgstr "Preis"
+
+msgid "Stāvoklis"
+msgstr "Zustand"
+
+msgid "Jauns"
+msgstr "Neu"
+
+msgid "Lietots"
+msgstr "Gebraucht"
+
+msgid "Bojāts"
+msgstr "Beschädigt"
+
+msgid "Bildes"
+msgstr "Fotos"
+
+msgid "Publicēt!"
+msgstr "Veröffentlichen!"
+
+msgid "Atrašanās vieta"
+msgstr "Standort"
+
+msgid "Sākumcena"
+msgstr "Startpreis"
+
+msgid "Pašreizējā cena"
+msgstr "Aktueller Preis"
+
+msgid "Solīt"
+msgstr "Bieten"
+
+msgid "Izsole beigusies"
+msgstr "Auktion beendet"
+
+msgid "Pērc tūlīt"
+msgstr "Sofort kaufen"
+
+msgid "Laiks atlicis"
+msgstr "Verbleibende Zeit"
+
+msgid "Uzvarētājs"
+msgstr "Gewinner"
+
+msgid "Solījumu vēsture"
+msgstr "Gebotshistorie"
+
+msgid "Profils"
+msgstr "Profil"
+
+msgid "Rediģēt profilu"
+msgstr "Profil bearbeiten"
+
+msgid "Mani sludinājumi"
+msgstr "Meine Anzeigen"
+
+msgid "Maks"
+msgstr "Geldbörse"
+
+msgid "Atlikums"
+msgstr "Guthaben"
+
+msgid "Papildināt maku"
+msgstr "Guthaben aufladen"
+
+msgid "Saglabāt"
+msgstr "Speichern"
+
+msgid "Atcelt"
+msgstr "Abbrechen"
+
+msgid "Dzēst"
+msgstr "Löschen"
+
+msgid "Labot"
+msgstr "Bearbeiten"
+
+msgid "Apstiprināt"
+msgstr "Bestätigen"
+
+msgid "Meklēt"
+msgstr "Suchen"
+
+msgid "Atpakaļ"
+msgstr "Zurück"
+
+msgid "Skatīt vairāk"
+msgstr "Mehr anzeigen"
+
+msgid "Sazināties"
+msgstr "Kontakt"
+
+msgid "Meklēšanas rezultāti"
+msgstr "Suchergebnisse"
+
+msgid "Nav rezultātu"
+msgstr "Keine Ergebnisse gefunden"
+
+msgid "Visas kategorijas"
+msgstr "Alle Kategorien"
+
+msgid "Transports"
+msgstr "Transport"
+
+msgid "Nekustamais īpašums"
+msgstr "Immobilien"
+
+msgid "Tehnika"
+msgstr "Elektronik"
+
+msgid "Sadzīves preces"
+msgstr "Haushaltswaren"
+
+msgid "Apģērbs"
+msgstr "Kleidung"
+
+msgid "Sports"
+msgstr "Sport"
+
+msgid "Dārzniecība"
+msgstr "Gartenarbeit"
+
+msgid "Bērniem"
+msgstr "Für Kinder"
+
+msgid "Dzīvnieki"
+msgstr "Tiere"
+
+msgid "Lauksaimniecība"
+msgstr "Landwirtschaft"
+
+msgid "Darbs"
+msgstr "Arbeit"
+
+msgid "Celtniecība"
+msgstr "Bauwesen"
+
+msgid "Pakalpojumi"
+msgstr "Dienstleistungen"
+
+msgid "Kolekcionēšana"
+msgstr "Sammlerstücke"
+
+msgid "Lētākā izsoļu un sludinājumu platforma"
+msgstr "Die günstigste Auktionsplattform"
+
+msgid "Skatīt izsoles"
+msgstr "Auktionen ansehen"
+
+msgid "Kategorijas"
+msgstr "Kategorien"
+
+msgid "Skatīt visu"
+msgstr "Alle anzeigen"
+
+msgid "Pēdējās skatītās"
+msgstr "Zuletzt angesehen"
+
+msgid "Pēc vienošanās"
+msgstr "Nach Vereinbarung"
+
+msgid "Aktīvās izsoles"
+msgstr "Aktive Auktionen"
+
+msgid "Pašlaik nav aktīvu izsolu"
+msgstr "Derzeit keine aktiven Auktionen"
+
+msgid "Esi pirmais, kas publicē izsoli!"
+msgstr "Seien Sie der Erste mit einer Auktion!"
+
+msgid "Publicēt izsoli"
+msgstr "Auktion erstellen"
+
+msgid "Sākums"
+msgstr "Startseite"
+
+msgid "Pārdevējs"
+msgstr "Verkäufer"
+
+msgid "Sazināties ar pārdevēju"
+msgstr "Verkäufer kontaktieren"
+
+msgid "Pieteikties, lai solītu"
+msgstr "Anmelden zum Bieten"
+
+msgid "Solīt!"
+msgstr "Bieten!"
+
+msgid "Vēl nav solījumu — esi pirmais!"
+msgstr "Noch keine Gebote — seien Sie der Erste!"
+
+msgid "Rezerves cena sasniegta"
+msgstr "Mindestpreis erreicht"
+
+msgid "Rezerves cena nav sasniegta"
+msgstr "Mindestpreis nicht erreicht"
+
+msgid "Šajā kategorijā vēl nav sludinājumu."
+msgstr "Noch keine Anzeigen in dieser Kategorie."
+
+msgid "Meklēšanas filtri"
+msgstr "Suchfilter"
+
+msgid "Notīrīt"
+msgstr "Zurücksetzen"
+
+msgid "Nepareizs lietotājvārds vai parole."
+msgstr "Falscher Benutzername oder Passwort."
+
+msgid "Jau ir konts?"
+msgstr "Bereits ein Konto?"
+
+msgid "Konta veids"
+msgstr "Kontotyp"
+
+msgid "Lūdzu aizpildiet visus laukus."
+msgstr "Bitte füllen Sie alle Felder aus."
+
+msgid "Reģistrācija veiksmīga!"
+msgstr "Registrierung erfolgreich!"
+
+msgid "Sludinājums publicēts."
+msgstr "Anzeige veröffentlicht."
+

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}Aktīvās izsoles{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Aktīvās izsoles" %}{% endblock %}
 
 {% block content %}
 <style>
@@ -56,7 +56,7 @@
 </style>
 
 <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
-    <h4 class="mb-0 fw-800" style="font-weight:800"><img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:1.3rem;height:1.3rem;vertical-align:-.15em;object-fit:contain" class="me-2">Aktīvās izsoles</h4>
+    <h4 class="mb-0 fw-800" style="font-weight:800"><img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:1.3rem;height:1.3rem;vertical-align:-.15em;object-fit:contain" class="me-2">{% trans "Aktīvās izsoles" %}</h4>
     <span class="badge rounded-pill" style="background:#fee2e2;color:#e63946;font-size:.82rem;padding:.35rem .85rem;font-weight:700">
         {{ auctions|length }} aktīvas
     </span>
@@ -128,7 +128,7 @@
                 </div>
 
                 <div class="ac-price-block mt-auto ac-grid-only">
-                    <div class="text-muted" style="font-size:.72rem;font-weight:500">PAŠREIZĒJĀ CENA</div>
+                    <div class="text-muted" style="font-size:.72rem;font-weight:500">{% trans "Pašreizējā cena"|upper %}</div>
                     <div class="fw-800 text-danger" style="font-size:1.5rem;font-weight:800;line-height:1">
                         €{{ auction.current_price }}
                     </div>
@@ -138,7 +138,7 @@
                     <div class="fw-800 text-danger" style="font-size:1.1rem;font-weight:800">€{{ auction.current_price }}</div>
                     <div class="d-flex gap-2 mt-1">
                         <a href="{% url 'auction_detail' auction.pk %}" class="btn btn-danger btn-sm fw-700" style="font-weight:700">
-                            <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain;filter:brightness(0) invert(1)" class="me-1">Solīt
+                            <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain;filter:brightness(0) invert(1)" class="me-1">{% trans "Solīt" %}
                         </a>
                         {% if auction.buy_now_price %}
                         <a href="{% url 'buy_now' auction.pk %}" class="btn btn-success btn-sm fw-700" style="font-weight:700">
@@ -154,9 +154,9 @@
     <div style="flex:0 0 100%;width:100%;padding:.75rem">
         <div class="card p-5 text-center border-0" style="background:#f8f9fa;border-radius:16px">
             <img src="{% static 'icons/amurs_melns.svg' %}" style="width:3rem;height:3rem;object-fit:contain;opacity:.35">
-            <h5 class="mt-3 text-muted">Pašlaik nav aktīvu izsolu</h5>
-            <p class="text-muted mb-0">Esi pirmais, kas publicē izsoli!</p>
-            <a href="{% url 'listing_create' %}" class="btn btn-danger mt-3 px-4">Publicēt izsoli</a>
+            <h5 class="mt-3 text-muted">{% trans "Pašlaik nav aktīvu izsolu" %}</h5>
+            <p class="text-muted mb-0">{% trans "Esi pirmais, kas publicē izsoli!" %}</p>
+            <a href="{% url 'listing_create' %}" class="btn btn-danger mt-3 px-4">{% trans "Publicēt izsoli" %}</a>
         </div>
     </div>
     {% endfor %}

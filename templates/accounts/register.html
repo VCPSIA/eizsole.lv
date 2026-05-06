@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Reģistrācija{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Reģistrēties" %}{% endblock %}
 
 {% block content %}
 <style>
@@ -16,7 +17,7 @@
 <div class="auth-card">
     <div class="auth-header">
         <i class="bi bi-person-plus text-white" style="font-size:2rem"></i>
-        <h4 class="text-white fw-800 mt-2 mb-0" style="font-weight:800">Reģistrēties</h4>
+        <h4 class="text-white fw-800 mt-2 mb-0" style="font-weight:800">{% trans "Reģistrēties" %}</h4>
         <p class="mb-0 mt-1" style="color:rgba(255,255,255,.7);font-size:.85rem">Izveido bezmaksas kontu</p>
     </div>
     <div class="auth-body">
@@ -37,18 +38,18 @@
             <input type="hidden" name="account_type" id="account_type_input" value="{{ post.account_type|default:'private' }}">
 
             <!-- Konta veids -->
-            <div class="section-label">Konta veids</div>
+            <div class="section-label">{% trans "Konta veids" %}</div>
             <div class="row g-2 mb-3">
                 <div class="col-6">
                     <div class="type-btn {% if post.account_type != 'company' %}active{% endif %}" id="btn-private" onclick="selectType('private')">
                         <i class="bi bi-person-fill"></i>
-                        <div class="fw-600 mt-1" style="font-weight:600;font-size:.9rem">Privātpersona</div>
+                        <div class="fw-600 mt-1" style="font-weight:600;font-size:.9rem">{% trans "Privātpersona" %}</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="type-btn {% if post.account_type == 'company' %}active{% endif %}" id="btn-company" onclick="selectType('company')">
                         <i class="bi bi-building"></i>
-                        <div class="fw-600 mt-1" style="font-weight:600;font-size:.9rem">Uzņēmums</div>
+                        <div class="fw-600 mt-1" style="font-weight:600;font-size:.9rem">{% trans "Uzņēmums" %}</div>
                     </div>
                 </div>
             </div>
@@ -58,11 +59,11 @@
                 <div class="section-label">Personas dati</div>
                 <div class="row g-2">
                     <div class="col-6">
-                        <label class="form-label fw-500">Vārds <span class="text-danger">*</span></label>
+                        <label class="form-label fw-500">{% trans "Vārds" %} <span class="text-danger">*</span></label>
                         <input type="text" name="first_name" class="form-control" value="{{ post.first_name|default:'' }}" placeholder="Jānis">
                     </div>
                     <div class="col-6">
-                        <label class="form-label fw-500">Uzvārds <span class="text-danger">*</span></label>
+                        <label class="form-label fw-500">{% trans "Uzvārds" %} <span class="text-danger">*</span></label>
                         <input type="text" name="last_name" class="form-control" value="{{ post.last_name|default:'' }}" placeholder="Bērziņš">
                     </div>
                 </div>
@@ -108,7 +109,7 @@
             <div class="section-label">Atrašanās vieta</div>
             <div class="row g-2 mb-2">
                 <div class="col-6">
-                    <label class="form-label fw-500">Valsts <span class="text-danger">*</span></label>
+                    <label class="form-label fw-500">{% trans "Valsts" %} <span class="text-danger">*</span></label>
                     <select name="country" class="form-select" required>
                         <option value="" disabled {% if not post.country %}selected{% endif %}>— izvēlieties —</option>
                         {% with countries="Latvija,Lietuva,Igaunija,Polija,Vācija,Zviedrija,Somija,Norvēģija,Dānija,Lielbritānija,Nīderlande,Beļģija,Francija,Itālija,Spānija,Austrija,Šveice,Čehija,Ungārija,Rumānija,Bulgārija,Grieķija,Portugāle,Ukraina,Krievija,ASV,Kanāda,Austrālija,Cita" %}
@@ -145,7 +146,7 @@
                     </select>
                 </div>
                 <div class="col-6">
-                    <label class="form-label fw-500">Pilsēta <span class="text-danger">*</span></label>
+                    <label class="form-label fw-500">{% trans "Pilsēta" %} <span class="text-danger">*</span></label>
                     <input type="text" name="city" class="form-control" value="{{ post.city|default:'' }}" placeholder="Rīga" required>
                 </div>
             </div>
@@ -153,7 +154,7 @@
             <!-- Kopīgie lauki -->
             <div class="section-label">Konta dati</div>
             <div class="mb-2">
-                <label class="form-label fw-500">Tālrunis <span class="text-danger">*</span></label>
+                <label class="form-label fw-500">{% trans "Tālrunis" %} <span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select name="phone_code" class="form-select" style="max-width:140px">
                         <option value="+371" {% if post.phone_code == '+371' or not post.phone_code %}selected{% endif %}>🇱🇻 +371</option>
@@ -181,7 +182,7 @@
                 <div class="form-text" style="font-size:.75rem">Tikai cipari, bez valsts koda</div>
             </div>
             <div class="mb-2">
-                <label class="form-label fw-500">E-pasta adrese <span class="text-danger">*</span></label>
+                <label class="form-label fw-500">{% trans "E-pasta adrese" %} <span class="text-danger">*</span></label>
                 <input type="email" name="email" class="form-control" value="{{ post.email|default:'' }}" placeholder="jusu@epasts.lv" required>
                 <div class="form-text" style="font-size:.75rem">Uz šo adresi nosūtīsim apstiprinājuma saiti</div>
             </div>
@@ -200,13 +201,13 @@
             {% endfor %}
 
             <button type="submit" class="btn btn-danger w-100 fw-700 py-2 mt-3" style="font-weight:700;border-radius:10px">
-                <i class="bi bi-person-check me-2"></i>Reģistrēties
+                <i class="bi bi-person-check me-2"></i>{% trans "Reģistrēties" %}
             </button>
         </form>
 
         <hr class="my-3">
         <p class="text-center mb-0" style="font-size:.88rem">
-            Jau ir konts? <a href="{% url 'login' %}" class="text-danger fw-600" style="font-weight:600">Pieteikties</a>
+            {% trans "Jau ir konts?" %} <a href="{% url 'login' %}" class="text-danger fw-600" style="font-weight:600">{% trans "Pieteikties" %}</a>
         </p>
     </div>
 </div>

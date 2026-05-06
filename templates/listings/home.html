@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}eizsole.lv — Sākumlapa{% endblock %}
+{% load static i18n %}
+{% block title %}eizsole.lv — {% trans "Sākumlapa" %}{% endblock %}
 
 {% block content %}
 
@@ -8,13 +8,13 @@
 <div class="hero-section mb-5">
     <div class="hero-inner">
         <h1 class="hero-title"><img src="{% static 'icons/amurs_balts.svg' %}" style="width:2.4rem;height:2.4rem;vertical-align:-.2em;object-fit:contain"> eizsole.lv</h1>
-        <p class="hero-sub">Lētākā izsoļu un sludinājumu platforma</p>
+        <p class="hero-sub">{% trans "Lētākā izsoļu un sludinājumu platforma" %}</p>
         <div class="hero-actions">
             <a href="{% url 'auction_list' %}" class="btn btn-danger btn-lg px-4">
-                <img src="{% static 'icons/amurs_balts.svg' %}" style="width:.9rem;height:.9rem;vertical-align:-.1em;object-fit:contain" class="me-2">Skatīt izsoles
+                <img src="{% static 'icons/amurs_balts.svg' %}" style="width:.9rem;height:.9rem;vertical-align:-.1em;object-fit:contain" class="me-2">{% trans "Skatīt izsoles" %}
             </a>
             <a href="{% url 'listing_create' %}" class="btn btn-light btn-lg px-4">
-                <i class="bi bi-plus-lg me-2"></i>Publicēt
+                <i class="bi bi-plus-lg me-2"></i>{% trans "Publicēt" %}
             </a>
         </div>
     </div>
@@ -124,7 +124,7 @@
 
 <!-- Kategorijas -->
 <div class="section-heading">
-    <i class="bi bi-grid-3x3-gap text-danger"></i> Kategorijas
+    <i class="bi bi-grid-3x3-gap text-danger"></i> {% trans "Kategorijas" %}
 </div>
 <div class="row g-2 mb-5 justify-content-center">
     {% for cat in categories %}
@@ -146,19 +146,19 @@
                     <i class="bi bi-{{ cat.icon|default:'tag' }}"></i>
                     {% endif %}
                 </div>
-                <div class="cat-name">{{ cat.name }}</div>
+                <div class="cat-name">{% trans cat.name %}</div>
             </div>
         </a>
         {% if cat.children.exists %}
         <div class="subcategory-dropdown">
-            <div class="fw-semibold text-danger small border-bottom pb-1 mb-1 px-1">{{ cat.name }}</div>
+            <div class="fw-semibold text-danger small border-bottom pb-1 mb-1 px-1">{% trans cat.name %}</div>
             {% for sub in cat.children.all %}
             <a href="{% url 'category' sub.slug %}" class="sub-link">
-                <i class="bi bi-chevron-right me-1" style="font-size:.65rem;color:#9ca3af"></i>{{ sub.name }}
+                <i class="bi bi-chevron-right me-1" style="font-size:.65rem;color:#9ca3af"></i>{% trans sub.name %}
             </a>
             {% endfor %}
             <div class="border-top mt-1 pt-1 px-1">
-                <a href="{% url 'category' cat.slug %}" class="small text-danger fw-semibold">Skatīt visu &rsaquo;</a>
+                <a href="{% url 'category' cat.slug %}" class="small text-danger fw-semibold">{% trans "Skatīt visu" %} &rsaquo;</a>
             </div>
         </div>
         {% endif %}
@@ -170,7 +170,7 @@
 
 {% if recently_viewed %}
 <div class="mt-5">
-    <h5 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock-history text-danger me-2"></i>Pēdējās skatītās</h5>
+    <h5 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock-history text-danger me-2"></i>{% trans "Pēdējās skatītās" %}</h5>
     <div class="row g-3">
         {% for l in recently_viewed %}
         <div class="col-6 col-md-3 col-lg-2">
@@ -183,7 +183,7 @@
                     <div class="p-2">
                         <div style="font-size:.78rem;font-weight:600;line-height:1.3">{{ l.title|truncatechars:35 }}</div>
                         {% if l.price %}<div style="color:#16a34a;font-weight:700;font-size:.85rem">€{{ l.price }}</div>
-                        {% else %}<div class="text-muted" style="font-size:.72rem">Pēc vienošanās</div>{% endif %}
+                        {% else %}<div class="text-muted" style="font-size:.72rem">{% trans "Pēc vienošanās" %}</div>{% endif %}
                     </div>
                 </div>
             </a>
