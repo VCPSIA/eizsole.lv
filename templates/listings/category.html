@@ -104,26 +104,26 @@
         <div class="card p-0" style="border-radius:12px;overflow:hidden">
             <div class="px-3 py-2" style="background:#e63946">
                 <a href="{% url 'category' top_parent.slug %}" class="text-white text-decoration-none fw-700 d-flex align-items-center gap-2" style="font-weight:700;font-size:.92rem">
-                    {% if top_parent.icon|slice:":3" == "ti-" %}<i class="ti {{ top_parent.icon }}"></i>{% else %}<i class="bi bi-{{ top_parent.icon|default:'tag' }}"></i>{% endif %} {{ top_parent.name }}
+                    {% if top_parent.icon|slice:":3" == "ti-" %}<i class="ti {{ top_parent.icon }}"></i>{% else %}<i class="bi bi-{{ top_parent.icon|default:'tag' }}"></i>{% endif %} {% trans top_parent.name %}
                 </a>
             </div>
             <div class="p-2" style="max-height:78vh;overflow-y:auto">
                 {% for lvl2 in top_parent.children.all %}
                 <a href="{% url 'category' lvl2.slug %}"
                    class="sidebar-link fw-semibold {% if lvl2.slug in active_slugs %}active{% endif %}">
-                    {{ lvl2.name }}
+                    {% trans lvl2.name %}
                 </a>
                 {% if lvl2.slug in active_slugs %}
                     {% for lvl3 in lvl2.children.all %}
                     <a href="{% url 'category' lvl3.slug %}"
                        class="sidebar-link sub {% if lvl3.slug in active_slugs %}active{% endif %}">
-                        <i class="bi bi-chevron-right me-1" style="font-size:.6rem;opacity:.5"></i>{{ lvl3.name }}
+                        <i class="bi bi-chevron-right me-1" style="font-size:.6rem;opacity:.5"></i>{% trans lvl3.name %}
                     </a>
                     {% if lvl3.slug in active_slugs %}
                         {% for lvl4 in lvl3.children.all %}
                         <a href="{% url 'category' lvl4.slug %}"
                            class="sidebar-link subsub {% if lvl4.slug in active_slugs %}active{% endif %}">
-                            — {{ lvl4.name }}
+                            — {% trans lvl4.name %}
                         </a>
                         {% endfor %}
                     {% endif %}
@@ -158,7 +158,7 @@
                         {% else %}
                         <i class="bi bi-{{ sub.icon|default:'chevron-right' }}"></i>
                         {% endif %}
-                        <div>{{ sub.name }}</div>
+                        <div>{% trans sub.name %}</div>
                     </div>
                 </a>
             </div>
@@ -185,7 +185,7 @@
                     </div>
                     <!-- Gads -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Gads</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Gads" %}</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="year_min" class="form-control" placeholder="No" min="1900" max="2030" value="{{ f.year_min }}">
                             <span class="input-group-text">—</span>
@@ -194,7 +194,7 @@
                     </div>
                     <!-- Tilpums -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Tilpums (L)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Tilpums" %} (L)</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="volume_min" class="form-control" placeholder="No" min="0" step="0.1" value="{{ f.volume_min }}">
                             <span class="input-group-text">—</span>
@@ -203,9 +203,9 @@
                     </div>
                     <!-- Dzinējs -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Dzinēja tips</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Dzinēja tips" %}</label>
                         <select name="engine_type" class="form-select form-select-sm">
-                            <option value="">Visi</option>
+                            <option value="">{% trans "Visi" %}</option>
                             {% for val, label in auto_choices.engine_types %}
                             <option value="{{ val }}" {% if f.engine_type == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
@@ -213,9 +213,9 @@
                     </div>
                     <!-- Ātrumkārba -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Ātrumkārba</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Ātrumkārba" %}</label>
                         <select name="transmission" class="form-select form-select-sm">
-                            <option value="">Visas</option>
+                            <option value="">{% trans "Visas" %}</option>
                             {% for val, label in auto_choices.transmissions %}
                             <option value="{{ val }}" {% if f.transmission == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
@@ -223,9 +223,9 @@
                     </div>
                     <!-- Virsbūve -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Virsbūves tips</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Virsbūves tips" %}</label>
                         <select name="body_type" class="form-select form-select-sm">
-                            <option value="">Visas</option>
+                            <option value="">{% trans "Visas" %}</option>
                             {% for val, label in auto_choices.body_types %}
                             <option value="{{ val }}" {% if f.body_type == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
@@ -233,17 +233,17 @@
                     </div>
                     <!-- Nobraukums -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Nobraukums (km)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Nobraukums" %} (km)</label>
                         <input type="number" name="mileage_max" class="form-control form-control-sm" placeholder="Līdz" min="0" value="{{ f.mileage_max }}">
                     </div>
                     <!-- Darījuma veids -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Darījuma veids</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Darījuma veids" %}</label>
                         <select name="deal_type" class="form-select form-select-sm">
-                            <option value="">Visi</option>
-                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>Pārdod</option>
-                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>Pērk</option>
-                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>Maina</option>
+                            <option value="">{% trans "Visi" %}</option>
+                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>{% trans "Pārdod" %}</option>
+                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>{% trans "Pērk" %}</option>
+                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>{% trans "Maina" %}</option>
                         </select>
                     </div>
                 </div>
@@ -263,13 +263,13 @@
         {% if show_tire_filters %}
         <div class="card mb-4" style="border-radius:12px;border:1.5px solid #bfdbfe">
             <div class="card-header py-2 px-3" style="background:#eff6ff;border-radius:12px 12px 0 0">
-                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-primary me-2"></i>Meklēšanas filtri</span>
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-primary me-2"></i>{% trans "Meklēšanas filtri" %}</span>
             </div>
             <form method="get" class="card-body pt-3 pb-3">
                 <div class="row g-3">
                     <!-- Cena -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Cena" %} (€)</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
                             <span class="input-group-text">—</span>
@@ -278,15 +278,15 @@
                     </div>
                     <!-- Ražotājs -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Ražotājs</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Ražotājs" %}</label>
                         <input type="text" name="manufacturer" class="form-control form-control-sm"
                                placeholder="Michelin, Nokian..." value="{{ f.manufacturer }}">
                     </div>
                     <!-- Sezona -->
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Sezona</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Sezona" %}</label>
                         <select name="season" class="form-select form-select-sm">
-                            <option value="">Visas</option>
+                            <option value="">{% trans "Visas" %}</option>
                             {% for val, label in tire_season_choices %}
                             <option value="{{ val }}" {% if f.season == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
@@ -294,25 +294,25 @@
                     </div>
                     <!-- Platums -->
                     <div class="col-md-2 col-6">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Platums (mm)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Platums" %} (mm)</label>
                         <input type="number" name="width" class="form-control form-control-sm"
                                placeholder="205" min="100" max="400" step="5" value="{{ f.width }}">
                     </div>
                     <!-- Profils -->
                     <div class="col-md-2 col-6">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Profils (%)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Profils" %} (%)</label>
                         <input type="number" name="profile" class="form-control form-control-sm"
                                placeholder="55" min="20" max="100" value="{{ f.profile }}">
                     </div>
                     <!-- Rādiuss -->
                     <div class="col-md-2 col-6">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Rādiuss (R)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Rādiuss" %} (R)</label>
                         <input type="number" name="radius" class="form-control form-control-sm"
                                placeholder="16" min="8" max="30" value="{{ f.radius }}">
                     </div>
                     <!-- Slodzes indekss -->
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Slodzes indekss</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Slodzes indekss" %}</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="load_min" class="form-control" placeholder="No" min="0" value="{{ f.load_min }}">
                             <span class="input-group-text">—</span>
@@ -321,15 +321,15 @@
                     </div>
                     <!-- Ātruma indekss -->
                     <div class="col-md-1 col-6">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Ātr. ind.</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Ātr. ind." %}</label>
                         <input type="text" name="speed_index" class="form-control form-control-sm"
                                placeholder="H" maxlength="3" style="text-transform:uppercase" value="{{ f.speed_index }}">
                     </div>
                     <!-- Stāvoklis -->
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Stāvoklis</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Stāvoklis" %}</label>
                         <select name="condition" class="form-select form-select-sm">
-                            <option value="">Visi</option>
+                            <option value="">{% trans "Visi" %}</option>
                             {% for val, label in condition_choices %}
                             <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
@@ -338,10 +338,10 @@
                 </div>
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-primary btn-sm px-4">
-                        <i class="bi bi-search me-1"></i>Meklēt
+                        <i class="bi bi-search me-1"></i>{% trans "Meklēt" %}
                     </button>
                     <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-x me-1"></i>Notīrīt
+                        <i class="bi bi-x me-1"></i>{% trans "Notīrīt" %}
                     </a>
                 </div>
             </form>
@@ -352,12 +352,12 @@
         {% if not show_auto_filters and not show_tire_filters %}
         <div class="card mb-4" style="border-radius:12px;border:1.5px solid #e9ecef">
             <div class="card-header py-2 px-3" style="background:#f8f9fa;border-radius:12px 12px 0 0">
-                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>Meklēšanas filtri</span>
+                <span class="fw-700" style="font-weight:700;font-size:.9rem"><i class="bi bi-sliders text-danger me-2"></i>{% trans "Meklēšanas filtri" %}</span>
             </div>
             <form method="get" class="card-body pt-3 pb-3">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Cena (€)</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Cena" %} (€)</label>
                         <div class="input-group input-group-sm">
                             <input type="number" name="price_min" class="form-control" placeholder="No" min="0" value="{{ f.price_min }}">
                             <span class="input-group-text">—</span>
@@ -365,43 +365,43 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Stāvoklis</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Stāvoklis" %}</label>
                         <select name="condition" class="form-select form-select-sm">
-                            <option value="">Visi</option>
+                            <option value="">{% trans "Visi" %}</option>
                             {% for val, label in condition_choices %}
                             <option value="{{ val }}" {% if f.condition == val %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Valsts</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Valsts" %}</label>
                         <input type="text" name="country" class="form-control form-control-sm"
                                placeholder="Latvija, Lietuva..." value="{{ f.country }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Darījuma veids</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Darījuma veids" %}</label>
                         <select name="deal_type" class="form-select form-select-sm">
-                            <option value="">Visi</option>
-                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>Pārdod</option>
-                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>Pērk</option>
-                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>Maina</option>
+                            <option value="">{% trans "Visi" %}</option>
+                            <option value="sell" {% if f.deal_type == "sell" %}selected{% endif %}>{% trans "Pārdod" %}</option>
+                            <option value="buy" {% if f.deal_type == "buy" %}selected{% endif %}>{% trans "Pērk" %}</option>
+                            <option value="trade" {% if f.deal_type == "trade" %}selected{% endif %}>{% trans "Maina" %}</option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold" style="font-size:.82rem">Veids</label>
+                        <label class="form-label fw-semibold" style="font-size:.82rem">{% trans "Veids" %}</label>
                         <select name="listing_type" class="form-select form-select-sm">
-                            <option value="">Visi</option>
-                            <option value="listing" {% if f.listing_type == "listing" %}selected{% endif %}>Sludinājums</option>
-                            <option value="auction" {% if f.listing_type == "auction" %}selected{% endif %}>Izsole</option>
+                            <option value="">{% trans "Visi" %}</option>
+                            <option value="listing" {% if f.listing_type == "listing" %}selected{% endif %}>{% trans "Sludinājums" %}</option>
+                            <option value="auction" {% if f.listing_type == "auction" %}selected{% endif %}>{% trans "Izsoles" %}</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-danger btn-sm px-4">
-                        <i class="bi bi-search me-1"></i>Meklēt
+                        <i class="bi bi-search me-1"></i>{% trans "Meklēt" %}
                     </button>
                     <a href="{% url 'category' category.slug %}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-x me-1"></i>Notīrīt
+                        <i class="bi bi-x me-1"></i>{% trans "Notīrīt" %}
                     </a>
                 </div>
             </form>
@@ -411,7 +411,7 @@
         <!-- Sludinājumu galvene -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0 fw-700" style="font-weight:700">
-                {{ category.name }}
+                {% trans category.name %}
             </h5>
             <div class="d-flex align-items-center gap-2">
                 <span class="badge rounded-pill" style="background:#f4f5f7;color:#6c757d;font-size:.82rem;font-weight:600;padding:.35rem .75rem">
@@ -544,7 +544,7 @@
 
             <!-- Skaita ierobežotājs -->
             <div class="d-flex align-items-center gap-2" style="font-size:.85rem">
-                <span class="text-muted">Lapā:</span>
+                <span class="text-muted">{% trans "Lapā" %}:</span>
                 {% for opt in per_page_options %}
                 <a href="?{% for k,v in f.items %}{% if k != 'per_page' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}per_page={{ opt }}"
                    class="px-2 py-1 rounded text-decoration-none {% if per_page == opt %}fw-700 text-danger{% else %}text-muted{% endif %}"
@@ -552,7 +552,7 @@
                     {{ opt }}
                 </a>
                 {% endfor %}
-                <span class="text-muted ms-1">/ {{ paginator.count }} kopā</span>
+                <span class="text-muted ms-1">/ {{ paginator.count }} {% trans "kopā" %}</span>
             </div>
 
         </div>

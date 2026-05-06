@@ -341,3 +341,498 @@ msgstr "Registration successful!"
 msgid "Sludinājums publicēts."
 msgstr "Listing published."
 
+msgid "Gads"
+msgstr "Year"
+
+msgid "Tilpums"
+msgstr "Volume"
+
+msgid "Dzinēja tips"
+msgstr "Engine type"
+
+msgid "Ātrumkārba"
+msgstr "Transmission"
+
+msgid "Virsbūves tips"
+msgstr "Body type"
+
+msgid "Nobraukums"
+msgstr "Mileage"
+
+msgid "Darījuma veids"
+msgstr "Deal type"
+
+msgid "Veids"
+msgstr "Type"
+
+msgid "Ražotājs"
+msgstr "Manufacturer"
+
+msgid "Sezona"
+msgstr "Season"
+
+msgid "Platums"
+msgstr "Width"
+
+msgid "Rādiuss"
+msgstr "Radius"
+
+msgid "Slodzes indekss"
+msgstr "Load index"
+
+msgid "Ātr. ind."
+msgstr "Speed idx."
+
+msgid "Visi"
+msgstr "All"
+
+msgid "Visas"
+msgstr "All"
+
+msgid "Pārdod"
+msgstr "Selling"
+
+msgid "Pērk"
+msgstr "Buying"
+
+msgid "Maina"
+msgstr "Trading"
+
+msgid "Sludinājums"
+msgstr "Listing"
+
+msgid "Lapā"
+msgstr "Per page"
+
+msgid "kopā"
+msgstr "total"
+
+msgid "Automašīnas"
+msgstr "Cars"
+
+msgid "Motocikli, motorolleri"
+msgstr "Motorcycles, scooters"
+
+msgid "Kravas auto, autobusi"
+msgstr "Trucks, buses"
+
+msgid "Lauksaimniecības tehnika"
+msgstr "Agricultural machinery"
+
+msgid "Ūdens transports"
+msgstr "Water transport"
+
+msgid "Rezerves daļas"
+msgstr "Spare parts"
+
+msgid "Riepas, diski"
+msgstr "Tires, rims"
+
+msgid "Auto piederumi"
+msgstr "Car accessories"
+
+msgid "Auto serviss"
+msgstr "Car service"
+
+msgid "Noma"
+msgstr "Rental"
+
+msgid "Dzīvokļi - pārdod"
+msgstr "Apartments - for sale"
+
+msgid "Dzīvokļi - īrē"
+msgstr "Apartments - for rent"
+
+msgid "Mājas - pārdod"
+msgstr "Houses - for sale"
+
+msgid "Mājas - īrē"
+msgstr "Houses - for rent"
+
+msgid "Vasarnīcas, dārziņi"
+msgstr "Summer houses, allotments"
+
+msgid "Zeme"
+msgstr "Land"
+
+msgid "Telpas biznesam"
+msgstr "Business premises"
+
+msgid "Noliktavas, ražotnes"
+msgstr "Warehouses, factories"
+
+msgid "Garāžas, stāvvietas"
+msgstr "Garages, parking"
+
+msgid "Citi īpašumi"
+msgstr "Other properties"
+
+msgid "Zeme un lauku īpašumi"
+msgstr "Land and rural properties"
+
+msgid "Datori, planšetes"
+msgstr "Computers, tablets"
+
+msgid "Telefoni"
+msgstr "Phones"
+
+msgid "TV, audio, video"
+msgstr "TV, audio, video"
+
+msgid "Sadzīves tehnika"
+msgstr "Home appliances"
+
+msgid "Foto, optika"
+msgstr "Photo, optics"
+
+msgid "Spēļu konsoles"
+msgstr "Gaming consoles"
+
+msgid "Biroja tehnika"
+msgstr "Office equipment"
+
+msgid "Tīkla iekārtas"
+msgstr "Network equipment"
+
+msgid "Programmatūra"
+msgstr "Software"
+
+msgid "Mēbeles"
+msgstr "Furniture"
+
+msgid "Virtuves preces"
+msgstr "Kitchen goods"
+
+msgid "Apgaismojums"
+msgstr "Lighting"
+
+msgid "Mājas tekstils"
+msgstr "Home textiles"
+
+msgid "Vannas istaba"
+msgstr "Bathroom"
+
+msgid "Dekorācijas"
+msgstr "Decorations"
+
+msgid "Remonta materiāli"
+msgstr "Renovation materials"
+
+msgid "Instrumenti"
+msgstr "Tools"
+
+msgid "Trauki, servīzes"
+msgstr "Dishes, crockery"
+
+msgid "Citas preces mājai"
+msgstr "Other home goods"
+
+msgid "Sieviešu apģērbs"
+msgstr "Women's clothing"
+
+msgid "Vīriešu apģērbs"
+msgstr "Men's clothing"
+
+msgid "Bērnu apģērbs"
+msgstr "Children's clothing"
+
+msgid "Apavi - sieviešu"
+msgstr "Shoes - women's"
+
+msgid "Apavi - vīriešu"
+msgstr "Shoes - men's"
+
+msgid "Apavi - bērnu"
+msgstr "Shoes - children's"
+
+msgid "Somas, mugursomas"
+msgstr "Bags, backpacks"
+
+msgid "Rotaslietas, pulksteņi"
+msgstr "Jewelry, watches"
+
+msgid "Sporta apģērbs"
+msgstr "Sports clothing"
+
+msgid "Cepures, šalles, cimdi"
+msgstr "Hats, scarves, gloves"
+
+msgid "Cits apģērbs"
+msgstr "Other clothing"
+
+msgid "Apakšveļa"
+msgstr "Underwear"
+
+msgid "Velosipēdi"
+msgstr "Bicycles"
+
+msgid "Ziemas sports"
+msgstr "Winter sports"
+
+msgid "Ūdens sports"
+msgstr "Water sports"
+
+msgid "Fitnesa inventārs"
+msgstr "Fitness equipment"
+
+msgid "Medības"
+msgstr "Hunting"
+
+msgid "Makšķerēšana"
+msgstr "Fishing"
+
+msgid "Tūrisms, kempings"
+msgstr "Tourism, camping"
+
+msgid "Futbols, bumbu spēles"
+msgstr "Football, ball games"
+
+msgid "Teniss, badmintons"
+msgstr "Tennis, badminton"
+
+msgid "Cits sports"
+msgstr "Other sports"
+
+msgid "Dārza instrumenti"
+msgstr "Garden tools"
+
+msgid "Augi, stādi, sēklas"
+msgstr "Plants, seedlings, seeds"
+
+msgid "Dārza mēbeles"
+msgstr "Garden furniture"
+
+msgid "Siltumnīcas"
+msgstr "Greenhouses"
+
+msgid "Laistīšanas sistēmas"
+msgstr "Irrigation systems"
+
+msgid "Dārza mājiņas"
+msgstr "Garden sheds"
+
+msgid "Mēslojums, augu kopšana"
+msgstr "Fertilizers, plant care"
+
+msgid "Dārza tehnika"
+msgstr "Garden machinery"
+
+msgid "Rotaļlietas"
+msgstr "Toys"
+
+msgid "Ratiņi, autokrēsli"
+msgstr "Prams, car seats"
+
+msgid "Bērnu mēbeles"
+msgstr "Children's furniture"
+
+msgid "Bērnu apģērbs (0-2 g.)"
+msgstr "Children's clothing (0-2 y.)"
+
+msgid "Bērnu apģērbs (3-7 g.)"
+msgstr "Children's clothing (3-7 y.)"
+
+msgid "Bērnu apģērbs (8+ g.)"
+msgstr "Children's clothing (8+ y.)"
+
+msgid "Skolas piederumi"
+msgstr "School supplies"
+
+msgid "Grāmatas, mūzika"
+msgstr "Books, music"
+
+msgid "Sporta preces bērniem"
+msgstr "Sports goods for children"
+
+msgid "Barošana, aprūpe"
+msgstr "Feeding, care"
+
+msgid "Suņi"
+msgstr "Dogs"
+
+msgid "Kaķi"
+msgstr "Cats"
+
+msgid "Putni"
+msgstr "Birds"
+
+msgid "Zivis, akvāriji"
+msgstr "Fish, aquariums"
+
+msgid "Grauzēji, truši"
+msgstr "Rodents, rabbits"
+
+msgid "Rāpuļi, eksotiskie"
+msgstr "Reptiles, exotic"
+
+msgid "Barība"
+msgstr "Pet food"
+
+msgid "Piederumi, aksesuāri"
+msgstr "Accessories"
+
+msgid "Veterinārija"
+msgstr "Veterinary"
+
+msgid "Zoopreču veikali"
+msgstr "Pet shops"
+
+msgid "Traktori"
+msgstr "Tractors"
+
+msgid "Kombaini"
+msgstr "Harvesters"
+
+msgid "Augsnes apstrāde"
+msgstr "Soil cultivation"
+
+msgid "Lauksaimniecības piekabes"
+msgstr "Agricultural trailers"
+
+msgid "Augu aizsardzība un mēslošana"
+msgstr "Crop protection and fertilization"
+
+msgid "Lopkopība"
+msgstr "Animal husbandry"
+
+msgid "Meža tehnika"
+msgstr "Forestry equipment"
+
+msgid "Apūdeņošana"
+msgstr "Irrigation"
+
+msgid "Graudu un produktu apstrāde"
+msgstr "Grain and product processing"
+
+msgid "Lauksaimniecības piederumi"
+msgstr "Agricultural accessories"
+
+msgid "Lauksaimniecības pakalpojumi"
+msgstr "Agricultural services"
+
+msgid "Pilna laika darbs"
+msgstr "Full-time job"
+
+msgid "Nepilna laika darbs"
+msgstr "Part-time job"
+
+msgid "Darbs ārzemēs"
+msgstr "Jobs abroad"
+
+msgid "Meklē darbu"
+msgstr "Looking for work"
+
+msgid "Freelance, attālinātais"
+msgstr "Freelance, remote work"
+
+msgid "Prakses vietas"
+msgstr "Internships"
+
+msgid "Uzņēmējdarbība"
+msgstr "Entrepreneurship"
+
+msgid "Kursi, apmācība"
+msgstr "Courses, training"
+
+msgid "Būvmateriāli"
+msgstr "Building materials"
+
+msgid "Jumti un fasādes"
+msgstr "Roofs and facades"
+
+msgid "Logi un durvis"
+msgstr "Windows and doors"
+
+msgid "Siltumizolācija un hidroizolācija"
+msgstr "Thermal and waterproofing"
+
+msgid "Betona darbi un mūrēšana"
+msgstr "Concrete works and masonry"
+
+msgid "Koka konstrukcijas"
+msgstr "Wooden structures"
+
+msgid "Grīdas un sienas apdare"
+msgstr "Floor and wall finishing"
+
+msgid "Santehnika"
+msgstr "Plumbing"
+
+msgid "Apkure un ventilācija"
+msgstr "Heating and ventilation"
+
+msgid "Elektromateriāli"
+msgstr "Electrical materials"
+
+msgid "Celtniecības tehnika un instrumenti"
+msgstr "Construction equipment and tools"
+
+msgid "Atkritumi un demontāža"
+msgstr "Waste and demolition"
+
+msgid "Celtniecības pakalpojumi"
+msgstr "Construction services"
+
+msgid "Remontdarbi, būvniecība"
+msgstr "Repairs, construction"
+
+msgid "Santehnika, elektrika"
+msgstr "Plumbing, electricity"
+
+msgid "Tīrīšana"
+msgstr "Cleaning"
+
+msgid "Pārvākšanās"
+msgstr "Moving"
+
+msgid "IT pakalpojumi"
+msgstr "IT services"
+
+msgid "Apmācība, tulkošana"
+msgstr "Training, translation"
+
+msgid "Skaistums, veselība"
+msgstr "Beauty, health"
+
+msgid "Foto, video, dizains"
+msgstr "Photo, video, design"
+
+msgid "Juridiskā palīdzība"
+msgstr "Legal assistance"
+
+msgid "Pārējie pakalpojumi"
+msgstr "Other services"
+
+msgid "Monētas, naudaszīmes"
+msgstr "Coins, banknotes"
+
+msgid "Pastmarkas, filokartija"
+msgstr "Stamps, postcards"
+
+msgid "Antīkās lietas"
+msgstr "Antiques"
+
+msgid "Māksla, gleznas"
+msgstr "Art, paintings"
+
+msgid "Grāmatas, žurnāli"
+msgstr "Books, magazines"
+
+msgid "Mūzika, lentas, plates"
+msgstr "Music, tapes, records"
+
+msgid "Filmas, DVD"
+msgstr "Films, DVD"
+
+msgid "Sporta suvenīri"
+msgstr "Sports memorabilia"
+
+msgid "Rotaļlietas, figūriņas"
+msgstr "Toys, figurines"
+
+msgid "Militārā vēsture"
+msgstr "Military history"
+
+msgid "Medaļas, ordeņi, nozīmītes"
+msgstr "Medals, orders, badges"
+
