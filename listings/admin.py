@@ -6,7 +6,7 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages as admin_messages
 from django.http import HttpResponse
-from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode
+from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner
 
 
 class ListingImageInline(admin.TabularInline):
@@ -92,6 +92,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'fields': ['featured_auction_enabled', 'featured_auction_fee'],
             'description': 'Klients var samaksāt, lai izsole rādītos saraksta augšgalā, līdz kāds cits samaksā par TOP vietu.',
         }),
+        ('Reklāmas baneri', {
+            'fields': ['banner_enabled', 'banner_fee', 'banner_rotation_seconds'],
+            'description': 'Klients var samaksāt par reklāmas baneri, kas rotācijas kārtībā rādīsies visās lapas apakšlapās.',
+        }),
     ]
 
     def has_add_permission(self, request):
@@ -107,6 +111,22 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         SiteSettings.objects.get_or_create(pk=1)
         return super().get_queryset(request)
+
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'user', 'listing', 'is_active', 'preview', 'created_at']
+    list_filter = ['is_active']
+    list_editable = ['is_active']
+    search_fields = ['user__username', 'listing__title']
+    readonly_fields = ['user', 'listing', 'created_at', 'preview']
+    fields = ['user', 'listing', 'image', 'preview', 'text', 'link_url', 'is_active', 'created_at']
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="height:40px;border-radius:4px">', obj.image.url)
+        return '—'
+    preview.short_description = 'Priekšskatījums'
 
 
 @admin.register(Report)

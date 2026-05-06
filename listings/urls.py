@@ -12,6 +12,7 @@ urlpatterns = [
     path('sludinajums/<int:pk>/pagarināt/', views.extend_listing, name='extend_listing'),
     path('sludinajums/<int:pk>/top/', views.listing_promote, name='listing_promote'),
     path('publicet/', views.listing_create, name='listing_create'),
+    path('baneris/veidot/', views.banner_create, name='banner_create'),
     path('api/subcategories/<int:pk>/', views.subcategories_json, name='subcategories_json'),
     path('api/discount-code/', views.discount_code_check, name='discount_code_check'),
     path('meklet/', views.search, name='search'),

@@ -95,7 +95,7 @@
             <div class="text-muted mb-1" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px">{% trans "Pašreizējā cena" %}</div>
             <div class="price-huge mb-1">€{{ auction.current_price }}</div>
             <div class="d-flex flex-wrap gap-2 align-items-center mb-2" style="font-size:.82rem">
-                <span class="text-muted">Sākums: €{{ auction.starting_price }} · <strong>{{ auction.bid_count }}</strong> solījumi</span>
+                <span class="text-muted">{% trans "Sākumcena" %}: €{{ auction.starting_price }} · <strong>{{ auction.bid_count }}</strong> {% trans "solījumi" %}</span>
             </div>
             {% if auction.reserve_price %}
             <div class="mb-3">
@@ -111,8 +111,8 @@
             </div>
             {% if user == auction.listing.seller %}
             <div class="mb-3 px-2 py-1 rounded" style="background:#fefce8;border:1px solid #fde68a;font-size:.78rem;color:#854d0e">
-                <i class="bi bi-eye me-1"></i>Jūsu rezerves cena: <strong>€{{ auction.reserve_price }}</strong>
-                <span class="ms-1" style="opacity:.7">(redzat tikai jūs)</span>
+                <i class="bi bi-eye me-1"></i>{% trans "Jūsu rezerves cena" %}: <strong>€{{ auction.reserve_price }}</strong>
+                <span class="ms-1" style="opacity:.7">({% trans "redzat tikai jūs" %})</span>
             </div>
             {% endif %}
             {% else %}
@@ -124,21 +124,21 @@
                 <div class="p-2 rounded mb-2" style="background:#f8f9fa;border:1px solid #e9ecef">
                     <div class="d-flex align-items-center gap-2 mb-1">
                         <span class="text-success fw-semibold" style="font-size:.82rem">
-                            <i class="bi bi-circle-fill me-1" style="font-size:.45rem"></i>Aktīva
+                            <i class="bi bi-circle-fill me-1" style="font-size:.45rem"></i>{% trans "Aktīva" %}
                         </span>
-                        <span class="text-muted" style="font-size:.78rem">beidzas {{ auction.ends_at|date:"d.m.Y H:i:s" }}</span>
+                        <span class="text-muted" style="font-size:.78rem">{% trans "beidzas" %} {{ auction.ends_at|date:"d.m.Y H:i:s" }}</span>
                     </div>
                     <div id="countdown" class="fw-800 text-danger" style="font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums">
                         --:--:--
                     </div>
                     {% if auction.anti_snipe_count %}
                     <div class="mt-1" style="font-size:.72rem;color:#854d0e">
-                        <i class="bi bi-clock-history me-1"></i>Anti-snipe pagarināts {{ auction.anti_snipe_count }}×
+                        <i class="bi bi-clock-history me-1"></i>{% trans "Anti-snipe pagarināts" %} {{ auction.anti_snipe_count }}×
                     </div>
                     {% endif %}
                 </div>
                 <div style="font-size:.75rem;color:#9ca3af">
-                    <i class="bi bi-shield-check me-1"></i>Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min.
+                    <i class="bi bi-shield-check me-1"></i>{% trans "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min." %}
                 </div>
                 {% else %}
                 <span class="text-danger fw-semibold" style="font-size:.88rem">
@@ -175,12 +175,12 @@
                 <ul class="nav nav-pills mb-3" style="font-size:.82rem">
                     <li class="nav-item">
                         <button class="nav-link active px-3 py-1" id="tab-manual" onclick="switchTab('manual')" style="border-radius:20px">
-                            <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.8rem;height:.8rem;vertical-align:-.05em;object-fit:contain" class="me-1">Manuāli
+                            <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.8rem;height:.8rem;vertical-align:-.05em;object-fit:contain" class="me-1">{% trans "Manuāli" %}
                         </button>
                     </li>
                     <li class="nav-item ms-1">
                         <button class="nav-link px-3 py-1" id="tab-proxy" onclick="switchTab('proxy')" style="border-radius:20px">
-                            <i class="bi bi-robot me-1"></i>Automātiski
+                            <i class="bi bi-robot me-1"></i>{% trans "Automātiski" %}
                         </button>
                     </li>
                 </ul>
@@ -198,10 +198,10 @@
                                 required>
                         </div>
                         <div class="d-flex justify-content-between mb-3" style="font-size:.75rem;color:#6c757d">
-                            <span>Min. solījums: <strong>€{{ auction.current_price|floatformat:2 }}</strong> + <strong>€{{ increment|floatformat:0 }}</strong></span>
+                            <span>{% trans "Min. solījums" %}: <strong>€{{ auction.current_price|floatformat:2 }}</strong> + <strong>€{{ increment|floatformat:0 }}</strong></span>
                             <button type="button" class="btn btn-link p-0 text-muted" style="font-size:.72rem"
                                 data-bs-toggle="collapse" data-bs-target="#bid-table">
-                                Soļu tabula ▾
+                                {% trans "Soļu tabula" %} ▾
                             </button>
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-700 py-2" style="font-weight:700">
@@ -212,7 +212,7 @@
                     <div class="collapse mt-2" id="bid-table">
                         <table class="table table-sm mb-0" style="font-size:.75rem">
                             <thead style="background:#f8f9fa">
-                                <tr><th>Cena</th><th>Solis</th></tr>
+                                <tr><th>{% trans "Cena" %}</th><th>{% trans "Solis" %}</th></tr>
                             </thead>
                             <tbody>
                                 <tr {% if auction.current_price <= 49 %}class="table-warning fw-bold"{% endif %}><td>€0 – €49</td><td>€1</td></tr>
@@ -236,16 +236,16 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <div class="fw-700 mb-1" style="font-weight:700;font-size:.88rem;color:#1e40af">
-                                    <i class="bi bi-robot me-1"></i>Automātiskā solīšana aktīva
+                                    <i class="bi bi-robot me-1"></i>{% trans "Automātiskā solīšana aktīva" %}
                                 </div>
                                 <div style="font-size:.82rem;color:#1e40af">
-                                    Jūsu maksimums: <strong>€{{ user_proxy.max_amount }}</strong>
+                                    {% trans "Jūsu maksimums" %}: <strong>€{{ user_proxy.max_amount }}</strong>
                                 </div>
                             </div>
                             <form method="post" action="{% url 'cancel_proxy_bid' auction.pk %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-outline-secondary" style="font-size:.75rem">
-                                    Atcelt
+                                    {% trans "Atcelt" %}
                                 </button>
                             </form>
                         </div>
@@ -255,20 +255,19 @@
                     <form method="post" action="{% url 'set_proxy_bid' auction.pk %}">
                         {% csrf_token %}
                         <div class="mb-2">
-                            <label style="font-size:.8rem;font-weight:600;color:#374151">Mans maksimums (€)</label>
+                            <label style="font-size:.8rem;font-weight:600;color:#374151">{% trans "Mans maksimums" %} (€)</label>
                             <div class="input-group mt-1">
                                 <span class="input-group-text fw-600" style="font-weight:600">€</span>
                                 <input type="number" name="max_amount" step="0.01" class="form-control"
-                                    style="font-size:1.1rem" placeholder="Piemērs: 120.00" required
+                                    style="font-size:1.1rem" placeholder="120.00" required
                                     {% if user_proxy %}value="{{ user_proxy.max_amount }}"{% endif %}>
                             </div>
                         </div>
                         <p style="font-size:.75rem;color:#6c757d;margin-bottom:.75rem">
-                            Sistēma automātiski solīs jūsu vietā ar minimālo soli.
-                            Jūsu maksimums ir <strong>slēpts</strong> no citiem.
+                            {% trans "Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir slēpts no citiem." %}
                         </p>
                         <button type="submit" class="btn w-100 fw-700 py-2" style="font-weight:700;background:#1d4ed8;color:white;border-radius:8px">
-                            <i class="bi bi-robot me-2"></i>{% if user_proxy %}Atjaunināt{% else %}Uzstādīt{% endif %} automātisko solīšanu
+                            <i class="bi bi-robot me-2"></i>{% if user_proxy %}{% trans "Atjaunināt automātisko solīšanu" %}{% else %}{% trans "Uzstādīt automātisko solīšanu" %}{% endif %}
                         </button>
                     </form>
                 </div>
@@ -279,14 +278,14 @@
                 </a>
                 {% else %}
                 <div class="alert alert-warning small mb-0">
-                    <i class="bi bi-info-circle me-1"></i>Nevarat solīt savā izsolē.
+                    <i class="bi bi-info-circle me-1"></i>{% trans "Nevarat solīt savā izsolē." %}
                 </div>
                 {% endif %}
             {% else %}
             <div class="alert mb-0" style="background:#f4f5f7;border:none;border-radius:8px;font-size:.85rem">
-                <i class="bi bi-clock me-1"></i>Izsole ir noslēgusies.
+                <i class="bi bi-clock me-1"></i>{% trans "Izsole ir noslēgusies." %}
                 {% if auction.winner %}
-                <br><i class="bi bi-trophy-fill text-warning me-1"></i>Uzvarētājs: <strong>{{ auction.winner.username }}</strong>
+                <br><i class="bi bi-trophy-fill text-warning me-1"></i>{% trans "Uzvarētājs" %}: <strong>{{ auction.winner.username }}</strong>
                 {% endif %}
             </div>
             {% endif %}

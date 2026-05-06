@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q, Count
-from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite
+from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite, Banner
 from .profanity import contains_profanity
 from .ai_moderation import check_listing_images
 from .contact_filter import contains_contact_info
@@ -499,6 +499,18 @@ def listing_create(request):
         else:
             featured_fee = None
 
+        # Banera maksu pārbaude
+        want_banner = 'want_banner' in request.POST and bool(request.FILES.get('banner_image'))
+        if want_banner and settings.banner_enabled and settings.banner_fee > 0:
+            banner_fee = settings.banner_fee
+            total_so_far = (fee or 0) + (featured_fee or 0)
+            if wallet.balance < total_so_far + banner_fee:
+                messages.error(request, f'Nepietiek līdzekļu banerim. Banera maksa ir €{banner_fee}. Jūsu atlikums: €{wallet.balance}.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        else:
+            banner_fee = None
+            want_banner = False
+
         if is_auction:
             expires_at = None
         else:
@@ -607,6 +619,16 @@ def listing_create(request):
             desc = 'TOP izsole' if is_auction else 'TOP sludinājums'
             WalletTransaction.make_spend(wallet, featured_fee, description=desc, reference=f'TOP-{listing.pk}')
 
+        # Baneris
+        if want_banner and banner_fee:
+            Banner.objects.create(
+                listing=listing,
+                user=request.user,
+                image=request.FILES['banner_image'],
+                link_url=request.POST.get('banner_link_url', '').strip(),
+            )
+            WalletTransaction.make_spend(wallet, banner_fee, description='Reklāmas baneris', reference=f'BAN-{listing.pk}')
+
         return redirect('listing_detail', pk=listing.pk)
     try:
         profile = request.user.profile
@@ -616,6 +638,40 @@ def listing_create(request):
         profile_country = ''
         profile_city = ''
     return render(request, 'listings/create.html', ctx({'profile_country': profile_country, 'profile_city': profile_city}))
+
+
+@login_required
+def banner_create(request):
+    settings = SiteSettings.get()
+    if not settings.banner_enabled:
+        messages.error(request, 'Baneru publicēšana pašlaik nav pieejama.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        image = request.FILES.get('banner_image')
+        if not image:
+            messages.error(request, 'Lūdzu augšupielādējiet banera attēlu.')
+            return render(request, 'listings/banner_create.html', {'site_settings': settings})
+
+        from accounts.models import Wallet, WalletTransaction
+        wallet, _ = Wallet.objects.get_or_create(user=request.user)
+        fee = settings.banner_fee if settings.banner_fee > 0 else None
+        if fee and wallet.balance < fee:
+            messages.error(request, f'Nepietiek līdzekļu. Banera maksa: €{fee}. Jūsu atlikums: €{wallet.balance}.')
+            return render(request, 'listings/banner_create.html', {'site_settings': settings})
+
+        Banner.objects.create(
+            user=request.user,
+            image=image,
+            text=request.POST.get('banner_text', '').strip(),
+            link_url=request.POST.get('banner_link_url', '').strip(),
+        )
+        if fee:
+            WalletTransaction.make_spend(wallet, fee, description='Reklāmas baneris', reference='BAN-standalone')
+        messages.success(request, 'Baneris veiksmīgi publicēts!')
+        return redirect('profile')
+
+    return render(request, 'listings/banner_create.html', {'site_settings': settings})
 
 
 @login_required

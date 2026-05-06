@@ -341,6 +341,66 @@ msgstr "Регистрация прошла успешно!"
 msgid "Sludinājums publicēts."
 msgstr "Объявление опубликовано."
 
+msgid "solījumi"
+msgstr "ставок"
+
+msgid "Aktīva"
+msgstr "Активна"
+
+msgid "beidzas"
+msgstr "истекает"
+
+msgid "Anti-snipe pagarināts"
+msgstr "Анти-снайп продлён"
+
+msgid "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min."
+msgstr "Анти-снайп активен — ставка в последние 60 сек. продлевает аукцион на 3 мин."
+
+msgid "Jūsu rezerves cena"
+msgstr "Ваша резервная цена"
+
+msgid "redzat tikai jūs"
+msgstr "видите только вы"
+
+msgid "Manuāli"
+msgstr "Вручную"
+
+msgid "Automātiski"
+msgstr "Автоматически"
+
+msgid "Min. solījums"
+msgstr "Мин. ставка"
+
+msgid "Soļu tabula"
+msgstr "Шаги ставок"
+
+msgid "Solis"
+msgstr "Шаг"
+
+msgid "Automātiskā solīšana aktīva"
+msgstr "Автоставка активна"
+
+msgid "Jūsu maksimums"
+msgstr "Ваш максимум"
+
+msgid "Mans maksimums"
+msgstr "Мой максимум"
+
+msgid "Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir slēpts no citiem."
+msgstr "Система автоматически сделает ставку вместо вас с минимальным шагом. Ваш максимум скрыт от других."
+
+msgid "Atjaunināt automātisko solīšanu"
+msgstr "Обновить автоставку"
+
+msgid "Uzstādīt automātisko solīšanu"
+msgstr "Установить автоставку"
+
+msgid "Nevarat solīt savā izsolē."
+msgstr "Нельзя делать ставки в своём аукционе."
+
+msgid "Izsole ir noslēgusies."
+msgstr "Аукцион завершён."
+
 msgid "Gads"
 msgstr "Год"
 
@@ -835,4 +895,232 @@ msgstr "Военная история"
 
 msgid "Medaļas, ordeņi, nozīmītes"
 msgstr "Медали, ордена, значки"
+
+msgid "— Izvēlieties kategoriju —"
+msgstr "— Выберите категорию —"
+
+msgid "— Izvēlieties apakškategoriju —"
+msgstr "— Выберите подкатегорию —"
+
+msgid "— Izvēlieties modeli —"
+msgstr "— Выберите модель —"
+
+msgid "— Izvēlieties —"
+msgstr "— Выберите —"
+
+msgid "— Nav norādīts —"
+msgstr "— Не указано —"
+
+msgid "Izgatavošanas gads"
+msgstr "Год выпуска"
+
+msgid "Sāciet rakstīt adresi..."
+msgstr "Начните вводить адрес..."
+
+msgid "Lūdzu izvēlieties adresi no saraksta."
+msgstr "Пожалуйста, выберите адрес из списка."
+
+msgid "Spied vai velc bildes šeit"
+msgstr "Нажмите или перетащите фото сюда"
+
+msgid "JPG, PNG, WEBP · max 8 bildes"
+msgstr "JPG, PNG, WEBP · макс. 8 фото"
+
+msgid "Spied vai velc video šeit"
+msgstr "Нажмите или перетащите видео сюда"
+
+msgid "MP4, WEBM, MOV · max 1 video"
+msgstr "MP4, WEBM, MOV · макс. 1 видео"
+
+msgid "Transportlīdzekļa dati"
+msgstr "Данные транспортного средства"
+
+msgid "Obligāti lauki"
+msgstr "Обязательные поля"
+
+msgid "Motora tips"
+msgstr "Тип двигателя"
+
+msgid "Motora tilpums (L)"
+msgstr "Объём двигателя (л)"
+
+msgid "Nobraukums (km)"
+msgstr "Пробег (км)"
+
+msgid "Reģ. numurs"
+msgstr "Рег. номер"
+
+msgid "VIN kods"
+msgstr "VIN код"
+
+msgid "Ir tehniskā apskate"
+msgstr "Есть технический осмотр"
+
+msgid "Tehniskā apskate līdz"
+msgstr "Технический осмотр до"
+
+msgid "Riepas parametri"
+msgstr "Параметры шин"
+
+msgid "* — obligāti lauki"
+msgstr "* — обязательные поля"
+
+msgid "Rādiuss (collas)"
+msgstr "Радиус (дюймы)"
+
+msgid "Platums (mm)"
+msgstr "Ширина (мм)"
+
+msgid "Profils (%)"
+msgstr "Профиль (%)"
+
+msgid "Ātruma indekss"
+msgstr "Индекс скорости"
+
+msgid "Nekustamā īpašuma dati"
+msgstr "Данные о недвижимости"
+
+msgid "Rajons"
+msgstr "Район"
+
+msgid "Aprīkojums"
+msgstr "Оснащение"
+
+msgid "Atzīmējiet visu pieejamo aprīkojumu"
+msgstr "Отметьте всё доступное оснащение"
+
+msgid "Publicēt kā izsoli"
+msgstr "Опубликовать как аукцион"
+
+msgid "Sākuma cena (€)"
+msgstr "Начальная цена (€)"
+
+msgid "Solījuma solis tiek aprēķināts automātiski pēc cenas."
+msgstr "Шаг ставки рассчитывается автоматически по цене."
+
+msgid "Izsole beidzas"
+msgstr "Аукцион заканчивается"
+
+msgid "Minimums: 1 stunda. Maksimums: 1 mēnesis."
+msgstr "Минимум: 1 час. Максимум: 1 месяц."
+
+msgid "Pērc tūlīt cena (€)"
+msgstr "Цена «Купить сейчас» (€)"
+
+msgid "— nav obligāta"
+msgstr "— не обязательно"
+
+msgid "Pircējs var nopirkt uzreiz bez solīšanas."
+msgstr "Покупатель может купить сразу без торгов."
+
+msgid "Rezerves cena (€)"
+msgstr "Резервная цена (€)"
+
+msgid "Slēptā min. cena. Pircēji neredz summu, tikai statusu."
+msgstr "Скрытая мин. цена. Покупатели не видят сумму, только статус."
+
+msgid "Kontaktinformācija"
+msgstr "Контактная информация"
+
+msgid "Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski redzams."
+msgstr "Телефон виден в объявлении после нажатия кнопки. E-mail не является публичным."
+
+msgid "Publicēšanas ilgums"
+msgstr "Срок публикации"
+
+msgid "Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt jebkurā laikā."
+msgstr "По истечении срока объявление будет автоматически удалено. Срок можно продлить в любое время."
+
+msgid "Atlaižu kods"
+msgstr "Код скидки"
+
+msgid "Pārbaudīt"
+msgstr "Проверить"
+
+msgid "TOP vieta"
+msgstr "ТОП место"
+
+msgid "Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP vietu."
+msgstr "Ваше объявление будет отображаться в верхней части списка, пока кто-то другой не заплатит за ТОП место."
+
+msgid "Lūdzu izvēlieties kategoriju pirms publicēšanas."
+msgstr "Пожалуйста, выберите категорию перед публикацией."
+
+msgid "E-pasts"
+msgstr "Эл. почта"
+
+msgid "vismaz 1, max 8"
+msgstr "минимум 1, макс. 8"
+
+msgid "nav obligāts, max 1"
+msgstr "не обязательно, макс. 1"
+
+msgid "Publicēt reklāmas baneri"
+msgstr "Опубликовать рекламный баннер"
+
+msgid "Par baneri"
+msgstr "О баннере"
+
+msgid "Baneris rādīsies visās lapas apakšlapās augšējā labajā stūrī"
+msgstr "Баннер будет отображаться на всех страницах сайта в верхнем правом углу."
+
+msgid "Rotācijas laiks:"
+msgstr "Время ротации:"
+
+msgid "sek. katram banerim"
+msgstr "сек. для каждого баннера"
+
+msgid "Maksa:"
+msgstr "Стоимость:"
+
+msgid "novilkts no maka"
+msgstr "списывается с кошелька"
+
+msgid "Bezmaksas"
+msgstr "Бесплатно"
+
+msgid "Ieteicamais izmērs:"
+msgstr "Рекомендуемый размер:"
+
+msgid "Banera attēls"
+msgstr "Изображение баннера"
+
+msgid "JPG, PNG, WEBP. Ieteicamais izmērs: 300×150 px."
+msgstr "JPG, PNG, WEBP. Рекомендуемый размер: 300×150 пx."
+
+msgid "Priekšskatījums:"
+msgstr "Предпросмотр:"
+
+msgid "Teksts"
+msgstr "Текст"
+
+msgid "nav obligāts — rakstāmmašīnas efekts"
+msgstr "не обязательно — эффект печатной машинки"
+
+msgid "Teksts animēti parādīsies zem attēla."
+msgstr "Текст анимированно появится под изображением."
+
+msgid "Saite pēc klikšķa"
+msgstr "Ссылка по клику"
+
+msgid "Publicēt baneri"
+msgstr "Опубликовать баннер"
+
+msgid "Vēlaties publicēt reklāmas baneri?"
+msgstr "Хотите опубликовать рекламный баннер?"
+
+msgid "Baneris parādīsies visās lapas apakšlapās augšējā labajā stūrī."
+msgstr "Баннер появится на всех страницах сайта в верхнем правом углу."
+
+msgid "1 nedēļa"
+msgstr "1 неделя"
+
+msgid "2 nedēļas"
+msgstr "2 недели"
+
+msgid "3 nedēļas"
+msgstr "3 недели"
+
+msgid "4 nedēļas"
+msgstr "4 недели"
 

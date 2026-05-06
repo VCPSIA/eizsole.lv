@@ -341,6 +341,66 @@ msgstr "Registrierung erfolgreich!"
 msgid "Sludinājums publicēts."
 msgstr "Anzeige veröffentlicht."
 
+msgid "solījumi"
+msgstr "Gebote"
+
+msgid "Aktīva"
+msgstr "Aktiv"
+
+msgid "beidzas"
+msgstr "endet"
+
+msgid "Anti-snipe pagarināts"
+msgstr "Anti-Snipe verlängert"
+
+msgid "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min."
+msgstr "Anti-Snipe aktiv — ein Gebot in den letzten 60 Sek. verlängert die Auktion um 3 Min."
+
+msgid "Jūsu rezerves cena"
+msgstr "Ihr Mindestpreis"
+
+msgid "redzat tikai jūs"
+msgstr "nur Sie sehen dies"
+
+msgid "Manuāli"
+msgstr "Manuell"
+
+msgid "Automātiski"
+msgstr "Automatisch"
+
+msgid "Min. solījums"
+msgstr "Mindestgebot"
+
+msgid "Soļu tabula"
+msgstr "Gebotsschritte"
+
+msgid "Solis"
+msgstr "Schritt"
+
+msgid "Automātiskā solīšana aktīva"
+msgstr "Autogebot aktiv"
+
+msgid "Jūsu maksimums"
+msgstr "Ihr Maximum"
+
+msgid "Mans maksimums"
+msgstr "Mein Maximum"
+
+msgid "Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir slēpts no citiem."
+msgstr "Das System bietet automatisch mit dem Mindestbetrag für Sie. Ihr Maximum ist für andere verborgen."
+
+msgid "Atjaunināt automātisko solīšanu"
+msgstr "Autogebot aktualisieren"
+
+msgid "Uzstādīt automātisko solīšanu"
+msgstr "Autogebot festlegen"
+
+msgid "Nevarat solīt savā izsolē."
+msgstr "Sie können nicht in Ihrer eigenen Auktion bieten."
+
+msgid "Izsole ir noslēgusies."
+msgstr "Die Auktion ist beendet."
+
 msgid "Gads"
 msgstr "Jahr"
 
@@ -835,4 +895,232 @@ msgstr "Militärgeschichte"
 
 msgid "Medaļas, ordeņi, nozīmītes"
 msgstr "Medaillen, Orden, Abzeichen"
+
+msgid "— Izvēlieties kategoriju —"
+msgstr "— Kategorie wählen —"
+
+msgid "— Izvēlieties apakškategoriju —"
+msgstr "— Unterkategorie wählen —"
+
+msgid "— Izvēlieties modeli —"
+msgstr "— Modell wählen —"
+
+msgid "— Izvēlieties —"
+msgstr "— Auswählen —"
+
+msgid "— Nav norādīts —"
+msgstr "— Nicht angegeben —"
+
+msgid "Izgatavošanas gads"
+msgstr "Baujahr"
+
+msgid "Sāciet rakstīt adresi..."
+msgstr "Adresse eingeben..."
+
+msgid "Lūdzu izvēlieties adresi no saraksta."
+msgstr "Bitte wählen Sie eine Adresse aus der Liste."
+
+msgid "Spied vai velc bildes šeit"
+msgstr "Fotos hier klicken oder ziehen"
+
+msgid "JPG, PNG, WEBP · max 8 bildes"
+msgstr "JPG, PNG, WEBP · max. 8 Fotos"
+
+msgid "Spied vai velc video šeit"
+msgstr "Video hier klicken oder ziehen"
+
+msgid "MP4, WEBM, MOV · max 1 video"
+msgstr "MP4, WEBM, MOV · max. 1 Video"
+
+msgid "Transportlīdzekļa dati"
+msgstr "Fahrzeugdaten"
+
+msgid "Obligāti lauki"
+msgstr "Pflichtfelder"
+
+msgid "Motora tips"
+msgstr "Motortyp"
+
+msgid "Motora tilpums (L)"
+msgstr "Motorvolumen (L)"
+
+msgid "Nobraukums (km)"
+msgstr "Kilometerstand (km)"
+
+msgid "Reģ. numurs"
+msgstr "Kfz-Kennzeichen"
+
+msgid "VIN kods"
+msgstr "VIN-Code"
+
+msgid "Ir tehniskā apskate"
+msgstr "Hat TÜV"
+
+msgid "Tehniskā apskate līdz"
+msgstr "TÜV gültig bis"
+
+msgid "Riepas parametri"
+msgstr "Reifenparameter"
+
+msgid "* — obligāti lauki"
+msgstr "* — Pflichtfelder"
+
+msgid "Rādiuss (collas)"
+msgstr "Radius (Zoll)"
+
+msgid "Platums (mm)"
+msgstr "Breite (mm)"
+
+msgid "Profils (%)"
+msgstr "Profil (%)"
+
+msgid "Ātruma indekss"
+msgstr "Geschwindigkeitsindex"
+
+msgid "Nekustamā īpašuma dati"
+msgstr "Immobilienangaben"
+
+msgid "Rajons"
+msgstr "Bezirk"
+
+msgid "Aprīkojums"
+msgstr "Ausstattung"
+
+msgid "Atzīmējiet visu pieejamo aprīkojumu"
+msgstr "Alle verfügbare Ausstattung markieren"
+
+msgid "Publicēt kā izsoli"
+msgstr "Als Auktion einstellen"
+
+msgid "Sākuma cena (€)"
+msgstr "Startpreis (€)"
+
+msgid "Solījuma solis tiek aprēķināts automātiski pēc cenas."
+msgstr "Der Gebotsschritt wird automatisch anhand des Preises berechnet."
+
+msgid "Izsole beidzas"
+msgstr "Auktion endet"
+
+msgid "Minimums: 1 stunda. Maksimums: 1 mēnesis."
+msgstr "Minimum: 1 Stunde. Maximum: 1 Monat."
+
+msgid "Pērc tūlīt cena (€)"
+msgstr "Sofortkauf-Preis (€)"
+
+msgid "— nav obligāta"
+msgstr "— optional"
+
+msgid "Pircējs var nopirkt uzreiz bez solīšanas."
+msgstr "Käufer kann sofort ohne Bieten kaufen."
+
+msgid "Rezerves cena (€)"
+msgstr "Mindestpreis (€)"
+
+msgid "Slēptā min. cena. Pircēji neredz summu, tikai statusu."
+msgstr "Versteckter Mindestpreis. Käufer sehen nur den Status, nicht den Betrag."
+
+msgid "Kontaktinformācija"
+msgstr "Kontaktinformationen"
+
+msgid "Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski redzams."
+msgstr "Telefon ist im Inserat nach Klick sichtbar. E-Mail ist nicht öffentlich sichtbar."
+
+msgid "Publicēšanas ilgums"
+msgstr "Veröffentlichungsdauer"
+
+msgid "Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt jebkurā laikā."
+msgstr "Nach Ablauf der Frist wird die Anzeige automatisch gelöscht. Die Frist kann jederzeit verlängert werden."
+
+msgid "Atlaižu kods"
+msgstr "Rabattcode"
+
+msgid "Pārbaudīt"
+msgstr "Prüfen"
+
+msgid "TOP vieta"
+msgstr "TOP-Platz"
+
+msgid "Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP vietu."
+msgstr "Ihre Anzeige erscheint oben in der Liste, bis jemand anderes für einen TOP-Platz bezahlt."
+
+msgid "Lūdzu izvēlieties kategoriju pirms publicēšanas."
+msgstr "Bitte wählen Sie vor der Veröffentlichung eine Kategorie aus."
+
+msgid "E-pasts"
+msgstr "E-Mail"
+
+msgid "vismaz 1, max 8"
+msgstr "mindestens 1, max. 8"
+
+msgid "nav obligāts, max 1"
+msgstr "optional, max. 1"
+
+msgid "Publicēt reklāmas baneri"
+msgstr "Werbebanner veröffentlichen"
+
+msgid "Par baneri"
+msgstr "Über das Banner"
+
+msgid "Baneris rādīsies visās lapas apakšlapās augšējā labajā stūrī"
+msgstr "Das Banner erscheint auf allen Seiten oben rechts."
+
+msgid "Rotācijas laiks:"
+msgstr "Rotationszeit:"
+
+msgid "sek. katram banerim"
+msgstr "Sek. pro Banner"
+
+msgid "Maksa:"
+msgstr "Gebühr:"
+
+msgid "novilkts no maka"
+msgstr "vom Wallet abgezogen"
+
+msgid "Bezmaksas"
+msgstr "Kostenlos"
+
+msgid "Ieteicamais izmērs:"
+msgstr "Empfohlene Größe:"
+
+msgid "Banera attēls"
+msgstr "Bannerbild"
+
+msgid "JPG, PNG, WEBP. Ieteicamais izmērs: 300×150 px."
+msgstr "JPG, PNG, WEBP. Empfohlene Größe: 300×150 px."
+
+msgid "Priekšskatījums:"
+msgstr "Vorschau:"
+
+msgid "Teksts"
+msgstr "Text"
+
+msgid "nav obligāts — rakstāmmašīnas efekts"
+msgstr "optional — Schreibmaschineneffekt"
+
+msgid "Teksts animēti parādīsies zem attēla."
+msgstr "Der Text wird animiert unter dem Bild erscheinen."
+
+msgid "Saite pēc klikšķa"
+msgstr "Link beim Klick"
+
+msgid "Publicēt baneri"
+msgstr "Banner veröffentlichen"
+
+msgid "Vēlaties publicēt reklāmas baneri?"
+msgstr "Möchten Sie einen Werbebanner veröffentlichen?"
+
+msgid "Baneris parādīsies visās lapas apakšlapās augšējā labajā stūrī."
+msgstr "Das Banner erscheint auf allen Seiten oben rechts."
+
+msgid "1 nedēļa"
+msgstr "1 Woche"
+
+msgid "2 nedēļas"
+msgstr "2 Wochen"
+
+msgid "3 nedēļas"
+msgstr "3 Wochen"
+
+msgid "4 nedēļas"
+msgstr "4 Wochen"
 

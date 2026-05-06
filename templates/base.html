@@ -418,6 +418,141 @@
     </div>
 </nav>
 
+{% if active_banners %}
+<div id="banner-widget" style="position:fixed;top:62px;right:0;z-index:1040;width:220px;background:#fff;border:1px solid #e9ecef;border-radius:8px;box-shadow:-4px 4px 16px rgba(0,0,0,.12);overflow:hidden;cursor:grab;user-select:none">
+    {% for b in active_banners %}
+    <div class="bslide" data-text="{{ b.text }}" style="display:none">
+        {% if b.link_url %}
+        <a href="{{ b.link_url }}" target="_blank" rel="noopener noreferrer" class="banner-link">
+            <img src="{{ b.image.url }}" alt="Reklāma" style="width:100%;display:block;max-height:110px;object-fit:cover;pointer-events:none">
+        </a>
+        {% else %}
+        <img src="{{ b.image.url }}" alt="Reklāma" style="width:100%;display:block;max-height:110px;object-fit:cover;pointer-events:none">
+        {% endif %}
+        {% if b.text %}
+        <div style="padding:.35rem .5rem;font-size:.72rem;color:#374151;background:#f9fafb;border-top:1px solid #f0f0f0;min-height:1.5rem;font-family:monospace">
+            <span class="btyper"></span><span style="border-right:1.5px solid #374151;animation:bcursor .7s infinite">​</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+<style>
+@keyframes bcursor{0%,100%{opacity:1}50%{opacity:0}}
+#banner-widget.dragging{cursor:grabbing;box-shadow:0 8px 32px rgba(0,0,0,.22);opacity:.92}
+</style>
+<script>
+(function(){
+    var widget = document.getElementById('banner-widget');
+    var slides = widget.querySelectorAll('.bslide');
+    if (!slides.length) { widget.style.display='none'; return; }
+    var current = 0;
+    var typerTimer = null;
+
+    function typeText(el, text) {
+        clearTimeout(typerTimer);
+        el.textContent = '';
+        var i = 0;
+        function step() {
+            if (i < text.length) { el.textContent += text[i++]; typerTimer = setTimeout(step, 65); }
+            else { typerTimer = setTimeout(function(){ typeText(el, text); }, 2000); }
+        }
+        step();
+    }
+
+    function showSlide(idx) {
+        slides.forEach(function(s){ s.style.display='none'; });
+        var s = slides[idx];
+        s.style.display = 'block';
+        var typer = s.querySelector('.btyper');
+        var text = s.dataset.text || '';
+        if (typer && text) typeText(typer, text);
+    }
+
+    showSlide(0);
+    if (slides.length > 1) {
+        setInterval(function(){
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        }, {{ banner_rotation_seconds|default:5 }} * 1000);
+    }
+
+    // — Pozīcijas atjaunošana no localStorage —
+    (function restorePos() {
+        var saved = localStorage.getItem('banner_pos');
+        if (!saved) return;
+        try {
+            var p = JSON.parse(saved);
+            var maxL = window.innerWidth  - widget.offsetWidth;
+            var maxT = window.innerHeight - widget.offsetHeight;
+            widget.style.right = 'auto';
+            widget.style.left = Math.max(0, Math.min(maxL, p.left)) + 'px';
+            widget.style.top  = Math.max(0, Math.min(maxT, p.top))  + 'px';
+        } catch(e) {}
+    })();
+
+    // — Drag —
+    var dragging = false, startX, startY, origLeft, origTop, moved;
+
+    function getPos(e) {
+        return e.touches ? {x: e.touches[0].clientX, y: e.touches[0].clientY}
+                         : {x: e.clientX, y: e.clientY};
+    }
+
+    function onStart(e) {
+        var pos = getPos(e);
+        var rect = widget.getBoundingClientRect();
+        widget.style.right = 'auto';
+        widget.style.left = rect.left + 'px';
+        widget.style.top  = rect.top  + 'px';
+        startX   = pos.x;
+        startY   = pos.y;
+        origLeft = rect.left;
+        origTop  = rect.top;
+        dragging = true;
+        moved    = false;
+        widget.classList.add('dragging');
+        e.preventDefault();
+    }
+
+    function onMove(e) {
+        if (!dragging) return;
+        var pos = getPos(e);
+        var dx = pos.x - startX;
+        var dy = pos.y - startY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+        var newLeft = Math.max(0, Math.min(window.innerWidth  - widget.offsetWidth,  origLeft + dx));
+        var newTop  = Math.max(0, Math.min(window.innerHeight - widget.offsetHeight, origTop  + dy));
+        widget.style.left = newLeft + 'px';
+        widget.style.top  = newTop  + 'px';
+        e.preventDefault();
+    }
+
+    function onEnd(e) {
+        if (!dragging) return;
+        dragging = false;
+        widget.classList.remove('dragging');
+        if (moved) {
+            localStorage.setItem('banner_pos', JSON.stringify({
+                left: parseFloat(widget.style.left),
+                top:  parseFloat(widget.style.top)
+            }));
+        } else {
+            var link = e.target && e.target.closest ? e.target.closest('.banner-link') : null;
+            if (link) link.click();
+        }
+    }
+
+    widget.addEventListener('mousedown',  onStart, {passive: false});
+    widget.addEventListener('touchstart', onStart, {passive: false});
+    document.addEventListener('mousemove',  onMove, {passive: false});
+    document.addEventListener('touchmove',  onMove, {passive: false});
+    document.addEventListener('mouseup',  onEnd);
+    document.addEventListener('touchend', onEnd);
+})();
+</script>
+{% endif %}
+
 <div class="container main-container">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3">

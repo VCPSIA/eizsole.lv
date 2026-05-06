@@ -338,6 +338,9 @@ class SiteSettings(models.Model):
     featured_listing_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='TOP sludinājuma maksa (€ ar PVN)')
     featured_auction_enabled = models.BooleanField(default=False, verbose_name='TOP izsole ieslēgta')
     featured_auction_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='TOP izsoles maksa (€ ar PVN)')
+    banner_enabled = models.BooleanField(default=False, verbose_name='Baneri ieslēgti')
+    banner_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='Banera maksa (€ ar PVN)')
+    banner_rotation_seconds = models.PositiveIntegerField(default=5, verbose_name='Banera rotācijas laiks (sekundes)')
 
     class Meta:
         verbose_name = 'Vietnes iestatījumi'
@@ -350,3 +353,21 @@ class SiteSettings(models.Model):
     def get(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+class Banner(models.Model):
+    listing = models.OneToOneField('Listing', on_delete=models.CASCADE, related_name='banner', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='banners')
+    image = models.ImageField(upload_to='banners/', verbose_name='Attēls')
+    text = models.CharField(max_length=200, blank=True, verbose_name='Teksts (rakstāmmašīna)')
+    link_url = models.URLField(blank=True, verbose_name='Saite (pēc klikšķa)')
+    is_active = models.BooleanField(default=True, verbose_name='Aktīvs')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Baneris'
+        verbose_name_plural = 'Baneri'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'Baneris #{self.pk} — {self.user.username}'

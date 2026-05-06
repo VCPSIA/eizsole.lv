@@ -341,6 +341,66 @@ msgstr "Registration successful!"
 msgid "Sludinājums publicēts."
 msgstr "Listing published."
 
+msgid "solījumi"
+msgstr "bids"
+
+msgid "Aktīva"
+msgstr "Active"
+
+msgid "beidzas"
+msgstr "ends"
+
+msgid "Anti-snipe pagarināts"
+msgstr "Anti-snipe extended"
+
+msgid "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min."
+msgstr "Anti-snipe active — a bid in the last 60 sec. extends the auction by 3 min."
+
+msgid "Jūsu rezerves cena"
+msgstr "Your reserve price"
+
+msgid "redzat tikai jūs"
+msgstr "only you can see this"
+
+msgid "Manuāli"
+msgstr "Manual"
+
+msgid "Automātiski"
+msgstr "Automatic"
+
+msgid "Min. solījums"
+msgstr "Min. bid"
+
+msgid "Soļu tabula"
+msgstr "Bid step table"
+
+msgid "Solis"
+msgstr "Step"
+
+msgid "Automātiskā solīšana aktīva"
+msgstr "Auto-bid active"
+
+msgid "Jūsu maksimums"
+msgstr "Your maximum"
+
+msgid "Mans maksimums"
+msgstr "My maximum"
+
+msgid "Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir slēpts no citiem."
+msgstr "The system will automatically bid on your behalf with the minimum increment. Your maximum is hidden from others."
+
+msgid "Atjaunināt automātisko solīšanu"
+msgstr "Update auto-bidding"
+
+msgid "Uzstādīt automātisko solīšanu"
+msgstr "Set auto-bidding"
+
+msgid "Nevarat solīt savā izsolē."
+msgstr "Cannot bid on your own auction."
+
+msgid "Izsole ir noslēgusies."
+msgstr "The auction has ended."
+
 msgid "Gads"
 msgstr "Year"
 
@@ -835,4 +895,232 @@ msgstr "Military history"
 
 msgid "Medaļas, ordeņi, nozīmītes"
 msgstr "Medals, orders, badges"
+
+msgid "— Izvēlieties kategoriju —"
+msgstr "— Select category —"
+
+msgid "— Izvēlieties apakškategoriju —"
+msgstr "— Select subcategory —"
+
+msgid "— Izvēlieties modeli —"
+msgstr "— Select model —"
+
+msgid "— Izvēlieties —"
+msgstr "— Select —"
+
+msgid "— Nav norādīts —"
+msgstr "— Not specified —"
+
+msgid "Izgatavošanas gads"
+msgstr "Year of manufacture"
+
+msgid "Sāciet rakstīt adresi..."
+msgstr "Start typing address..."
+
+msgid "Lūdzu izvēlieties adresi no saraksta."
+msgstr "Please select an address from the list."
+
+msgid "Spied vai velc bildes šeit"
+msgstr "Click or drag photos here"
+
+msgid "JPG, PNG, WEBP · max 8 bildes"
+msgstr "JPG, PNG, WEBP · max 8 photos"
+
+msgid "Spied vai velc video šeit"
+msgstr "Click or drag video here"
+
+msgid "MP4, WEBM, MOV · max 1 video"
+msgstr "MP4, WEBM, MOV · max 1 video"
+
+msgid "Transportlīdzekļa dati"
+msgstr "Vehicle details"
+
+msgid "Obligāti lauki"
+msgstr "Required fields"
+
+msgid "Motora tips"
+msgstr "Engine type"
+
+msgid "Motora tilpums (L)"
+msgstr "Engine volume (L)"
+
+msgid "Nobraukums (km)"
+msgstr "Mileage (km)"
+
+msgid "Reģ. numurs"
+msgstr "Reg. number"
+
+msgid "VIN kods"
+msgstr "VIN code"
+
+msgid "Ir tehniskā apskate"
+msgstr "Has technical inspection"
+
+msgid "Tehniskā apskate līdz"
+msgstr "Inspection valid until"
+
+msgid "Riepas parametri"
+msgstr "Tire parameters"
+
+msgid "* — obligāti lauki"
+msgstr "* — required fields"
+
+msgid "Rādiuss (collas)"
+msgstr "Radius (inches)"
+
+msgid "Platums (mm)"
+msgstr "Width (mm)"
+
+msgid "Profils (%)"
+msgstr "Profile (%)"
+
+msgid "Ātruma indekss"
+msgstr "Speed index"
+
+msgid "Nekustamā īpašuma dati"
+msgstr "Property details"
+
+msgid "Rajons"
+msgstr "District"
+
+msgid "Aprīkojums"
+msgstr "Equipment"
+
+msgid "Atzīmējiet visu pieejamo aprīkojumu"
+msgstr "Check all available equipment"
+
+msgid "Publicēt kā izsoli"
+msgstr "Post as auction"
+
+msgid "Sākuma cena (€)"
+msgstr "Starting price (€)"
+
+msgid "Solījuma solis tiek aprēķināts automātiski pēc cenas."
+msgstr "Bid increment is calculated automatically based on the price."
+
+msgid "Izsole beidzas"
+msgstr "Auction ends"
+
+msgid "Minimums: 1 stunda. Maksimums: 1 mēnesis."
+msgstr "Minimum: 1 hour. Maximum: 1 month."
+
+msgid "Pērc tūlīt cena (€)"
+msgstr "Buy now price (€)"
+
+msgid "— nav obligāta"
+msgstr "— optional"
+
+msgid "Pircējs var nopirkt uzreiz bez solīšanas."
+msgstr "Buyer can purchase immediately without bidding."
+
+msgid "Rezerves cena (€)"
+msgstr "Reserve price (€)"
+
+msgid "Slēptā min. cena. Pircēji neredz summu, tikai statusu."
+msgstr "Hidden minimum price. Buyers see only the status, not the amount."
+
+msgid "Kontaktinformācija"
+msgstr "Contact information"
+
+msgid "Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski redzams."
+msgstr "Phone is visible in the listing after button click. Email is not publicly visible."
+
+msgid "Publicēšanas ilgums"
+msgstr "Listing duration"
+
+msgid "Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt jebkurā laikā."
+msgstr "After the period expires, the listing will be automatically deleted. The period can be extended at any time."
+
+msgid "Atlaižu kods"
+msgstr "Discount code"
+
+msgid "Pārbaudīt"
+msgstr "Check"
+
+msgid "TOP vieta"
+msgstr "TOP spot"
+
+msgid "Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP vietu."
+msgstr "Your listing will appear at the top of the list until someone else pays for a TOP spot."
+
+msgid "Lūdzu izvēlieties kategoriju pirms publicēšanas."
+msgstr "Please select a category before posting."
+
+msgid "E-pasts"
+msgstr "Email"
+
+msgid "vismaz 1, max 8"
+msgstr "at least 1, max 8"
+
+msgid "nav obligāts, max 1"
+msgstr "optional, max 1"
+
+msgid "Publicēt reklāmas baneri"
+msgstr "Publish ad banner"
+
+msgid "Par baneri"
+msgstr "About the banner"
+
+msgid "Baneris rādīsies visās lapas apakšlapās augšējā labajā stūrī"
+msgstr "The banner will appear on all pages in the top-right corner."
+
+msgid "Rotācijas laiks:"
+msgstr "Rotation time:"
+
+msgid "sek. katram banerim"
+msgstr "sec. per banner"
+
+msgid "Maksa:"
+msgstr "Fee:"
+
+msgid "novilkts no maka"
+msgstr "deducted from wallet"
+
+msgid "Bezmaksas"
+msgstr "Free"
+
+msgid "Ieteicamais izmērs:"
+msgstr "Recommended size:"
+
+msgid "Banera attēls"
+msgstr "Banner image"
+
+msgid "JPG, PNG, WEBP. Ieteicamais izmērs: 300×150 px."
+msgstr "JPG, PNG, WEBP. Recommended size: 300×150 px."
+
+msgid "Priekšskatījums:"
+msgstr "Preview:"
+
+msgid "Teksts"
+msgstr "Text"
+
+msgid "nav obligāts — rakstāmmašīnas efekts"
+msgstr "optional — typewriter effect"
+
+msgid "Teksts animēti parādīsies zem attēla."
+msgstr "The text will animate below the image."
+
+msgid "Saite pēc klikšķa"
+msgstr "Link on click"
+
+msgid "Publicēt baneri"
+msgstr "Publish banner"
+
+msgid "Vēlaties publicēt reklāmas baneri?"
+msgstr "Want to publish an ad banner?"
+
+msgid "Baneris parādīsies visās lapas apakšlapās augšējā labajā stūrī."
+msgstr "The banner will appear on all pages in the top-right corner."
+
+msgid "1 nedēļa"
+msgstr "1 week"
+
+msgid "2 nedēļas"
+msgstr "2 weeks"
+
+msgid "3 nedēļas"
+msgstr "3 weeks"
+
+msgid "4 nedēļas"
+msgstr "4 weeks"
 
