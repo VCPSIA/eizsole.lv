@@ -419,7 +419,7 @@
 </nav>
 
 {% if active_banners %}
-<div id="banner-widget" style="position:fixed;top:62px;right:0;z-index:1040;width:220px;background:#fff;border:1px solid #e9ecef;border-radius:8px;box-shadow:-4px 4px 16px rgba(0,0,0,.12);overflow:hidden;cursor:grab;user-select:none">
+<div id="banner-widget" style="position:fixed;bottom:20px;left:0;z-index:1040;width:220px;background:#fff;border:1px solid #e9ecef;border-radius:8px;box-shadow:4px -4px 16px rgba(0,0,0,.12);overflow:hidden;cursor:grab;user-select:none">
     {% for b in active_banners %}
     <div class="bslide" data-text="{{ b.text }}" style="display:none">
         {% if b.link_url %}
@@ -485,7 +485,7 @@
             var p = JSON.parse(saved);
             var maxL = window.innerWidth  - widget.offsetWidth;
             var maxT = window.innerHeight - widget.offsetHeight;
-            widget.style.right = 'auto';
+            widget.style.bottom = 'auto';
             widget.style.left = Math.max(0, Math.min(maxL, p.left)) + 'px';
             widget.style.top  = Math.max(0, Math.min(maxT, p.top))  + 'px';
         } catch(e) {}
