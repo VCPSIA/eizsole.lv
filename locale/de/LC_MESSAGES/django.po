@@ -47,6 +47,21 @@ msgstr "Startseite"
 msgid "Konts"
 msgstr "Konto"
 
+msgid "Kontakti"
+msgstr "Kontakte"
+
+msgid "Lētākā izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši."
+msgstr "Die günstigste Auktions- und Anzeigenplattform. Kaufen, verkaufen und bieten Sie sicher."
+
+msgid "Reģ. Nr."
+msgstr "Reg.-Nr."
+
+msgid "Privātuma politika"
+msgstr "Datenschutzrichtlinie"
+
+msgid "Lietošanas noteikumi"
+msgstr "Nutzungsbedingungen"
+
 msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
 msgstr "Wir verwenden Cookies für eine bessere Nutzererfahrung. Durch die weitere Nutzung stimmen Sie der"
 

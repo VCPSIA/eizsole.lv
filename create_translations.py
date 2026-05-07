@@ -18,6 +18,14 @@ TRANSLATIONS = {
     "Platforma":                   {"ru": "Платформа",                  "en": "Platform",                   "de": "Plattform"},
     "Sākumlapa":                   {"ru": "Главная",                    "en": "Home",                       "de": "Startseite"},
     "Konts":                       {"ru": "Аккаунт",                    "en": "Account",                    "de": "Konto"},
+    "Kontakti":                    {"ru": "Контакты",                   "en": "Contacts",                   "de": "Kontakte"},
+    "Lētākā izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši.":
+                                   {"ru": "Самая доступная платформа аукционов и объявлений. Покупай, продавай и торгуйся безопасно.",
+                                    "en": "The most affordable auction and listings platform. Buy, sell and bid safely.",
+                                    "de": "Die günstigste Auktions- und Anzeigenplattform. Kaufen, verkaufen und bieten Sie sicher."},
+    "Reģ. Nr.":                    {"ru": "Рег. №",                     "en": "Reg. No.",                   "de": "Reg.-Nr."},
+    "Privātuma politika":          {"ru": "Политика конфиденциальности","en": "Privacy policy",             "de": "Datenschutzrichtlinie"},
+    "Lietošanas noteikumi":        {"ru": "Условия использования",      "en": "Terms of use",               "de": "Nutzungsbedingungen"},
     # Cookies
     "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat":
                                    {"ru": "Мы используем файлы cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с",
