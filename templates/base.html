@@ -537,11 +537,12 @@
                 left: parseFloat(widget.style.left),
                 top:  parseFloat(widget.style.top)
             }));
-        } else {
-            var link = e.target && e.target.closest ? e.target.closest('.banner-link') : null;
-            if (link) link.click();
         }
     }
+
+    widget.addEventListener('click', function(e) {
+        if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    });
 
     widget.addEventListener('mousedown',  onStart, {passive: false});
     widget.addEventListener('touchstart', onStart, {passive: false});
