@@ -119,8 +119,13 @@ class BannerAdmin(admin.ModelAdmin):
     list_filter = ['is_active']
     list_editable = ['is_active']
     search_fields = ['user__username', 'listing__title']
-    readonly_fields = ['user', 'listing', 'created_at', 'preview']
-    fields = ['user', 'listing', 'image', 'preview', 'text', 'link_url', 'is_active', 'created_at']
+    readonly_fields = ['created_at', 'preview']
+    fields = ['user', 'image', 'preview', 'text', 'link_url', 'is_active', 'created_at']
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk and not obj.user_id:
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
 
     def preview(self, obj):
         if obj.image:
