@@ -191,9 +191,19 @@
             {% for field in form %}
             <div class="mb-2">
                 <label class="form-label fw-500">{{ field.label }}</label>
+                {% if field.field.widget.input_type == 'password' %}
+                <div class="input-group">
+                    <input type="password" name="{{ field.html_name }}" id="reg-pw-{{ forloop.counter }}"
+                        class="form-control" placeholder="{{ field.label }}">
+                    <button type="button" class="input-group-text bg-white border-start-0" onclick="togglePw('reg-pw-{{ forloop.counter }}',this)" tabindex="-1">
+                        <i class="bi bi-eye text-muted"></i>
+                    </button>
+                </div>
+                {% else %}
                 <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}"
                     class="form-control" placeholder="{{ field.label }}"
-                    {% if field.value and field.field.widget.input_type != 'password' %}value="{{ field.value }}"{% endif %}>
+                    {% if field.value %}value="{{ field.value }}"{% endif %}>
+                {% endif %}
                 {% if field.help_text %}
                 <div class="form-text" style="font-size:.75rem">{{ field.help_text }}</div>
                 {% endif %}
