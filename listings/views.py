@@ -629,6 +629,10 @@ def listing_create(request):
             )
             WalletTransaction.make_spend(wallet, banner_fee, description='Reklāmas baneris', reference=f'BAN-{listing.pk}')
 
+        if is_auction:
+            messages.success(request, 'Izsole veiksmīgi publicēta!')
+        else:
+            messages.success(request, 'Sludinājums veiksmīgi publicēts!')
         return redirect('listing_detail', pk=listing.pk)
     try:
         profile = request.user.profile
