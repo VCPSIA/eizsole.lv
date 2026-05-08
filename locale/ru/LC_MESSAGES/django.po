@@ -62,6 +62,9 @@ msgstr "Политика конфиденциальности"
 msgid "Lietošanas noteikumi"
 msgstr "Условия использования"
 
+msgid "Lietotājvārds vai e-pasts"
+msgstr "Имя пользователя или e-mail"
+
 msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
 msgstr "Мы используем файлы cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с"
 

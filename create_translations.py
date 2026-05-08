@@ -26,6 +26,7 @@ TRANSLATIONS = {
     "Reģ. Nr.":                    {"ru": "Рег. №",                     "en": "Reg. No.",                   "de": "Reg.-Nr."},
     "Privātuma politika":          {"ru": "Политика конфиденциальности","en": "Privacy policy",             "de": "Datenschutzrichtlinie"},
     "Lietošanas noteikumi":        {"ru": "Условия использования",      "en": "Terms of use",               "de": "Nutzungsbedingungen"},
+    "Lietotājvārds vai e-pasts":    {"ru": "Имя пользователя или e-mail", "en": "Username or email",           "de": "Benutzername oder E-Mail"},
     # Cookies
     "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat":
                                    {"ru": "Мы используем файлы cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с",

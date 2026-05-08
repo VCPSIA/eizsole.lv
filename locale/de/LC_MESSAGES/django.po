@@ -62,6 +62,9 @@ msgstr "Datenschutzrichtlinie"
 msgid "Lietošanas noteikumi"
 msgstr "Nutzungsbedingungen"
 
+msgid "Lietotājvārds vai e-pasts"
+msgstr "Benutzername oder E-Mail"
+
 msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
 msgstr "Wir verwenden Cookies für eine bessere Nutzererfahrung. Durch die weitere Nutzung stimmen Sie der"
 
