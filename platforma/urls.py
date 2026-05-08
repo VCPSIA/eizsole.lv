@@ -16,6 +16,7 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('listings.urls')),
     path('accounts/', include('accounts.urls')),
+    path('social/', include('allauth.socialaccount.urls')),
     path('izsoles/', include('auctions.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
