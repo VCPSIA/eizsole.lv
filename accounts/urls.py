@@ -32,6 +32,7 @@ urlpatterns = [
         email_template_name='accounts/password_reset_email.txt',
         subject_template_name='accounts/password_reset_subject.txt',
         success_url='/accounts/parole/nosutita/',
+        from_email='info@eizsole.lv',
     ), name='password_reset'),
     path('parole/nosutita/', auth_views.PasswordResetDoneView.as_view(
         template_name='accounts/password_reset_done.html',
