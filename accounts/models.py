@@ -152,6 +152,28 @@ class AccountDeletionRequest(models.Model):
         return f"Konta dzēšana: {self.user.username}"
 
 
+class EmailChangeRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_change_requests')
+    new_email = models.EmailField()
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def is_valid(self):
+        return not self.is_used and timezone.now() < self.created_at + timedelta(hours=24)
+
+    @classmethod
+    def create_for_user(cls, user, new_email):
+        cls.objects.filter(user=user, is_used=False).update(is_used=True)
+        return cls.objects.create(user=user, new_email=new_email, token=secrets.token_urlsafe(32))
+
+    def __str__(self):
+        return f"E-pasta maiņa: {self.user.username} → {self.new_email}"
+
+
 class Rating(models.Model):
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings_given')
     reviewed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings_received')

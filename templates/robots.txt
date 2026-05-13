@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /izsoles/solit/
+Disallow: /izsoles/stripe/
+
+Sitemap: https://eizsole.lv/sitemap.xml

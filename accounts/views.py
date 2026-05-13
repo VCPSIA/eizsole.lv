@@ -1,14 +1,75 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Profile, EmailVerification, PhoneVerification, Wallet, WalletTransaction, AccountDeletionRequest, Notification, Rating
+from .models import Profile, EmailVerification, PhoneVerification, Wallet, WalletTransaction, AccountDeletionRequest, Notification, Rating, EmailChangeRequest
 from .sms import send_sms
 from decimal import Decimal, InvalidOperation
+
+BRUTE_FORCE_LIMIT = 5
+BRUTE_FORCE_TIMEOUT = 15 * 60  # 15 minūtes sekundēs
+
+
+def _get_client_ip(request):
+    forwarded = request.META.get('HTTP_X_FORWARDED_FOR', '')
+    if forwarded:
+        return forwarded.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR', '127.0.0.1')
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    ip = _get_client_ip(request)
+    cache_key = f'login_fail_{ip}'
+    fail_count = cache.get(cache_key, 0)
+
+    if fail_count >= BRUTE_FORCE_LIMIT:
+        return render(request, 'accounts/login.html', {'locked_out': True})
+
+    unverified = False
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            cache.delete(cache_key)
+            login(request, form.get_user())
+            return redirect(request.GET.get('next', 'home'))
+        else:
+            new_count = fail_count + 1
+            cache.set(cache_key, new_count, BRUTE_FORCE_TIMEOUT)
+            remaining = max(0, BRUTE_FORCE_LIMIT - new_count)
+
+            username = request.POST.get('username', '')
+            password = request.POST.get('password', '')
+            try:
+                user = User.objects.get(username=username)
+                if not user.is_active and user.check_password(password):
+                    unverified = True
+            except User.DoesNotExist:
+                try:
+                    user = User.objects.get(email=username)
+                    if not user.is_active and user.check_password(password):
+                        unverified = True
+                except (User.DoesNotExist, User.MultipleObjectsReturned):
+                    pass
+
+            if new_count >= BRUTE_FORCE_LIMIT:
+                return render(request, 'accounts/login.html', {'locked_out': True})
+
+            return render(request, 'accounts/login.html', {
+                'form': form,
+                'unverified': unverified,
+                'remaining': remaining,
+            })
+
+    return render(request, 'accounts/login.html', {'form': form, 'unverified': unverified})
 
 
 def register(request):
@@ -36,16 +97,16 @@ def register(request):
         if not city:
             errors.append('Pilsēta ir obligāta.')
 
+        if not request.POST.get('agree_terms'):
+            errors.append('Jums jāpiekrīt lietošanas noteikumiem.')
+
         if account_type == 'private':
             first_name = request.POST.get('first_name', '').strip()
             last_name = request.POST.get('last_name', '').strip()
-            personal_code = request.POST.get('personal_code', '').strip()
             if not first_name:
                 errors.append('Vārds ir obligāts.')
             if not last_name:
                 errors.append('Uzvārds ir obligāts.')
-            if not personal_code:
-                errors.append('Personas kods ir obligāts.')
         else:
             company_name = request.POST.get('company_name', '').strip()
             reg_number = request.POST.get('reg_number', '').strip()
@@ -63,13 +124,13 @@ def register(request):
         if form.is_valid() and not errors:
             user = form.save(commit=False)
             user.email = email
+            user.is_active = False
             user.save()
 
             profile = Profile.objects.create(user=user, account_type=account_type)
             if account_type == 'private':
                 profile.first_name = first_name
                 profile.last_name = last_name
-                profile.personal_code = personal_code
                 profile.phone = phone
                 profile.address = request.POST.get('address', '').strip()
             else:
@@ -86,8 +147,7 @@ def register(request):
             verification = EmailVerification.create_for_user(user)
             _send_verification_email(user, verification.token, request)
 
-            login(request, user)
-            messages.success(request, 'Reģistrācija veiksmīga! Lūdzu apstipriniet e-pastu.')
+            request.session['pending_verification_email'] = email
             return redirect('verify_email_sent')
 
         return render(request, 'accounts/register.html', {
@@ -113,7 +173,8 @@ def _send_verification_email(user, token, request):
 
 
 def verify_email_sent(request):
-    return render(request, 'accounts/verify_email_sent.html')
+    email = request.session.get('pending_verification_email', '')
+    return render(request, 'accounts/verify_email_sent.html', {'pending_email': email})
 
 
 def verify_email(request, token):
@@ -123,30 +184,51 @@ def verify_email(request, token):
         messages.error(request, 'Verifikācijas saite ir novecojusi vai jau izmantota.')
         return redirect('resend_verification')
 
+    user = verification.user
     verification.is_used = True
     verification.save()
-    profile, _ = Profile.objects.get_or_create(user=verification.user)
+
+    user.is_active = True
+    user.save()
+
+    profile, _ = Profile.objects.get_or_create(user=user)
     profile.email_verified = True
     profile.save()
 
-    messages.success(request, 'E-pasts veiksmīgi apstiprināts!')
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+    if 'pending_verification_email' in request.session:
+        del request.session['pending_verification_email']
+    messages.success(request, 'E-pasts veiksmīgi apstiprināts! Laipni lūdzam!')
     return redirect('profile')
 
 
-@login_required
 def resend_verification(request):
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-    if profile.email_verified:
-        messages.info(request, 'Jūsu e-pasts jau ir apstiprināts.')
-        return redirect('profile')
-
     if request.method == 'POST':
-        verification = EmailVerification.create_for_user(request.user)
-        _send_verification_email(request.user, verification.token, request)
+        if request.user.is_authenticated:
+            email = request.user.email
+        else:
+            email = request.POST.get('email', '').strip() or request.session.get('pending_verification_email', '')
+
+        user = User.objects.filter(email=email).first()
+        if user and not user.is_active:
+            verification = EmailVerification.create_for_user(user)
+            _send_verification_email(user, verification.token, request)
+            request.session['pending_verification_email'] = email
+        elif user and user.is_active:
+            profile, _ = Profile.objects.get_or_create(user=user)
+            if not profile.email_verified:
+                verification = EmailVerification.create_for_user(user)
+                _send_verification_email(user, verification.token, request)
+
         messages.success(request, 'Verifikācijas e-pasts nosūtīts atkārtoti.')
         return redirect('verify_email_sent')
 
-    return render(request, 'accounts/resend_verification.html')
+    email = ''
+    if request.user.is_authenticated:
+        email = request.user.email
+    else:
+        email = request.session.get('pending_verification_email', '')
+    return render(request, 'accounts/resend_verification.html', {'email': email})
 
 
 @login_required
@@ -229,9 +311,17 @@ def profile(request):
             messages.success(request, 'Avatārs atjaunināts.')
         return redirect('profile')
 
+    from listings.models import Listing
+    from django.utils import timezone
+    templates = Listing.objects.filter(
+        seller=request.user,
+        is_template=True,
+    ).order_by('-template_created_at')
+
     return render(request, 'accounts/profile.html', {
         'unread_count': unread_count,
         'wallet': wallet,
+        'templates': templates,
     })
 
 
@@ -278,6 +368,21 @@ def notifications_view(request):
 
 
 @login_required
+def _send_email_change_link(user, new_email, token, request):
+    link = request.build_absolute_uri(f'/accounts/maina-epastu/{token}/')
+    subject = 'Apstipriniet e-pasta maiņu — eizsole.lv'
+    body = (
+        f'Sveiki, {user.username}!\n\n'
+        f'Tika pieprasīta jūsu e-pasta maiņa uz: {new_email}\n\n'
+        f'Lai apstiprinātu maiņu, spiediet uz saites:\n\n'
+        f'{link}\n\n'
+        f'Saite derīga 24 stundas.\n\n'
+        f'Ja jūs neprasījāt mainīt e-pastu, ignorējiet šo ziņu — jūsu adrese paliks nemainīta.\n\n'
+        f'— eizsole.lv komanda'
+    )
+    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=True)
+
+
 def profile_edit(request):
     profile_obj, _ = Profile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
@@ -287,8 +392,10 @@ def profile_edit(request):
             if User.objects.filter(email=email).exclude(pk=user.pk).exists():
                 messages.error(request, 'Šī e-pasta adrese jau tiek izmantota.')
                 return render(request, 'accounts/profile_edit.html', {'profile': profile_obj})
-            user.email = email
-            user.save()
+            req = EmailChangeRequest.create_for_user(user, email)
+            _send_email_change_link(user, email, req.token, request)
+            messages.info(request, f'Apstiprinājuma saite nosūtīta uz jūsu pašreizējo e-pastu ({user.email}). Pārbaudiet iesūtni un spiediet uz saites.')
+            # Pārējie lauki tiek saglabāti normāli, tikai email ne
 
         profile_obj.phone    = request.POST.get('phone', '').strip()
         profile_obj.country  = request.POST.get('country', '').strip()
@@ -310,6 +417,32 @@ def profile_edit(request):
         return redirect('profile')
 
     return render(request, 'accounts/profile_edit.html', {'profile': profile_obj})
+
+
+def confirm_email_change(request, token):
+    req = get_object_or_404(EmailChangeRequest, token=token)
+
+    if not req.is_valid():
+        messages.error(request, 'Saite ir nederīga vai termiņš ir beidzies.')
+        return redirect('profile')
+
+    if User.objects.filter(email=req.new_email).exclude(pk=req.user.pk).exists():
+        messages.error(request, 'Šī e-pasta adrese jau tiek izmantota citā kontā.')
+        req.is_used = True
+        req.save()
+        return redirect('profile')
+
+    req.user.email = req.new_email
+    req.user.save()
+    req.is_used = True
+    req.save()
+
+    if request.user.is_authenticated and request.user == req.user:
+        messages.success(request, f'E-pasta adrese veiksmīgi nomainīta uz {req.new_email}.')
+    else:
+        messages.success(request, f'E-pasta adrese veiksmīgi nomainīta. Piesakieties ar jauno adresi.')
+
+    return redirect('profile')
 
 
 @login_required

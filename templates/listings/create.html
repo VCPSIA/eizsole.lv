@@ -44,7 +44,46 @@
         <textarea name="description" class="form-control" rows="5" required></textarea>
     </div>
 
-    <div class="row">
+    <!-- Iepazīšanās vecuma amplitūda -->
+    <div id="dating-block" class="mb-3" style="display:none">
+        <div class="card" style="border-color:#fecdd3;border-radius:12px">
+            <div class="card-header fw-semibold" style="background:#fff1f2;border-radius:12px 12px 0 0">
+                <i class="ti ti-heart text-danger"></i> {% trans "Iepazīšanās parametri" %}
+            </div>
+            <div class="card-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Es esmu</label>
+                        <select name="gender" class="form-select">
+                            <option value="">— Nav norādīts —</option>
+                            <option value="male">&#9794; Vīrietis</option>
+                            <option value="female">&#9792; Sieviete</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Meklēju</label>
+                        <select name="seeking" class="form-select">
+                            <option value="">— Nav norādīts —</option>
+                            <option value="male">&#9794; Vīrieti</option>
+                            <option value="female">&#9792; Sievieti</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">{% trans "Vecuma amplitūda" %}</label>
+                        <select name="age_range" id="age_range" class="form-select">
+                            <option value="">{% trans "— Nav norādīts —" %}</option>
+                            <option value="18-30">18–30 {% trans "gadi" %}</option>
+                            <option value="30-45">30–45 {% trans "gadi" %}</option>
+                            <option value="45-60">45–60 {% trans "gadi" %}</option>
+                            <option value="60+">{% trans "No 60 gadiem" %}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="standard-fields-row" class="row">
         <div class="col-md-4 mb-3">
             <label class="form-label fw-semibold">{% trans "Stāvoklis" %}</label>
             <select name="condition" class="form-select">
@@ -62,27 +101,26 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="col-12 mb-3">
-            <label class="form-label fw-semibold" for="address-input">
-                {% trans "Adrese" %} <span class="text-danger">*</span>
-                {% if not google_maps_api_key %}
-                <span class="text-muted fw-normal" style="font-size:.78rem">(Google Maps API atslēga nav iestatīta)</span>
-                {% endif %}
-            </label>
-            <div class="position-relative">
-                <i class="bi bi-geo-alt-fill position-absolute" style="left:.85rem;top:50%;transform:translateY(-50%);color:#e63946;font-size:.9rem;pointer-events:none"></i>
-                <input type="text" id="address-input" class="form-control" placeholder="{% trans "Sāciet rakstīt adresi..." %}"
-                    style="padding-left:2.4rem"
-                    value="{{ post.location|default:'' }}" autocomplete="off">
-            </div>
-            <input type="hidden" name="location" id="location-val" value="{{ post.location|default:'' }}">
-            <input type="hidden" name="country"  id="country-val"  value="{{ post.country|default:profile_country }}">
-            <input type="hidden" name="city"     id="city-val"     value="{{ post.city|default:profile_city }}">
-            <input type="hidden" name="lat"      id="lat-val"      value="">
-            <input type="hidden" name="lng"      id="lng-val"      value="">
-            <div id="address-hint" class="form-text" style="display:none;color:#e63946">
-                <i class="bi bi-exclamation-circle me-1"></i>{% trans "Lūdzu izvēlieties adresi no saraksta." %}
-            </div>
+    </div><!-- /standard-fields-row -->
+
+    <!-- Adrese (vienmēr redzama) -->
+    <div class="mb-3" id="address-col">
+        <label class="form-label fw-semibold" for="address-input">
+            {% trans "Dzīvesvieta" %} <span class="text-danger" id="address-required-star">*</span>
+        </label>
+        <div class="position-relative">
+            <i class="bi bi-geo-alt-fill position-absolute" style="left:.85rem;top:50%;transform:translateY(-50%);color:#e63946;font-size:.9rem;pointer-events:none"></i>
+            <input type="text" id="address-input" class="form-control" placeholder="{% trans "Sāciet rakstīt adresi..." %}"
+                style="padding-left:2.4rem"
+                value="{{ post.location|default:'' }}" autocomplete="off">
+        </div>
+        <input type="hidden" name="location" id="location-val" value="{{ post.location|default:'' }}">
+        <input type="hidden" name="country"  id="country-val"  value="{{ post.country|default:profile_country }}">
+        <input type="hidden" name="city"     id="city-val"     value="{{ post.city|default:profile_city }}">
+        <input type="hidden" name="lat"      id="lat-val"      value="">
+        <input type="hidden" name="lng"      id="lng-val"      value="">
+        <div id="address-hint" class="form-text" style="display:none;color:#e63946">
+            <i class="bi bi-exclamation-circle me-1"></i>{% trans "Lūdzu izvēlieties adresi no saraksta." %}
         </div>
     </div>
 
@@ -331,7 +369,7 @@
     </div>
 
     <!-- Izsoles opcija -->
-    <div class="card bg-light mb-3">
+    <div class="card bg-light mb-3" id="auction-card">
         <div class="card-body">
             <div class="form-check mb-3">
                 <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input" onchange="toggleAuction(this)">
@@ -636,6 +674,24 @@ function checkCat2(select) {
     if (!AUTO_DETAIL_IDS.has(val)) setYearRequired(YEAR_REQUIRED_IDS.has(val));
 }
 
+let isDatingMode = false;
+
+function setDatingMode(enabled) {
+    isDatingMode = enabled;
+    document.getElementById('dating-block').style.display = enabled ? 'block' : 'none';
+    document.getElementById('standard-fields-row').style.display = enabled ? 'none' : 'flex';
+    document.getElementById('auction-card').style.display = enabled ? 'none' : 'block';
+    if (enabled) {
+        const auctionCb = document.getElementById('is_auction');
+        if (auctionCb) auctionCb.checked = false;
+        toggleAuction({checked: false});
+    }
+    // Pēc toggleAuction — override required (toggleAuction to uzstāda required=true)
+    const priceInput = document.getElementById('price_input');
+    if (priceInput) priceInput.required = false;
+    document.querySelectorAll('input[name="deal_type"]').forEach(r => r.required = false);
+}
+
 // Kaskādes kategoriju loģika
 const selects = {
     1: document.getElementById('cat-1'),
@@ -696,6 +752,8 @@ selects[1].addEventListener('change', function() {
     setAutoBlockVisibility(false);
     setTireBlockVisibility(false);
     setReBlockVisibility(RE_CAT_IDS.has(parseInt(this.value)));
+    const slug = this.options[this.selectedIndex].dataset.slug || '';
+    setDatingMode(slug === 'iepazisanas');
     updateFinal(1, this.value, this.options[this.selectedIndex].text);
 });
 selects[2].addEventListener('change', function() {
@@ -833,69 +891,82 @@ vidZone.addEventListener('drop', e => {
     if (f) { document.getElementById('video-input').files = new DataTransfer().files; handleVideo(f); }
 });
 
-// --- Google Maps Places Autocomplete ---
-{% if google_maps_api_key %}
-let addressConfirmed = false;
-
-function initAddressAutocomplete() {
-    const input = document.getElementById('address-input');
-    const ac = new google.maps.places.Autocomplete(input, {
-        types: ['geocode', 'establishment'],
-    });
-    ac.addListener('place_changed', () => {
-        const place = ac.getPlace();
-        if (!place.geometry) return;
-        addressConfirmed = true;
-        document.getElementById('address-hint').style.display = 'none';
-        document.getElementById('location-val').value = place.formatted_address || input.value;
-        input.value = place.formatted_address || input.value;
-
-        let city = '', country = '';
-        (place.address_components || []).forEach(c => {
-            if (c.types.includes('locality') || c.types.includes('postal_town')) city = c.long_name;
-            if (c.types.includes('country')) country = c.long_name;
-        });
-        document.getElementById('city-val').value    = city;
-        document.getElementById('country-val').value = country;
-
-        const geo = place.geometry.location;
-        document.getElementById('lat-val').value = geo.lat();
-        document.getElementById('lng-val').value = geo.lng();
-    });
-
-    // Brīdinājums ja teksts mainīts bez izvēles
-    input.addEventListener('input', () => {
-        addressConfirmed = false;
-        document.getElementById('location-val').value = input.value;
-    });
-    input.addEventListener('blur', () => {
-        if (!addressConfirmed && input.value.trim()) {
-            document.getElementById('address-hint').style.display = 'block';
-        } else if (!input.value.trim()) {
-            document.getElementById('address-hint').style.display = 'none';
-        }
-    });
-}
-{% else %}
-// Bez API atslēgas — parastais teksta lauks
+// --- Adreses autocomplete ---
 (function() {
     const input = document.getElementById('address-input');
-    input.addEventListener('input', () => {
-        document.getElementById('location-val').value = input.value;
-        // Mēģina izvilkt pilsētu no "Pilsēta, Valsts" formāta
+    const locationVal = document.getElementById('location-val');
+    const cityVal = document.getElementById('city-val');
+    const countryVal = document.getElementById('country-val');
+    const hint = document.getElementById('address-hint');
+
+    {% if google_maps_api_key %}
+    // Dropdown elements
+    const dropdown = document.createElement('ul');
+    dropdown.style.cssText = 'position:absolute;z-index:9999;background:#fff;border:1px solid #ced4da;border-radius:8px;list-style:none;margin:2px 0 0;padding:0;width:100%;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12);display:none';
+    input.parentElement.style.position = 'relative';
+    input.parentElement.appendChild(dropdown);
+
+    let timer, selected = false;
+
+    input.addEventListener('input', function() {
+        selected = false;
+        locationVal.value = input.value;
+        clearTimeout(timer);
+        if (input.value.length < 2) { dropdown.style.display = 'none'; return; }
+        timer = setTimeout(() => {
+            fetch('/api/adrese/?q=' + encodeURIComponent(input.value))
+                .then(r => r.json())
+                .then(data => {
+                    dropdown.innerHTML = '';
+                    if (!data.predictions.length) { dropdown.style.display = 'none'; return; }
+                    data.predictions.forEach(p => {
+                        const li = document.createElement('li');
+                        li.textContent = p.description;
+                        li.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:.88rem;border-bottom:1px solid #f0f0f0';
+                        li.addEventListener('mousedown', function(e) {
+                            e.preventDefault();
+                            input.value = p.description;
+                            locationVal.value = p.description;
+                            cityVal.value = p.city || '';
+                            countryVal.value = p.country || '';
+                            document.getElementById('lat-val').value = p.lat || '';
+                            document.getElementById('lng-val').value = p.lng || '';
+                            selected = true;
+                            hint.style.display = 'none';
+                            dropdown.style.display = 'none';
+                        });
+                        li.addEventListener('mouseover', () => li.style.background = '#f8f9fa');
+                        li.addEventListener('mouseout', () => li.style.background = '#fff');
+                        dropdown.appendChild(li);
+                    });
+                    dropdown.style.display = 'block';
+                });
+        }, 300);
+    });
+
+    input.addEventListener('blur', function() {
+        setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+        if (!selected && input.value.trim()) hint.style.display = 'block';
+        else hint.style.display = 'none';
+    });
+
+    input.addEventListener('focus', function() {
+        hint.style.display = 'none';
+    });
+
+    {% else %}
+    // Bez API — parastais teksta lauks
+    input.addEventListener('input', function() {
+        locationVal.value = input.value;
         const parts = input.value.split(',').map(s => s.trim());
         if (parts.length >= 2) {
-            document.getElementById('city-val').value    = parts[0];
-            document.getElementById('country-val').value = parts[parts.length - 1];
+            cityVal.value = parts[0];
+            countryVal.value = parts[parts.length - 1];
         } else if (parts.length === 1 && parts[0]) {
-            document.getElementById('city-val').value = parts[0];
+            cityVal.value = parts[0];
         }
     });
+    {% endif %}
 })();
-{% endif %}
 </script>
-
-{% if google_maps_api_key %}
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAddressAutocomplete" async defer></script>
-{% endif %}
 {% endblock %}

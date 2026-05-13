@@ -13,6 +13,24 @@ from accounts.notifications import notify
 from accounts.models import Wallet, WalletTransaction
 
 
+def _validate_price(value_str, field_name='Cena'):
+    from decimal import Decimal, InvalidOperation
+    s = (value_str or '').strip()
+    if not s:
+        return None, None
+    if 'e' in s.lower():
+        return None, f'{field_name} — zinātniskais pieraksts nav atļauts.'
+    try:
+        val = Decimal(s)
+    except InvalidOperation:
+        return None, f'{field_name} — nederīgs skaitlis.'
+    if val <= 0:
+        return None, f'{field_name} jābūt pozitīvam skaitlim.'
+    if val > Decimal('9999999'):
+        return None, f'{field_name} nevar pārsniegt €9 999 999.'
+    return val, None
+
+
 def _finish_auction(auction):
     """Pabeidz izsoli: pieraksta uzvarētāju, iekasē no maka, sūta paziņojumus."""
     top_bid = auction.bids.order_by('-amount').first()
@@ -58,11 +76,38 @@ def _finish_auction(auction):
     ProxyBid.objects.filter(auction=auction, is_active=True).update(is_active=False)
 
 
+def _root_category(cat):
+    while cat.parent_id:
+        cat = cat.parent
+    return cat
+
+
 def auction_list(request):
-    auctions = Auction.objects.filter(
+    from listings.models import Category
+    qs = list(Auction.objects.filter(
         is_finished=False, ends_at__gt=timezone.now()
-    ).select_related('listing').order_by('ends_at')
-    return render(request, 'auctions/list.html', {'auctions': auctions})
+    ).select_related('listing__category__parent__parent__parent').order_by('ends_at'))
+
+    auction_root_map = {}
+    counts = {}
+    for auction in qs:
+        cat = auction.listing.category
+        if cat:
+            root = _root_category(cat)
+            auction_root_map[auction.pk] = root.pk
+            counts[root.pk] = counts.get(root.pk, 0) + 1
+
+    active_pks = set(counts.keys())
+    all_root_cats = Category.objects.filter(parent__isnull=True, pk__in=active_pks).order_by('order', 'pk')
+    root_cats_list = [
+        {'cat': c, 'count': counts.get(c.pk, 0)}
+        for c in all_root_cats
+    ]
+    auctions = [{'obj': a, 'root_cat_pk': auction_root_map.get(a.pk, '')} for a in qs]
+    return render(request, 'auctions/list.html', {
+        'auctions': auctions,
+        'root_cats': root_cats_list,
+    })
 
 
 def auction_detail(request, pk):
@@ -107,10 +152,9 @@ def place_bid(request, pk):
     if err:
         return err
 
-    try:
-        amount = Decimal(request.POST.get('amount', '0'))
-    except InvalidOperation:
-        messages.error(request, 'Nederīga summa.')
+    amount, amt_err = _validate_price(request.POST.get('amount', ''), 'Solījuma summa')
+    if amt_err or amount is None:
+        messages.error(request, amt_err or 'Solījuma summa ir obligāta.')
         return redirect('auction_detail', pk=pk)
 
     increment = get_increment(auction.current_price)
@@ -158,14 +202,13 @@ def place_bid(request, pk):
     if seller != request.user:
         notify(seller, 'bid',
                f'Jauns solījums €{auction.current_price:.2f} izsolē "{auction.listing.title}"',
-               url=f'/sludinajums/{auction.listing.pk}/')
-    # Paziņojums pārsolitajam lietotājam
-    if auto_fired:
-        prev_top = Bid.objects.filter(auction=auction).exclude(bidder=request.user).order_by('-amount').first()
-        if prev_top and prev_top.bidder != seller:
-            notify(prev_top.bidder, 'outbid',
-                   f'Jūs tikāt pārsolīts izsolē "{auction.listing.title}". Pašreizējā cena: €{auction.current_price:.2f}',
-                   url=f'/sludinajums/{auction.listing.pk}/')
+               url=f'/izsoles/{auction.pk}/')
+    # Paziņojums pārsolitajam lietotājam (gan manuāls, gan proxy)
+    prev_top = Bid.objects.filter(auction=auction).exclude(bidder=request.user).order_by('-amount').first()
+    if prev_top and prev_top.bidder != seller and prev_top.bidder != request.user:
+        notify(prev_top.bidder, 'outbid',
+               f'Jūs tikāt pārsolīts izsolē "{auction.listing.title}". Pašreizējā cena: €{auction.current_price:.2f}',
+               url=f'/izsoles/{auction.pk}/')
 
     return redirect('auction_detail', pk=pk)
 
@@ -178,10 +221,9 @@ def set_proxy_bid(request, pk):
     if err:
         return err
 
-    try:
-        max_amount = Decimal(request.POST.get('max_amount', '0'))
-    except InvalidOperation:
-        messages.error(request, 'Nederīga summa.')
+    max_amount, ma_err = _validate_price(request.POST.get('max_amount', ''), 'Maksimālā summa')
+    if ma_err or max_amount is None:
+        messages.error(request, ma_err or 'Maksimālā summa ir obligāta.')
         return redirect('auction_detail', pk=pk)
 
     increment = get_increment(auction.current_price)
@@ -278,6 +320,51 @@ def buy_now(request, pk):
         return redirect('auction_detail', pk=pk)
 
     return render(request, 'auctions/buy_now_confirm.html', {'auction': auction, 'wallet': wallet})
+
+
+@login_required
+def auction_edit(request, pk):
+    auction = get_object_or_404(Auction, pk=pk, listing__seller=request.user)
+    listing = auction.listing
+
+    if auction.is_finished:
+        messages.error(request, 'Pabeigtu izsoli nevar rediģēt.')
+        return redirect('auction_detail', pk=pk)
+
+    has_bids = auction.bids.exists()
+
+    if request.method == 'POST':
+        description = request.POST.get('description', '').strip()
+
+        if not has_bids:
+            new_title = request.POST.get('title', '').strip()
+            if len(new_title) < 3:
+                messages.error(request, 'Nosaukums ir pārāk īss — minimums 3 rakstzīmes.')
+                return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+            if len(new_title) > 200:
+                messages.error(request, 'Nosaukums ir pārāk garš — maksimums 200 rakstzīmes.')
+                return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+            new_price, sp_err = _validate_price(request.POST.get('starting_price', ''), 'Sākumcena')
+            if sp_err or new_price is None:
+                messages.error(request, sp_err or 'Sākumcena ir obligāta.')
+                return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+            listing.title = new_title
+            auction.starting_price = new_price
+            auction.current_price = new_price
+
+        if len(description) > 10000:
+            messages.error(request, 'Apraksts ir pārāk garš — maksimums 10 000 rakstzīmes.')
+            return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+        listing.description = description
+        listing.save()
+        auction.save()
+        messages.success(request, 'Izsole atjaunināta.')
+        return redirect('auction_detail', pk=pk)
+
+    return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
 
 
 @login_required

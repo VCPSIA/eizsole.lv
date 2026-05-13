@@ -1,6 +1,8 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
+from django.utils import timezone
 from .models import Listing, Category
+from auctions.models import Auction
 
 
 class ListingSitemap(Sitemap):
@@ -8,7 +10,7 @@ class ListingSitemap(Sitemap):
     priority = 0.8
 
     def items(self):
-        return Listing.objects.filter(is_active=True, moderation_status='approved')
+        return Listing.objects.filter(is_active=True, moderation_status='approved').order_by('-updated_at')
 
     def lastmod(self, obj):
         return obj.updated_at
@@ -26,6 +28,20 @@ class CategorySitemap(Sitemap):
 
     def location(self, obj):
         return reverse('category', args=[obj.slug])
+
+
+class AuctionSitemap(Sitemap):
+    changefreq = 'hourly'
+    priority = 0.9
+
+    def items(self):
+        return Auction.objects.filter(is_finished=False, ends_at__gt=timezone.now())
+
+    def lastmod(self, obj):
+        return obj.ends_at
+
+    def location(self, obj):
+        return reverse('auction_detail', args=[obj.pk])
 
 
 class StaticSitemap(Sitemap):

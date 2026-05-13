@@ -50,8 +50,8 @@ msgstr "Аккаунт"
 msgid "Kontakti"
 msgstr "Контакты"
 
-msgid "Lētākā izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši."
-msgstr "Самая доступная платформа аукционов и объявлений. Покупай, продавай и торгуйся безопасно."
+msgid "Bezmaksas izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši."
+msgstr "Бесплатная платформа аукционов и объявлений. Покупай, продавай и торгуйся безопасно."
 
 msgid "Reģ. Nr."
 msgstr "Рег. №"
@@ -236,6 +236,9 @@ msgstr "Результатов не найдено"
 msgid "Visas kategorijas"
 msgstr "Все категории"
 
+msgid "Eļļas un autokīmija"
+msgstr "Масла и автохимия"
+
 msgid "Transports"
 msgstr "Транспорт"
 
@@ -278,8 +281,8 @@ msgstr "Услуги"
 msgid "Kolekcionēšana"
 msgstr "Коллекционирование"
 
-msgid "Lētākā izsoļu un sludinājumu platforma"
-msgstr "Самая доступная аукционная платформа"
+msgid "Bezmaksas izsoļu un sludinājumu platforma"
+msgstr "Бесплатная платформа аукционов и объявлений"
 
 msgid "Skatīt izsoles"
 msgstr "Смотреть аукционы"
@@ -475,6 +478,9 @@ msgstr "Покупает"
 
 msgid "Maina"
 msgstr "Обменивает"
+
+msgid "Sludinājumi"
+msgstr "Объявления"
 
 msgid "Sludinājums"
 msgstr "Объявление"
@@ -1141,4 +1147,162 @@ msgstr "3 недели"
 
 msgid "4 nedēļas"
 msgstr "4 недели"
+
+# ── Lietošanas noteikumi ──
+msgid "Spēkā no 2025. gada 1. janvāra"
+msgstr "Действует с 1 января 2025 года"
+
+msgid "1. Vispārīgie noteikumi"
+msgstr "1. Общие положения"
+
+msgid "Lietojot eizsole.lv, jūs piekrītat šiem noteikumiem. Platforma nodrošina tirgus vietu sludinājumu publicēšanai un izsoļu rīkošanai. Platforma nav darījuma puse starp pircēju un pārdevēju."
+msgstr "Используя eizsole.lv, вы соглашаетесь с настоящими условиями. Платформа предоставляет торговую площадку для публикации объявлений и проведения аукционов. Платформа не является стороной сделок между покупателями и продавцами."
+
+msgid "2. Reģistrācija"
+msgstr "2. Регистрация"
+
+msgid "Reģistrācijai nepieciešams derīgs e-pasts un tālrunis."
+msgstr "Для регистрации необходим действующий электронный адрес и номер телефона."
+
+msgid "Lietotājam jābūt vismaz 18 gadus vecam."
+msgstr "Пользователю должно быть не менее 18 лет."
+
+msgid "Viens lietotājs var reģistrēt vienu kontu."
+msgstr "Один пользователь может зарегистрировать один аккаунт."
+
+msgid "Lietotājs ir atbildīgs par konta drošību."
+msgstr "Пользователь несёт ответственность за безопасность своего аккаунта."
+
+msgid "3. Sludinājumi un izsoles"
+msgstr "3. Объявления и аукционы"
+
+msgid "Aizliegts publicēt nelikumīgas, bīstamas vai maldinošas preces."
+msgstr "Публикация незаконных, опасных или вводящих в заблуждение товаров запрещена."
+
+msgid "Attēliem jāattēlo faktiskā prece."
+msgstr "Изображения должны отображать фактический товар."
+
+msgid "Izsoles solījums ir saistošs — uzvarētājam jāsamaksā."
+msgstr "Ставка на аукционе является обязательной — победитель обязан оплатить."
+
+msgid "Platforma patur tiesības dzēst jebkuru sludinājumu bez brīdinājuma."
+msgstr "Платформа оставляет за собой право удалить любое объявление без предупреждения."
+
+msgid "4. Maksājumi"
+msgstr "4. Платежи"
+
+msgid "Maksa par sludinājumu publicēšanu un TOP funkcijām ir norādīta platformā. Visa nauda tiek iekasēta caur drošu maksājumu sistēmu. Atmaksa iespējama tikai tehnisku kļūdu gadījumā."
+msgstr "Плата за публикацию объявлений и функций TOP указана на платформе. Все средства взимаются через безопасную платёжную систему. Возврат средств возможен только в случае технических ошибок."
+
+msgid "5. Atbildības ierobežojumi"
+msgstr "5. Ограничение ответственности"
+
+msgid "Platforma neuzņemas atbildību par darījumiem starp lietotājiem, preces kvalitāti, piegādes laiku vai citiem darījuma aspektiem. Lietotāji paši ir atbildīgi par darījuma drošību."
+msgstr "Платформа не несёт ответственности за сделки между пользователями, качество товаров, сроки доставки или иные аспекты сделки. Пользователи несут личную ответственность за безопасность сделок."
+
+msgid "6. Pārkāpumi"
+msgstr "6. Нарушения"
+
+msgid "Noteikumu pārkāpuma gadījumā konts var tikt apturēts vai dzēsts. Nopietnu pārkāpumu gadījumā informācija var tikt nodota tiesībsargājošajām iestādēm."
+msgstr "В случае нарушения правил аккаунт может быть приостановлен или удалён. В случае серьёзных нарушений информация может быть передана правоохранительным органам."
+
+msgid "7. Kontakti"
+msgstr "7. Контакты"
+
+msgid "Jautājumu gadījumā:"
+msgstr "По вопросам:"
+
+# ── Mobīlā lietotne ──
+msgid "Instalēt kā"
+msgstr "Установить как"
+
+msgid "Mobīlā lietotne"
+msgstr "Мобильное приложение"
+
+msgid "eizsole.lv var instalēt kā lietotni — bez App Store, bez maksas."
+msgstr "eizsole.lv можно установить как приложение — без App Store, бесплатно."
+
+msgid "Chrome pārlūks"
+msgstr "Браузер Chrome"
+
+msgid "Atver <strong>eizsole.lv</strong> Chrome pārlūkā"
+msgstr "Откройте <strong>eizsole.lv</strong> в браузере Chrome"
+
+msgid "Piespiež ⋮ (trīs punkti) ekrāna augšā"
+msgstr "Нажмите ⋮ (три точки) в верхней части экрана"
+
+msgid "Izvēlies <strong>\"Pievienot sākuma ekrānam\"</strong>"
+msgstr "Выберите <strong>«Добавить на главный экран»</strong>"
+
+msgid "Piespiez <strong>\"Instalēt\"</strong> — gatavs!"
+msgstr "Нажмите <strong>«Установить»</strong> — готово!"
+
+msgid "Safari pārlūks"
+msgstr "Браузер Safari"
+
+msgid "Atver <strong>eizsole.lv</strong> Safari pārlūkā"
+msgstr "Откройте <strong>eizsole.lv</strong> в браузере Safari"
+
+msgid "Piespiež (dalīšanās poga ekrāna apakšā)"
+msgstr "Нажмите кнопку «Поделиться» в нижней части экрана"
+
+msgid "Piespiez <strong>\"Pievienot\"</strong> — gatavs!"
+msgstr "Нажмите <strong>«Добавить»</strong> — готово!"
+
+msgid "Bezmaksas · Nav App Store nepieciešams · Darbojas offline"
+msgstr "Бесплатно · Без App Store · Работает офлайн"
+
+msgid "Esmu izlasījis un piekrītu"
+msgstr "Я прочитал и согласен с"
+
+msgid "lietošanas noteikumiem"
+msgstr "условиями использования"
+
+msgid "Jums jāpiekrīt lietošanas noteikumiem."
+msgstr "Вы должны принять условия использования."
+
+msgid "Cits"
+msgstr "Другое"
+
+msgid "Izklaide"
+msgstr "Развлечения"
+
+msgid "Nopietnas attiecības"
+msgstr "Серьёзные отношения"
+
+msgid "Ceļošana"
+msgstr "Путешествия"
+
+msgid "Jūsu ziņojums..."
+msgstr "Ваше сообщение..."
+
+msgid "Jūsu ziņojums pārdevējam..."
+msgstr "Ваше сообщение продавцу..."
+
+msgid "Nosūtīt"
+msgstr "Отправить"
+
+msgid "Sports un hobijs"
+msgstr "Спорт и хобби"
+
+msgid "Tikšanās pēc vienošanās"
+msgstr "Встреча по договорённости"
+
+msgid "Cena pēc vienošanās"
+msgstr "Цена по договорённости"
+
+msgid "Iepazīšanās"
+msgstr "Знакомства"
+
+msgid "Iepazīsies vīrietis ar sievieti"
+msgstr "Мужчина ищет женщину"
+
+msgid "Iepazīsies sieviete ar vīrieti"
+msgstr "Женщина ищет мужчину"
+
+msgid "Iepazīsies sieviete ar sievieti"
+msgstr "Женщина ищет женщину"
+
+msgid "Iepazīsies vīrietis ar vīrieti"
+msgstr "Мужчина ищет мужчину"
 

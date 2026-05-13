@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('login/', views.login_view, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('profile/', views.profile, name='profile'),
     path('profile/labot/', views.profile_edit, name='profile_edit'),
@@ -16,6 +16,9 @@ urlpatterns = [
     path('verify-email/sent/', views.verify_email_sent, name='verify_email_sent'),
     path('verify-email/resend/', views.resend_verification, name='resend_verification'),
     path('verify-email/<str:token>/', views.verify_email, name='verify_email'),
+
+    # E-pasta maiņas apstiprinājums
+    path('maina-epastu/<str:token>/', views.confirm_email_change, name='confirm_email_change'),
 
     # Telefona verifikācija
     path('add-phone/', views.add_phone, name='add_phone'),

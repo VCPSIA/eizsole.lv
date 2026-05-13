@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q, Count
-from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite, Banner
+from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite, Banner, SavedSearch, ListingView
 from .profanity import contains_profanity
 from .ai_moderation import check_listing_images
 from .contact_filter import contains_contact_info
@@ -24,11 +24,31 @@ def is_admin(user):
     return user.is_authenticated and user.is_staff
 
 
+def _validate_price(value_str, field_name='Cena'):
+    """Atgriež (Decimal, None) vai (None, kļūdas ziņojums). Tukša virkne → (None, None) — obligātumu pārbauda izsaucējs."""
+    from decimal import Decimal, InvalidOperation
+    s = (value_str or '').strip()
+    if not s:
+        return None, None
+    if 'e' in s.lower():
+        return None, f'{field_name} — zinātniskais pieraksts nav atļauts.'
+    try:
+        val = Decimal(s)
+    except InvalidOperation:
+        return None, f'{field_name} — nederīgs skaitlis.'
+    if val <= 0:
+        return None, f'{field_name} jābūt pozitīvam skaitlim.'
+    if val > Decimal('9999999'):
+        return None, f'{field_name} nevar pārsniegt €9 999 999.'
+    return val, None
+
+
 AUTO_DETAIL_SLUGS = {'auto-automasinas', 'auto-motocikli', 'auto-kravas'}
 YEAR_REQUIRED_SLUGS = {'auto-lauksaimnieciba', 'auto-udens'}
 TIRE_SLUGS = {'auto-riepas'}
 TIRE_EXCLUDE_SLUGS = {'riepas-tela-diski', 'riepas-al-diski'}
 RE_SLUGS = {'nekustamais-ipasums'}
+DATING_SLUGS = {'iepazisanas'}
 
 
 def _is_auto_category(category):
@@ -79,6 +99,15 @@ def _is_re_category(category):
     c = category
     while c:
         if c.slug in RE_SLUGS:
+            return True
+        c = c.parent
+    return False
+
+
+def _is_dating_category(category):
+    c = category
+    while c:
+        if c.slug in DATING_SLUGS:
             return True
         c = c.parent
     return False
@@ -162,6 +191,7 @@ def category(request, slug):
 
     show_auto_filters = _is_auto_category(cat)
     show_tire_filters = _is_tire_category(cat) or cat.slug in TIRE_SLUGS
+    show_dating_filters = _is_dating_category(cat)
     f = request.GET
 
     if show_auto_filters:
@@ -212,7 +242,24 @@ def category(request, slug):
         if f.get('speed_index'):
             listings = listings.filter(tire_details__speed_index__iexact=f['speed_index'])
 
-    if not show_auto_filters and not show_tire_filters:
+    if show_dating_filters:
+        if f.get('age_range'):
+            listings = listings.filter(age_range=f['age_range'])
+        if f.get('city'):
+            listings = listings.filter(city__icontains=f['city'])
+        if f.get('subcat'):
+            try:
+                subcat = Category.objects.get(pk=f['subcat'])
+                def collect_all(c):
+                    r = [c]
+                    for ch in c.children.all():
+                        r.extend(collect_all(ch))
+                    return r
+                listings = listings.filter(category__in=collect_all(subcat))
+            except Category.DoesNotExist:
+                pass
+
+    if not show_auto_filters and not show_tire_filters and not show_dating_filters:
         if f.get('price_min'):
             listings = listings.filter(price__gte=f['price_min'])
         if f.get('price_max'):
@@ -255,6 +302,9 @@ def category(request, slug):
         'per_page_options': per_page_options,
         'show_auto_filters': show_auto_filters,
         'show_tire_filters': show_tire_filters,
+        'show_dating_filters': show_dating_filters,
+        'dating_subcats': cat.children.all() if show_dating_filters and cat.slug == 'iepazisanas' else [],
+        'age_range_choices': [('18-30','18–30 gadi'),('30-45','30–45 gadi'),('45-60','45–60 gadi'),('60+','No 60 gadiem')],
         'auto_choices': {
             'engine_types': AutoDetails.ENGINE_CHOICES,
             'transmissions': AutoDetails.TRANSMISSION_CHOICES,
@@ -276,6 +326,8 @@ def listing_detail(request, pk):
         raise Http404
     if listing.is_active:
         Listing.objects.filter(pk=pk).update(views=listing.views + 1)
+        source = ListingView.detect_source(request.META.get('HTTP_REFERER', ''))
+        ListingView.objects.create(listing=listing, source=source)
     # Saglabā pēdējās skatītās sesijā
     recently = request.session.get('recently_viewed', [])
     if pk in recently:
@@ -295,6 +347,7 @@ def listing_detail(request, pk):
         'site_settings': SiteSettings.get(),
         'is_favorited': is_favorited,
         'related': related,
+        'is_dating': _is_dating_category(listing.category),
     })
 
 
@@ -391,8 +444,32 @@ def listing_create(request):
         return base
 
     if request.method == 'POST':
-        title = request.POST.get('title', '')
-        description = request.POST.get('description', '')
+        # Rate limiting: max 5 sludinājumi stundā vienam lietotājam
+        recent = Listing.objects.filter(
+            seller=request.user,
+            created_at__gte=timezone.now() - timedelta(hours=1),
+        ).count()
+        if recent >= 5:
+            messages.error(request, 'Esat sasniedzis publicēšanas limitu — maksimum 5 sludinājumi stundā. Lūdzu mēģiniet vēlāk.')
+            return render(request, 'listings/create.html', ctx())
+
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+
+        if len(title) < 3:
+            messages.error(request, 'Nosaukums ir pārāk īss — minimums 3 rakstzīmes.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        if len(title) > 200:
+            messages.error(request, 'Nosaukums ir pārāk garš — maksimums 200 rakstzīmes.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        if len(description) > 10000:
+            messages.error(request, 'Apraksts ir pārāk garš — maksimums 10 000 rakstzīmes.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        _, price_err = _validate_price(request.POST.get('price', ''))
+        if price_err:
+            messages.error(request, price_err)
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         if contains_profanity(title) or contains_profanity(description):
             messages.error(request, 'Sludinājumā konstatēts nepiemērots saturs. Lūdzu pārbaudiet tekstu un mēģiniet vēlreiz.')
@@ -438,10 +515,26 @@ def listing_create(request):
             messages.error(request, 'E-pasta adrese ir obligāta.')
             return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
-        # Vismaz viena bilde obligāta
-        if not request.FILES.getlist('images'):
+        # Vismaz viena bilde obligāta (izņemot iepazīšanās)
+        is_dating = cat_pk and _is_dating_category(get_object_or_404(Category, pk=cat_pk))
+        uploaded_images = request.FILES.getlist('images')
+        if not uploaded_images and not is_dating:
             messages.error(request, 'Lūdzu pievienojiet vismaz vienu fotogrāfiju.')
             return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        # Bilžu servera validācija
+        _ALLOWED_IMG = {'image/jpeg', 'image/png', 'image/webp'}
+        _MAX_IMG_SIZE = 10 * 1024 * 1024  # 10 MB
+        if len(uploaded_images) > 8:
+            messages.error(request, 'Maksimums 8 bildes atļautas.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        for _img in uploaded_images:
+            if _img.content_type not in _ALLOWED_IMG:
+                messages.error(request, f'Atbalstīti tikai JPG, PNG, WEBP formāti ({_img.name}).')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            if _img.size > _MAX_IMG_SIZE:
+                messages.error(request, f'Bilde pārāk liela — maks. 10 MB ({_img.name}).')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         is_auction = 'is_auction' in request.POST
 
@@ -513,6 +606,21 @@ def listing_create(request):
 
         if is_auction:
             expires_at = None
+            sp_val, sp_err = _validate_price(request.POST.get('starting_price', ''), 'Sākumcena')
+            if sp_err:
+                messages.error(request, sp_err)
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            if sp_val is None:
+                messages.error(request, 'Sākumcena ir obligāta.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            _, bn_err = _validate_price(request.POST.get('buy_now_price', ''), 'Pērc tūlīt cena')
+            if bn_err:
+                messages.error(request, bn_err)
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
+            _, rp_err = _validate_price(request.POST.get('reserve_price', ''), 'Rezerves cena')
+            if rp_err:
+                messages.error(request, rp_err)
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
         else:
             duration_days = int(request.POST.get('duration', 7))
             if duration_days not in [7, 14, 21, 28]:
@@ -520,10 +628,11 @@ def listing_create(request):
             expires_at = timezone.now() + timedelta(days=duration_days)
 
         year_val = request.POST.get('year') or None
+        cat_for_listing = get_object_or_404(Category, pk=request.POST['category'])
         listing = Listing.objects.create(
             title=title,
             description=description,
-            category=get_object_or_404(Category, pk=request.POST['category']),
+            category=cat_for_listing,
             seller=request.user,
             price=request.POST.get('price') or None,
             condition=request.POST.get('condition', 'used'),
@@ -536,22 +645,24 @@ def listing_create(request):
             expires_at=expires_at,
             contact_email=contact_email,
             contact_phone=contact_phone,
+            age_range=request.POST.get('age_range', '') if _is_dating_category(cat_for_listing) else '',
+            gender=request.POST.get('gender', '') if _is_dating_category(cat_for_listing) else '',
+            seeking=request.POST.get('seeking', '') if _is_dating_category(cat_for_listing) else '',
         )
         equipment_ids = request.POST.getlist('equipment')
         if equipment_ids:
             listing.equipment.set(Equipment.objects.filter(pk__in=equipment_ids))
 
         # Auto / riepas / NĪ detaļas
-        if _is_auto_category(listing.category):
+        if _is_auto_category(cat_for_listing):
             _save_auto_details(listing, request.POST)
-        elif _is_tire_category(listing.category):
+        elif _is_tire_category(cat_for_listing):
             _save_tire_details(listing, request.POST)
-        elif _is_re_category(listing.category):
+        elif _is_re_category(cat_for_listing):
             _save_re_details(listing, request.POST)
 
-        # Bildes — max 8
-        images = request.FILES.getlist('images')[:8]
-        for i, img in enumerate(images):
+        # Bildes — jau validētas augstāk
+        for i, img in enumerate(uploaded_images):
             ListingImage.objects.create(listing=listing, image=img, order=i)
 
         # AI bilžu moderācija
@@ -593,12 +704,12 @@ def listing_create(request):
                 ends_at_dt = timezone.now() + timedelta(days=7)
             Auction.objects.create(
                 listing=listing,
-                starting_price=request.POST['starting_price'],
-                current_price=request.POST['starting_price'],
+                starting_price=sp_val,
+                current_price=sp_val,
                 min_bid_increment=request.POST.get('min_bid_increment', 1),
                 ends_at=ends_at_dt,
-                buy_now_price=request.POST.get('buy_now_price') or None,
-                reserve_price=request.POST.get('reserve_price') or None,
+                buy_now_price=_validate_price(request.POST.get('buy_now_price', ''))[0],
+                reserve_price=_validate_price(request.POST.get('reserve_price', ''))[0],
             )
 
         # Novilkt maksu no maka
@@ -739,6 +850,21 @@ def listing_edit(request, pk):
         title = request.POST.get('title', '').strip()
         description = request.POST.get('description', '').strip()
 
+        if len(title) < 3:
+            messages.error(request, 'Nosaukums ir pārāk īss — minimums 3 rakstzīmes.')
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+        if len(title) > 200:
+            messages.error(request, 'Nosaukums ir pārāk garš — maksimums 200 rakstzīmes.')
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+        if len(description) > 10000:
+            messages.error(request, 'Apraksts ir pārāk garš — maksimums 10 000 rakstzīmes.')
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+
+        _, price_err = _validate_price(request.POST.get('price', ''))
+        if price_err:
+            messages.error(request, price_err)
+            return render(request, 'listings/edit.html', ctx({'post': request.POST}))
+
         if contains_profanity(title) or contains_profanity(description):
             messages.error(request, 'Sludinājumā konstatēts nepiemērots saturs.')
             return render(request, 'listings/edit.html', ctx({'post': request.POST}))
@@ -759,6 +885,12 @@ def listing_edit(request, pk):
         listing.country = request.POST.get('country', '').strip()
         listing.city = request.POST.get('city', '').strip()
         listing.contact_email = request.POST.get('contact_email', '').strip()
+        if _is_dating_category(new_category):
+            listing.gender  = request.POST.get('gender', '')
+            listing.seeking = request.POST.get('seeking', '')
+        else:
+            listing.gender  = ''
+            listing.seeking = ''
 
         equipment_ids = request.POST.getlist('equipment')
         listing.equipment.set(Equipment.objects.filter(pk__in=equipment_ids))
@@ -780,11 +912,23 @@ def listing_edit(request, pk):
             TireDetails.objects.filter(listing=listing).delete()
             RealEstateDetails.objects.filter(listing=listing).delete()
 
-        # Jaunas bildes (ja augšupielādētas)
+        # Jaunas bildes (ja augšupielādētas) — servera validācija
         new_images = request.FILES.getlist('images')
         if new_images:
+            _ALLOWED_IMG = {'image/jpeg', 'image/png', 'image/webp'}
+            _MAX_IMG_SIZE = 10 * 1024 * 1024
+            if len(new_images) > 8:
+                messages.error(request, 'Maksimums 8 bildes atļautas.')
+                return render(request, 'listings/edit.html', ctx())
+            for _img in new_images:
+                if _img.content_type not in _ALLOWED_IMG:
+                    messages.error(request, f'Atbalstīti tikai JPG, PNG, WEBP formāti ({_img.name}).')
+                    return render(request, 'listings/edit.html', ctx())
+                if _img.size > _MAX_IMG_SIZE:
+                    messages.error(request, f'Bilde pārāk liela — maks. 10 MB ({_img.name}).')
+                    return render(request, 'listings/edit.html', ctx())
             listing.images.all().delete()
-            for i, img in enumerate(new_images[:8]):
+            for i, img in enumerate(new_images):
                 ListingImage.objects.create(listing=listing, image=img, order=i)
 
         # Jauns video (ja augšupielādēts)
@@ -836,6 +980,37 @@ def extend_listing(request, pk):
 
 
 @login_required
+def publish_template(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_template=True)
+    if request.method == 'POST':
+        days = int(request.POST.get('duration', 7))
+        if days not in [7, 14, 21, 28]:
+            days = 7
+        listing.is_active = True
+        listing.is_template = False
+        listing.template_created_at = None
+        listing.expires_at = timezone.now() + timedelta(days=days)
+        listing.moderation_status = 'approved'
+        listing.views = 0
+        listing.save()
+        messages.success(request, 'Sludinājums publicēts no šablona.')
+        return redirect('listing_detail', pk=pk)
+    return render(request, 'listings/publish_template.html', {
+        'listing': listing,
+        'duration_choices': DURATION_CHOICES,
+    })
+
+
+@login_required
+def delete_template(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_template=True)
+    if request.method == 'POST':
+        listing.delete()
+        messages.success(request, 'Šablons dzēsts.')
+    return redirect('profile')
+
+
+@login_required
 def listing_promote(request, pk):
     listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_active=True)
     settings = SiteSettings.get()
@@ -874,9 +1049,17 @@ def listing_promote(request, pk):
     })
 
 
+def _msg_rate_exceeded(sender, recipient):
+    return Message.objects.filter(
+        sender=sender,
+        recipient=recipient,
+        created_at__gte=timezone.now() - timedelta(hours=1),
+    ).count() >= 6
+
+
 @login_required
 def contact_seller(request, pk):
-    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    listing = get_object_or_404(Listing, pk=pk)
     if request.user == listing.seller:
         messages.error(request, 'Nevarat sazināties ar sevi.')
         return redirect('listing_detail', pk=pk)
@@ -888,6 +1071,9 @@ def contact_seller(request, pk):
         blocked = contains_contact_info(content)
         if blocked:
             messages.error(request, f'Ziņojums nedrīkst saturēt {blocked}. Sazinieties caur platformu.')
+            return redirect('listing_detail', pk=pk)
+        if _msg_rate_exceeded(request.user, listing.seller):
+            messages.error(request, 'Esat sasniedzis ziņojumu limitu — maksimum 6 ziņojumi stundā vienam pārdevējam.')
             return redirect('listing_detail', pk=pk)
         Message.objects.create(
             listing=listing,
@@ -940,15 +1126,15 @@ def conversation(request, listing_pk, user_pk):
     other = get_object_or_404(AuthUser, pk=user_pk)
     user = request.user
 
-    if user != listing.seller and user != other and user.pk != user_pk:
-        from django.http import Http404
-        raise Http404
-
     thread = Message.objects.filter(
         listing=listing
     ).filter(
         Q(sender=user, recipient=other) | Q(sender=other, recipient=user)
     ).select_related('sender', 'recipient')
+
+    if user != listing.seller and not thread.exists():
+        from django.http import Http404
+        raise Http404
 
     # Atzīmē kā lasītus
     thread.filter(recipient=user, is_read=False).update(is_read=True)
@@ -959,6 +1145,8 @@ def conversation(request, listing_pk, user_pk):
             blocked = contains_contact_info(content)
             if blocked:
                 messages.error(request, f'Ziņojums nedrīkst saturēt {blocked}.')
+            elif _msg_rate_exceeded(user, other):
+                messages.error(request, 'Esat sasniedzis ziņojumu limitu — maksimum 6 ziņojumi stundā vienam pārdevējam.')
             else:
                 Message.objects.create(
                     listing=listing,
@@ -1070,6 +1258,37 @@ def moderate_listing(request, pk):
         messages.info(request, f'Ziņojumi par "{listing.title}" noraidīti.')
 
     return redirect('moderation_panel')
+
+
+def address_autocomplete(request):
+    query = request.GET.get('q', '').strip()
+    if not query or len(query) < 2:
+        return JsonResponse({'predictions': []})
+    import urllib.request, urllib.parse, json as _json
+    params = urllib.parse.urlencode({
+        'q': query,
+        'format': 'json',
+        'limit': 6,
+        'addressdetails': 1,
+    })
+    url = f'https://nominatim.openstreetmap.org/search?{params}'
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'eizsole.lv/1.0'})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            data = _json.loads(r.read())
+        predictions = [
+            {
+                'description': p['display_name'],
+                'lat': p['lat'],
+                'lng': p['lon'],
+                'city': p.get('address', {}).get('city') or p.get('address', {}).get('town') or p.get('address', {}).get('village', ''),
+                'country': p.get('address', {}).get('country', ''),
+            }
+            for p in data
+        ]
+        return JsonResponse({'predictions': predictions})
+    except Exception:
+        return JsonResponse({'predictions': []})
 
 
 def discount_code_check(request):
@@ -1257,3 +1476,92 @@ def robots_txt(request):
         f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml\n"
     )
     return HttpResponse(content, content_type='text/plain')
+
+
+@login_required
+def listing_stats(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
+    from django.db.models import Count
+    from django.db.models.functions import TruncDate
+    import json
+
+    today = timezone.now().date()
+    since_14 = today - timedelta(days=13)
+
+    # Skatījumi pa dienām (pēdējās 14 dienas)
+    daily_qs = (
+        ListingView.objects
+        .filter(listing=listing, viewed_at__date__gte=since_14)
+        .annotate(day=TruncDate('viewed_at'))
+        .values('day')
+        .annotate(count=Count('id'))
+        .order_by('day')
+    )
+    daily_map = {str(row['day']): row['count'] for row in daily_qs}
+    days = [(since_14 + timedelta(days=i)) for i in range(14)]
+    chart_labels = [d.strftime('%-d.%-m') for d in days]
+    chart_data = [daily_map.get(str(d), 0) for d in days]
+
+    # Avoti
+    source_qs = (
+        ListingView.objects
+        .filter(listing=listing)
+        .values('source')
+        .annotate(count=Count('id'))
+    )
+    source_labels_map = {'google': 'Google', 'facebook': 'Facebook', 'internal': 'Eizsole.lv', 'direct': 'Tiešā', 'other': 'Cits'}
+    source_data = {source_labels_map.get(r['source'], r['source']): r['count'] for r in source_qs}
+
+    return render(request, 'listings/stats.html', {
+        'listing': listing,
+        'views_total': listing.views,
+        'views_7d': sum(daily_map.get(str(today - timedelta(days=i)), 0) for i in range(7)),
+        'views_30d': ListingView.objects.filter(listing=listing, viewed_at__date__gte=today - timedelta(days=29)).count(),
+        'favorites': listing.favorited_by.count(),
+        'chart_labels': json.dumps(chart_labels),
+        'chart_data': json.dumps(chart_data),
+        'source_data': json.dumps(source_data),
+    })
+
+
+@login_required
+def save_search(request):
+    if request.method != 'POST':
+        return redirect('search')
+    if SavedSearch.objects.filter(user=request.user).count() >= 10:
+        messages.warning(request, 'Varat saglabāt līdz 10 meklēšanām.')
+        return redirect(request.POST.get('next', 'search'))
+
+    cat_pk = request.POST.get('category', '')
+    category = None
+    if cat_pk:
+        try:
+            category = Category.objects.get(pk=cat_pk)
+        except Category.DoesNotExist:
+            pass
+
+    SavedSearch.objects.create(
+        user=request.user,
+        query=request.POST.get('query', '').strip()[:200],
+        price_min=request.POST.get('price_min', '').strip()[:20],
+        price_max=request.POST.get('price_max', '').strip()[:20],
+        condition=request.POST.get('condition', '').strip()[:10],
+        category=category,
+        listing_type=request.POST.get('listing_type', '').strip()[:10],
+    )
+    messages.success(request, 'Meklēšana saglabāta! Jūs saņemsiet e-pastu, kad parādīsies jauni sludinājumi.')
+    return redirect(request.POST.get('next', 'search'))
+
+
+@login_required
+def delete_saved_search(request, pk):
+    saved = get_object_or_404(SavedSearch, pk=pk, user=request.user)
+    saved.delete()
+    messages.success(request, 'Saglabātā meklēšana dzēsta.')
+    return redirect('saved_searches')
+
+
+@login_required
+def saved_searches(request):
+    searches = SavedSearch.objects.filter(user=request.user)
+    return render(request, 'listings/saved_searches.html', {'searches': searches})

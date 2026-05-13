@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Nav savienojuma — eizsole.lv{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+    <div style="font-size:4rem;margin-bottom:1rem">📡</div>
+    <h2 class="fw-700" style="font-weight:700">Nav interneta savienojuma</h2>
+    <p class="text-muted mb-4">Pārbaudiet savienojumu un mēģiniet vēlreiz.</p>
+    <button class="btn btn-danger px-4" onclick="location.reload()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Mēģināt vēlreiz
+    </button>
+</div>
+{% endblock %}

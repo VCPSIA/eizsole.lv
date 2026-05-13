@@ -68,10 +68,12 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'platforma.middleware.ContentSecurityPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -111,6 +113,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# Cache — datubāze (darbojas ar vairākiem gunicorn workers)
+# Palaist: python manage.py createcachetable
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache',
     }
 }
 
@@ -178,7 +189,7 @@ ANTHROPIC_API_KEY = ''
 VEHICLEHISTORY_API_KEY = ''
 
 # Google Maps Places API — https://console.cloud.google.com/
-GOOGLE_MAPS_API_KEY = ''
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
 STRIPE_SECRET_KEY      = os.environ.get('STRIPE_SECRET_KEY', '')
@@ -209,3 +220,40 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'eizsole.lv <noreply@e
 TWILIO_ACCOUNT_SID  = os.environ.get('TWILIO_ACCOUNT_SID', '')
 TWILIO_AUTH_TOKEN   = os.environ.get('TWILIO_AUTH_TOKEN', '')
 TWILIO_FROM_NUMBER  = os.environ.get('TWILIO_FROM_NUMBER', '')
+
+# ── Drošības galvenes ─────────────────────────────────────────────────────────
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+if not DEBUG:
+    # Strict-Transport-Security (HSTS) — pārlūks 1 gadu izmantos tikai HTTPS
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Nginx veic HTTP→HTTPS novirzīšanu, bet Django jāzina par proxy
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Sīkfaili tikai HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# Content-Security-Policy
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' "
+        "https://www.googletagmanager.com "
+        "https://www.google-analytics.com "
+        "https://cdn.jsdelivr.net; "
+    "style-src 'self' 'unsafe-inline' "
+        "https://cdn.jsdelivr.net "
+        "https://fonts.googleapis.com; "
+    "font-src 'self' "
+        "https://fonts.gstatic.com "
+        "https://cdn.jsdelivr.net; "
+    "img-src 'self' data: https:; "
+    "connect-src 'self' "
+        "https://www.google-analytics.com "
+        "https://region1.google-analytics.com; "
+    "frame-src 'self'; "
+    "object-src 'none';"
+)

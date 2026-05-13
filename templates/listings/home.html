@@ -8,7 +8,7 @@
 <div class="hero-section mb-5">
     <div class="hero-inner">
         <h1 class="hero-title"><img src="{% static 'icons/amurs_balts.svg' %}" style="width:2.4rem;height:2.4rem;vertical-align:-.2em;object-fit:contain"> eizsole.lv</h1>
-        <p class="hero-sub">{% trans "Lētākā izsoļu un sludinājumu platforma" %}</p>
+        <p class="hero-sub">{% trans "Bezmaksas izsoļu un sludinājumu platforma" %}</p>
         <div class="hero-actions">
             <a href="{% url 'auction_list' %}" class="btn btn-danger btn-lg px-4">
                 <img src="{% static 'icons/amurs_balts.svg' %}" style="width:.9rem;height:.9rem;vertical-align:-.1em;object-fit:contain" class="me-2">{% trans "Skatīt izsoles" %}
@@ -104,6 +104,11 @@
 .sub-link:hover { background: #f8f9fa; color: #e63946; }
 @media (max-width: 768px) {
     .subcategory-dropdown { left: 0; top: 100%; width: 100%; }
+    .hero-section { padding: 2.2rem 1.25rem; border-radius: 12px; }
+    .hero-title { font-size: 1.9rem; }
+    .hero-sub { font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .listing-card .card-img-top { height: 140px; }
+    .auction-card .card-img-top { height: 120px; }
 }
 
 /* Listing cards */
@@ -154,7 +159,7 @@
             <div class="fw-semibold text-danger small border-bottom pb-1 mb-1 px-1">{% trans cat.name %}</div>
             {% for sub in cat.children.all %}
             <a href="{% url 'category' sub.slug %}" class="sub-link">
-                <i class="bi bi-chevron-right me-1" style="font-size:.65rem;color:#9ca3af"></i>{% trans sub.name %}
+                <i class="bi bi-chevron-right me-1" style="font-size:.65rem;color:#9ca3af"></i>{% trans sub.name %}{% if sub.slug == 'iepazisies-vietis-ar-sievieti' %} <i class="bi bi-gender-male" style="color:#3b82f6"></i><i class="bi bi-gender-female" style="color:#e63946"></i>{% elif sub.slug == 'iepazisies-sieviete-ar-virieti' %} <i class="bi bi-gender-female" style="color:#e63946"></i><i class="bi bi-gender-male" style="color:#3b82f6"></i>{% elif sub.slug == 'iepazisies-sieviete-ar-sievieti' %} <i class="bi bi-gender-female" style="color:#e63946"></i><i class="bi bi-gender-female" style="color:#e63946"></i>{% elif sub.slug == 'iepazisies-vietis-ar-virieti' %} <i class="bi bi-gender-male" style="color:#3b82f6"></i><i class="bi bi-gender-male" style="color:#3b82f6"></i>{% endif %}
             </a>
             {% endfor %}
             <div class="border-top mt-1 pt-1 px-1">

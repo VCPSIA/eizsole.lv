@@ -75,6 +75,21 @@
             <span class="badge rounded-pill" style="background:#f4f5f7;color:#6c757d;font-size:.82rem;padding:.35rem .75rem;font-weight:600">
                 {{ listings.count }} rezultāti
             </span>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'save_search' %}" class="ms-auto">
+                {% csrf_token %}
+                <input type="hidden" name="query" value="{{ query }}">
+                <input type="hidden" name="price_min" value="{{ f.price_min }}">
+                <input type="hidden" name="price_max" value="{{ f.price_max }}">
+                <input type="hidden" name="condition" value="{{ f.condition }}">
+                <input type="hidden" name="category" value="{{ f.category }}">
+                <input type="hidden" name="listing_type" value="{{ f.listing_type }}">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-bell me-1"></i>Saglabāt meklēšanu
+                </button>
+            </form>
+            {% endif %}
         </div>
 
         {% if listings %}

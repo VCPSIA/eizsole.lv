@@ -7,6 +7,36 @@
 {% block og_image %}{% with listing.get_main_image as img %}{% if img %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}">{% endblock %}
 
+{% block schema_json %}
+{% with listing.get_main_image as img %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ listing.title|escapejs }}",
+  "description": "{{ listing.description|truncatechars:500|escapejs }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
+  {% if img %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}",{% endif %}
+  "itemCondition": "https://schema.org/{% if listing.condition == 'new' %}NewCondition{% elif listing.condition == 'used' %}UsedCondition{% else %}DamagedCondition{% endif %}",
+  {% if listing.price %}
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ listing.price }}",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/{% if listing.is_active %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
+    "seller": {
+      "@type": "Person",
+      "name": "{{ listing.seller.username|escapejs }}"
+    }
+  },
+  {% endif %}
+  "category": "{{ listing.category.name|escapejs }}"
+}
+</script>
+{% endwith %}
+{% endblock %}
+
 {% block content %}
 <style>
 .detail-img-wrap { border-radius: 12px; overflow: hidden; background: #f4f5f7; }
@@ -20,6 +50,107 @@
 .fav-btn-detail { background:white; border:1.5px solid #e9ecef; border-radius:10px; padding:.45rem .75rem; cursor:pointer; color:#ccc; font-size:1.1rem; transition:all .18s; display:inline-flex; align-items:center; gap:.4rem; }
 .fav-btn-detail:hover, .fav-btn-detail.active { color:#e63946; border-color:#e63946; box-shadow:0 2px 10px rgba(230,57,70,.15); }
 .fav-btn-detail.active { background:#fff5f5; }
+@media (max-width: 575.98px) {
+    .price-big { font-size: 1.6rem; }
+    .detail-img-wrap img { max-height: 280px; }
+    .info-card { padding: 1rem; }
+}
+
+/* ── LIGHTBOX ── */
+.lb-img-wrap { position:relative; cursor:zoom-in; }
+.lb-img-wrap::after {
+    content: '\F52A';
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    bottom: .6rem; right: .6rem;
+    background: rgba(0,0,0,.45);
+    color: white;
+    font-size: .85rem;
+    padding: .25rem .5rem;
+    border-radius: 6px;
+    pointer-events: none;
+}
+.lb-img-wrap:hover::after { background: rgba(0,0,0,.7); }
+
+#lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.93);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#lightbox.open { display: flex; }
+
+#lb-img-container {
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#lb-img {
+    max-width: 92vw;
+    max-height: calc(100vh - 120px);
+    object-fit: contain;
+    border-radius: 4px;
+    cursor: zoom-in;
+    user-select: none;
+    touch-action: none;
+    will-change: transform;
+}
+
+#lb-close {
+    position: fixed; top: 1rem; right: 1rem;
+    background: rgba(255,255,255,.15); border: none;
+    color: white; border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s; z-index: 10;
+}
+#lb-close:hover { background: rgba(255,255,255,.3); }
+
+.lb-nav {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,.12); border: none;
+    color: white; border-radius: 50%;
+    width: 48px; height: 48px;
+    font-size: 1.3rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, opacity .2s; z-index: 10;
+}
+.lb-nav:hover { background: rgba(255,255,255,.28); }
+#lb-prev { left: .75rem; }
+#lb-next { right: .75rem; }
+.lb-nav.hidden { opacity: 0; pointer-events: none; }
+
+#lb-thumbs {
+    position: fixed; bottom: .75rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: .4rem; padding: .35rem;
+    max-width: 90vw; overflow-x: auto;
+    scrollbar-width: none;
+}
+#lb-thumbs img {
+    height: 50px; width: 66px; object-fit: cover;
+    border-radius: 5px; cursor: pointer;
+    border: 2px solid transparent; opacity: .5;
+    transition: all .15s; flex-shrink: 0;
+}
+#lb-thumbs img.active { border-color: white; opacity: 1; }
+#lb-thumbs img:hover { opacity: .8; }
+
+#lb-hint {
+    position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,.55); font-size: .72rem;
+    background: rgba(0,0,0,.35); padding: .2rem .7rem; border-radius: 20px;
+    pointer-events: none; white-space: nowrap;
+    transition: opacity .4s;
+}
 </style>
 
 <!-- Moderācijas statusa brīdinājums -->
@@ -62,7 +193,9 @@
                 <div class="carousel-inner">
                     {% for img in images %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{ img.image.url }}" class="d-block mx-auto">
+                        <div class="lb-img-wrap" onclick="lbOpen({{ forloop.counter0 }})">
+                            <img src="{{ img.image.url }}" class="d-block mx-auto" data-lb-src="{{ img.image.url }}" data-lb-idx="{{ forloop.counter0 }}">
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -91,6 +224,229 @@
         </div>
         {% endif %}
         {% endwith %}
+
+        <!-- LIGHTBOX -->
+        <div id="lightbox">
+            <button id="lb-close" onclick="lbClose()"><i class="bi bi-x-lg"></i></button>
+            <button class="lb-nav" id="lb-prev" onclick="lbNav(-1)"><i class="bi bi-chevron-left"></i></button>
+            <div id="lb-img-container">
+                <img id="lb-img" src="" alt="">
+            </div>
+            <button class="lb-nav" id="lb-next" onclick="lbNav(1)"><i class="bi bi-chevron-right"></i></button>
+            <div id="lb-thumbs"></div>
+            <div id="lb-hint">Klikšķis — tuvināt &nbsp;·&nbsp; Velkt — pārvietot &nbsp;·&nbsp; Ritenis — zoom</div>
+        </div>
+
+        <script>
+        (function(){
+            const srcs = [{% for img in listing.images.all %}"{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+            const lb    = document.getElementById('lightbox');
+            const img   = document.getElementById('lb-img');
+            const thumbs = document.getElementById('lb-thumbs');
+            const prevBtn = document.getElementById('lb-prev');
+            const nextBtn = document.getElementById('lb-next');
+
+            let cur = 0;
+            let scale = 1, panX = 0, panY = 0;
+            let dragging = false, didDrag = false;
+            let dragStartX = 0, dragStartY = 0;
+            let touchStartX = 0, touchStartY = 0;
+            let lastPinchDist = 0;
+
+            // ── sīkbildes ──
+            srcs.forEach(function(src, i) {
+                var t = document.createElement('img');
+                t.src = src;
+                t.onclick = function() { lbOpen(i); };
+                thumbs.appendChild(t);
+            });
+
+            function applyTransform(animate) {
+                img.style.transition = animate ? 'transform .2s ease' : 'none';
+                img.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
+            }
+
+            function clampPan() {
+                var iw = img.offsetWidth, ih = img.offsetHeight;
+                var maxX = Math.max(0, (iw * scale - window.innerWidth)  / 2);
+                var maxY = Math.max(0, (ih * scale - (window.innerHeight - 100)) / 2);
+                panX = Math.max(-maxX, Math.min(maxX, panX));
+                panY = Math.max(-maxY, Math.min(maxY, panY));
+            }
+
+            function resetView(animate) {
+                scale = 1; panX = 0; panY = 0;
+                img.style.cursor = 'zoom-in';
+                applyTransform(animate);
+            }
+
+            function updateNavVis() {
+                var single = srcs.length <= 1;
+                prevBtn.classList.toggle('hidden', single || scale > 1);
+                nextBtn.classList.toggle('hidden', single || scale > 1);
+                thumbs.style.display = single ? 'none' : 'flex';
+            }
+
+            function updateThumbs() {
+                thumbs.querySelectorAll('img').forEach(function(t, i) {
+                    t.classList.toggle('active', i === cur);
+                });
+                var at = thumbs.querySelectorAll('img')[cur];
+                if (at) at.scrollIntoView({inline: 'center', behavior: 'smooth'});
+            }
+
+            // ── atver ──
+            window.lbOpen = function(idx) {
+                cur = idx;
+                resetView(false);
+                img.src = srcs[cur];
+                updateThumbs();
+                updateNavVis();
+                lb.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            };
+
+            // ── aizver ──
+            window.lbClose = function() {
+                lb.classList.remove('open');
+                document.body.style.overflow = '';
+                resetView(false);
+            };
+
+            // ── nākamā/iepriekšējā bilde ──
+            window.lbNav = function(dir) {
+                if (scale > 1) return;
+                cur = (cur + dir + srcs.length) % srcs.length;
+                resetView(false);
+                img.src = srcs[cur];
+                updateThumbs();
+                updateNavVis();
+            };
+
+            // ── PELE: klikšķis — zoom, vilkšana — pan ──
+            img.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                dragging = true; didDrag = false;
+                dragStartX = e.clientX - panX;
+                dragStartY = e.clientY - panY;
+                img.style.cursor = 'grabbing';
+                img.style.transition = 'none';
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!dragging) return;
+                var nx = e.clientX - dragStartX;
+                var ny = e.clientY - dragStartY;
+                if (Math.abs(nx - panX) > 3 || Math.abs(ny - panY) > 3) didDrag = true;
+                if (scale > 1) { panX = nx; panY = ny; applyTransform(false); }
+            });
+
+            document.addEventListener('mouseup', function(e) {
+                if (!dragging) return;
+                dragging = false;
+                if (!didDrag) {
+                    // klikšķis — toggle zoom
+                    if (scale > 1) {
+                        resetView(true);
+                    } else {
+                        scale = 2.8;
+                        img.style.cursor = 'grab';
+                        applyTransform(true);
+                    }
+                } else {
+                    clampPan();
+                    applyTransform(true);
+                    img.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+                }
+                updateNavVis();
+            });
+
+            // ── RITENIS: zoom ──
+            img.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                var factor = e.deltaY < 0 ? 1.18 : 0.85;
+                scale = Math.max(1, Math.min(8, scale * factor));
+                if (scale <= 1) { scale = 1; panX = 0; panY = 0; img.style.cursor = 'zoom-in'; }
+                else img.style.cursor = 'grab';
+                clampPan();
+                applyTransform(false);
+                updateNavVis();
+            }, {passive: false});
+
+            // ── TOUCH: swipe (zoom=1) vai pan, pinch-to-zoom ──
+            img.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 2) {
+                    lastPinchDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY);
+                } else {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                    if (scale > 1) {
+                        dragStartX = e.touches[0].clientX - panX;
+                        dragStartY = e.touches[0].clientY - panY;
+                    }
+                }
+            }, {passive: true});
+
+            img.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (e.touches.length === 2) {
+                    var d = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY);
+                    scale = Math.max(1, Math.min(8, scale * d / lastPinchDist));
+                    lastPinchDist = d;
+                    if (scale <= 1) { scale = 1; panX = 0; panY = 0; }
+                    clampPan();
+                    applyTransform(false);
+                    updateNavVis();
+                } else if (scale > 1) {
+                    panX = e.touches[0].clientX - dragStartX;
+                    panY = e.touches[0].clientY - dragStartY;
+                    clampPan();
+                    applyTransform(false);
+                }
+            }, {passive: false});
+
+            img.addEventListener('touchend', function(e) {
+                if (scale <= 1 && e.changedTouches.length === 1) {
+                    var dx = e.changedTouches[0].clientX - touchStartX;
+                    var dy = e.changedTouches[0].clientY - touchStartY;
+                    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+                        lbNav(dx < 0 ? 1 : -1);
+                    }
+                }
+                clampPan();
+                applyTransform(true);
+                img.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+                updateNavVis();
+            });
+
+            // ── TASTATŪRA ──
+            document.addEventListener('keydown', function(e) {
+                if (!lb.classList.contains('open')) return;
+                if (e.key === 'Escape') lbClose();
+                if (e.key === 'ArrowLeft')  lbNav(-1);
+                if (e.key === 'ArrowRight') lbNav(1);
+                if (e.key === '+' || e.key === '=') {
+                    scale = Math.min(8, scale * 1.3);
+                    img.style.cursor = 'grab';
+                    clampPan(); applyTransform(true); updateNavVis();
+                }
+                if (e.key === '-') {
+                    scale = Math.max(1, scale / 1.3);
+                    if (scale === 1) { panX = 0; panY = 0; img.style.cursor = 'zoom-in'; }
+                    clampPan(); applyTransform(true); updateNavVis();
+                }
+            });
+
+            // ── fona klikšķis aizver ──
+            lb.addEventListener('mousedown', function(e) {
+                if (e.target === lb) lbClose();
+            });
+        })();
+        </script>
 
         <!-- Video -->
         {% with listing.video as vid %}
@@ -126,6 +482,13 @@
                 {% if listing.deal_type %}<span><i class="bi bi-arrow-left-right me-1"></i>{{ listing.get_deal_type_display }}</span>{% endif %}
                 {% if listing.year %}<span><i class="bi bi-calendar3 me-1"></i>{{ listing.year }}. g.</span>{% endif %}
                 <span><i class="bi bi-clock me-1"></i>{{ listing.created_at|date:"d.m.Y" }}</span>
+                {% if listing.gender and listing.seeking %}
+                <span>
+                    <i class="bi bi-gender-{% if listing.gender == 'male' %}male" style="color:#3b82f6{% else %}female" style="color:#e63946{% endif %}"></i>
+                    <i class="bi bi-arrow-right mx-1" style="font-size:.7rem"></i>
+                    <i class="bi bi-gender-{% if listing.seeking == 'male' %}male" style="color:#3b82f6{% else %}female" style="color:#e63946{% endif %}"></i>
+                </span>
+                {% endif %}
             </div>
             <hr class="my-3">
             <div style="line-height:1.75;color:#374151">{{ listing.description|linebreaks }}</div>
@@ -312,7 +675,11 @@
             {% if listing.price %}
             <div class="price-big" style="color:#16a34a">€{{ listing.price }}</div>
             {% else %}
-            <div class="price-big text-muted" style="font-size:1.4rem">Cena pēc vienošanās</div>
+            {% if is_dating %}
+            <div class="price-big text-muted" style="font-size:1.4rem">{% trans "Tikšanās pēc vienošanās" %}</div>
+            {% else %}
+            <div class="price-big text-muted" style="font-size:1.4rem">{% trans "Cena pēc vienošanās" %}</div>
+            {% endif %}
             {% endif %}
             {% endif %}
         </div>
@@ -323,21 +690,21 @@
             {% if user.is_authenticated %}
             <button class="btn btn-outline-danger w-100" type="button"
                 data-bs-toggle="collapse" data-bs-target="#contact-form">
-                <i class="bi bi-envelope me-2"></i>Sazināties ar pārdevēju
+                <i class="bi bi-envelope me-2"></i>{% if is_dating %}{% trans "Sazināties" %}{% else %}{% trans "Sazināties ar pārdevēju" %}{% endif %}
             </button>
             <div class="collapse mt-2" id="contact-form">
                 <form method="post" action="{% url 'contact_seller' listing.pk %}">
                     {% csrf_token %}
                     <textarea name="message" class="form-control mb-2" rows="3"
-                        placeholder="Jūsu ziņojums pārdevējam..." style="font-size:.85rem;border-radius:8px" required></textarea>
+                        placeholder="{% if is_dating %}{% trans 'Jūsu ziņojums...' %}{% else %}{% trans 'Jūsu ziņojums pārdevējam...' %}{% endif %}" style="font-size:.85rem;border-radius:8px" required></textarea>
                     <button type="submit" class="btn btn-danger w-100 btn-sm">
-                        <i class="bi bi-send me-1"></i>Nosūtīt
+                        <i class="bi bi-send me-1"></i>{% trans "Nosūtīt" %}
                     </button>
                 </form>
             </div>
             {% else %}
             <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-danger w-100">
-                <i class="bi bi-envelope me-2"></i>Sazināties ar pārdevēju
+                <i class="bi bi-envelope me-2"></i>{% if is_dating %}{% trans "Sazināties" %}{% else %}{% trans "Sazināties ar pārdevēju" %}{% endif %}
             </a>
             {% endif %}
         </div>
@@ -409,8 +776,38 @@
             {% endwith %}
         </div>
 
+        <!-- Statistika pārdevējam -->
+        {% if user == listing.seller %}
+        <div class="info-card">
+            <a href="{% url 'listing_stats' listing.pk %}" class="btn btn-outline-secondary w-100 btn-sm">
+                <i class="bi bi-bar-chart me-2"></i>Skatīt statistiku
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Facebook dalīšanās pārdevējam -->
+        {% if user == listing.seller %}
+        <div class="info-card" style="border-color:#1877F2!important;border-width:1.5px">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}%3A%2F%2F{{ request.get_host }}{% url 'listing_detail' listing.pk %}"
+               target="_blank" rel="noopener"
+               class="btn w-100 fw-700" style="background:#1877F2;color:white;font-weight:700;border-radius:10px">
+                <i class="bi bi-facebook me-2"></i>Publicēt savā Facebook
+            </a>
+        </div>
+        {% endif %}
+
         <!-- Ziņot / Admin -->
         {% if user.is_staff %}
+        <div class="info-card" style="border-color:#1877F2!important;border-width:1.5px">
+            <h6 class="fw-700 mb-2" style="font-weight:700;color:#1877F2"><i class="bi bi-facebook me-2"></i>Publicēt Facebook</h6>
+            {% with listing.get_main_image as img %}
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}%3A%2F%2F{{ request.get_host }}{% url 'listing_detail' listing.pk %}"
+               target="_blank" rel="noopener"
+               class="btn w-100 fw-700" style="background:#1877F2;color:white;font-weight:700;border-radius:10px">
+                <i class="bi bi-facebook me-2"></i>Dalīties Facebook
+            </a>
+            {% endwith %}
+        </div>
         <div class="info-card border-danger" style="border-color:#e63946!important">
             <h6 class="text-danger fw-700 mb-3" style="font-weight:700"><i class="bi bi-shield-check me-2"></i>Admina darbības</h6>
             {% if listing.moderation_status == 'pending' %}

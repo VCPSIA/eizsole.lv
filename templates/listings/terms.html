@@ -1,42 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Lietošanas noteikumi — eizsole.lv{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Lietošanas noteikumi" %} — eizsole.lv{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
 <div class="col-lg-8">
 <div class="card p-4 p-md-5" style="border-radius:16px">
-    <h1 class="fw-800 mb-4" style="font-weight:800;font-size:1.8rem">Lietošanas noteikumi</h1>
-    <p class="text-muted" style="font-size:.88rem">Spēkā no 2025. gada 1. janvāra</p>
+    <h1 class="fw-800 mb-4" style="font-weight:800;font-size:1.8rem">{% trans "Lietošanas noteikumi" %}</h1>
+    <p class="text-muted" style="font-size:.88rem">{% trans "Spēkā no 2025. gada 1. janvāra" %}</p>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">1. Vispārīgie noteikumi</h5>
-    <p>Lietojot eizsole.lv, jūs piekrītat šiem noteikumiem. Platforma nodrošina tirgus vietu sludinājumu publicēšanai un izsoļu rīkošanai. Platforma nav darījuma puse starp pircēju un pārdevēju.</p>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "1. Vispārīgie noteikumi" %}</h5>
+    <p>{% trans "Lietojot eizsole.lv, jūs piekrītat šiem noteikumiem. Platforma nodrošina tirgus vietu sludinājumu publicēšanai un izsoļu rīkošanai. Platforma nav darījuma puse starp pircēju un pārdevēju." %}</p>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">2. Reģistrācija</h5>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "2. Reģistrācija" %}</h5>
     <ul>
-        <li>Reģistrācijai nepieciešams derīgs e-pasts un tālrunis.</li>
-        <li>Lietotājam jābūt vismaz 18 gadus vecam.</li>
-        <li>Viens lietotājs var reģistrēt vienu kontu.</li>
-        <li>Lietotājs ir atbildīgs par konta drošību.</li>
+        <li>{% trans "Reģistrācijai nepieciešams derīgs e-pasts un tālrunis." %}</li>
+        <li>{% trans "Lietotājam jābūt vismaz 18 gadus vecam." %}</li>
+        <li>{% trans "Viens lietotājs var reģistrēt vienu kontu." %}</li>
+        <li>{% trans "Lietotājs ir atbildīgs par konta drošību." %}</li>
     </ul>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">3. Sludinājumi un izsoles</h5>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "3. Sludinājumi un izsoles" %}</h5>
     <ul>
-        <li>Aizliegts publicēt nelikumīgas, bīstamas vai maldinošas preces.</li>
-        <li>Attēliem jāattēlo faktiskā prece.</li>
-        <li>Izsoles solījums ir saistošs — uzvarētājam jāsamaksā.</li>
-        <li>Platforma patur tiesības dzēst jebkuru sludinājumu bez brīdinājuma.</li>
+        <li>{% trans "Aizliegts publicēt nelikumīgas, bīstamas vai maldinošas preces." %}</li>
+        <li>{% trans "Attēliem jāattēlo faktiskā prece." %}</li>
+        <li>{% trans "Izsoles solījums ir saistošs — uzvarētājam jāsamaksā." %}</li>
+        <li>{% trans "Platforma patur tiesības dzēst jebkuru sludinājumu bez brīdinājuma." %}</li>
     </ul>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">4. Maksājumi</h5>
-    <p>Maksa par sludinājumu publicēšanu un TOP funkcijām ir norādīta platformā. Visa nauda tiek iekasēta caur drošu maksājumu sistēmu. Atmaksa iespējama tikai tehnisku kļūdu gadījumā.</p>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "4. Maksājumi" %}</h5>
+    <p>{% trans "Maksa par sludinājumu publicēšanu un TOP funkcijām ir norādīta platformā. Visa nauda tiek iekasēta caur drošu maksājumu sistēmu. Atmaksa iespējama tikai tehnisku kļūdu gadījumā." %}</p>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">5. Atbildības ierobežojumi</h5>
-    <p>Platforma neuzņemas atbildību par darījumiem starp lietotājiem, preces kvalitāti, piegādes laiku vai citiem darījuma aspektiem. Lietotāji paši ir atbildīgi par darījuma drošību.</p>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "5. Atbildības ierobežojumi" %}</h5>
+    <p>{% trans "Platforma neuzņemas atbildību par darījumiem starp lietotājiem, preces kvalitāti, piegādes laiku vai citiem darījuma aspektiem. Lietotāji paši ir atbildīgi par darījuma drošību." %}</p>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">6. Pārkāpumi</h5>
-    <p>Noteikumu pārkāpuma gadījumā konts var tikt apturēts vai dzēsts. Nopietnu pārkāpumu gadījumā informācija var tikt nodota tiesībsargājošajām iestādēm.</p>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "6. Pārkāpumi" %}</h5>
+    <p>{% trans "Noteikumu pārkāpuma gadījumā konts var tikt apturēts vai dzēsts. Nopietnu pārkāpumu gadījumā informācija var tikt nodota tiesībsargājošajām iestādēm." %}</p>
 
-    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">7. Kontakti</h5>
-    <p>Jautājumu gadījumā: <a href="mailto:info@eizsole.lv">info@eizsole.lv</a></p>
+    <h5 class="fw-700 mt-4 mb-2" style="font-weight:700">{% trans "7. Kontakti" %}</h5>
+    <p>{% trans "Jautājumu gadījumā:" %} <a href="mailto:info@eizsole.lv">info@eizsole.lv</a></p>
 </div>
 </div>
 </div>

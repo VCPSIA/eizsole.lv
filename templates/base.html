@@ -4,15 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="5AcObE6LH_juZxhekAHRFtNNoD7byFCN0sZLEMttc-E">
     <title>{% block title %}eizsole.lv{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}eizsole.lv — Latvijas lētākā izsoļu un sludinājumu platforma. Pērc un pārdod viegli un droši.{% endblock %}">
     <meta property="og:title" content="{% block og_title %}eizsole.lv{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Latvijas lētākā izsoļu un sludinājumu platforma.{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="eizsole.lv">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     {% block og_image %}<meta property="og:image" content="{% static 'icons/amurs_balts.svg' %}">{% endblock %}
     {% block canonical %}{% endblock %}
+    {% block schema_json %}{% endblock %}
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#e63946">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="eizsole.lv">
+    <link rel="apple-touch-icon" href="{% static 'icons/pwa/icon-152.png' %}">
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SND8DRSTT7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-SND8DRSTT7');
+    </script>
+    <script>
+    (function(){
+        var KEY='eizsole_sw_clean', VER='v3';
+        if(localStorage.getItem(KEY)!==VER && 'serviceWorker' in navigator){
+            localStorage.setItem(KEY, VER);
+            Promise.all([
+                navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}),
+                'caches' in window ? caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}) : Promise.resolve()
+            ]).then(function(){ location.reload(); });
+        }
+    })();
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" rel="stylesheet">
@@ -274,6 +304,22 @@
         .breadcrumb { font-size: 0.82rem; }
         .breadcrumb-item a { color: var(--primary); text-decoration: none; }
         .breadcrumb-item.active { color: var(--text-muted); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 991.98px) {
+            .search-bar {
+                max-width: none;
+                margin: 0.6rem 0;
+                width: 100%;
+            }
+            .navbar-nav { gap: 0 !important; }
+            .btn-publish { display: inline-block; margin: 0.25rem 0; }
+        }
+        @media (max-width: 575.98px) {
+            #banner-widget { display: none !important; }
+            .main-container { padding-top: 0.75rem; padding-bottom: 2rem; }
+            .section-heading { font-size: 1rem; }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -296,6 +342,11 @@
             </form>
 
             <ul class="navbar-nav ms-auto align-items-center gap-1">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="bi bi-grid me-1" style="color:#e63946"></i>{% trans "Sludinājumi" %}
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auction_list' %}">
                         <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:.85rem;height:.85rem;vertical-align:-.1em;object-fit:contain" class="me-1">{% trans "Izsoles" %}
@@ -572,7 +623,7 @@
                 <div class="fw-800 text-white fs-5 mb-2" style="font-weight:800">
                     <img src="{% static 'icons/amurs_sarkans.svg' %}" style="width:1.2rem;height:1.2rem;vertical-align:-.1em;object-fit:contain"> eizsole.lv
                 </div>
-                <p class="small mb-0">{% trans "Lētākā izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši." %}</p>
+                <p class="small mb-0">{% trans "Bezmaksas izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši." %}</p>
             </div>
             <div class="col-md-2">
                 <div class="text-white fw-600 small mb-2" style="font-weight:600">{% trans "Platforma" %}</div>
@@ -598,7 +649,24 @@
                 </ul>
             </div>
         </div>
-        <hr style="border-color:#374151;margin:2rem 0 1rem">
+        <!-- Mobilās lietotnes josla -->
+        <div class="mt-4 pt-3" style="border-top:1px solid #374151">
+            <div class="d-flex flex-wrap align-items-center justify-content-center gap-3">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#pwaModal"
+                    style="background:none;border:1.5px solid #374151;border-radius:12px;padding:.6rem 1.2rem;cursor:pointer;color:#9ca3af;transition:all .2s;display:flex;align-items:center;gap:.6rem"
+                    onmouseover="this.style.borderColor='#e63946';this.style.color='#fff'"
+                    onmouseout="this.style.borderColor='#374151';this.style.color='#9ca3af'">
+                    <i class="bi bi-phone" style="font-size:1.3rem;color:#e63946"></i>
+                    <div style="text-align:left">
+                        <div style="font-size:.72rem;line-height:1;margin-bottom:2px">{% trans "Instalēt kā" %}</div>
+                        <div style="font-size:.88rem;font-weight:700;color:#fff;line-height:1">{% trans "Mobīlā lietotne" %}</div>
+                    </div>
+                    <i class="bi bi-chevron-right" style="font-size:.7rem;opacity:.5"></i>
+                </button>
+            </div>
+        </div>
+
+        <hr style="border-color:#374151;margin:1.5rem 0 1rem">
         <div class="d-flex flex-wrap justify-content-center gap-3 small mb-2">
             <a href="{% url 'privacy_policy' %}">{% trans "Privātuma politika" %}</a>
             <a href="{% url 'terms' %}">{% trans "Lietošanas noteikumi" %}</a>
@@ -606,6 +674,70 @@
         <p class="small mb-0 text-center">&copy; 2025 eizsole.lv — Visas tiesības aizsargātas</p>
     </div>
 </footer>
+
+<!-- PWA instalācijas modāls -->
+<div class="modal fade" id="pwaModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px;border:none;overflow:hidden">
+            <div class="modal-header" style="background:#e63946;border:none;padding:1.25rem 1.5rem">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-phone text-white" style="font-size:1.4rem"></i>
+                    <h5 class="modal-title text-white fw-700 mb-0" style="font-weight:700">{% trans "Mobīlā lietotne" %}</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <p class="text-muted small text-center pt-3 px-4 mb-0">
+                    {% trans "eizsole.lv var instalēt kā lietotni — bez App Store, bez maksas." %}
+                </p>
+
+                <!-- Android -->
+                <div class="p-4 border-bottom">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div style="width:36px;height:36px;background:#34a853;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-android2 text-white" style="font-size:1.1rem"></i>
+                        </div>
+                        <div>
+                            <div class="fw-700" style="font-weight:700;font-size:.95rem">Android</div>
+                            <div class="text-muted" style="font-size:.75rem">{% trans "Chrome pārlūks" %}</div>
+                        </div>
+                    </div>
+                    <ol class="mb-0 ps-3" style="font-size:.86rem;line-height:2">
+                        <li>{% blocktrans %}Atver <strong>eizsole.lv</strong> Chrome pārlūkā{% endblocktrans %}</li>
+                        <li>{% trans "Piespiež ⋮ (trīs punkti) ekrāna augšā" %}</li>
+                        <li>{% blocktrans %}Izvēlies <strong>"Pievienot sākuma ekrānam"</strong>{% endblocktrans %}</li>
+                        <li>{% blocktrans %}Piespiez <strong>"Instalēt"</strong> — gatavs!{% endblocktrans %}</li>
+                    </ol>
+                </div>
+
+                <!-- iPhone -->
+                <div class="p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div style="width:36px;height:36px;background:#1a1d23;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-apple text-white" style="font-size:1.1rem"></i>
+                        </div>
+                        <div>
+                            <div class="fw-700" style="font-weight:700;font-size:.95rem">iPhone / iPad</div>
+                            <div class="text-muted" style="font-size:.75rem">{% trans "Safari pārlūks" %}</div>
+                        </div>
+                    </div>
+                    <ol class="mb-0 ps-3" style="font-size:.86rem;line-height:2">
+                        <li>{% blocktrans %}Atver <strong>eizsole.lv</strong> Safari pārlūkā{% endblocktrans %}</li>
+                        <li>{% trans "Piespiež (dalīšanās poga ekrāna apakšā)" %} <i class="bi bi-box-arrow-up" style="font-size:.9rem"></i></li>
+                        <li>{% blocktrans %}Izvēlies <strong>"Pievienot sākuma ekrānam"</strong>{% endblocktrans %}</li>
+                        <li>{% blocktrans %}Piespiez <strong>"Pievienot"</strong> — gatavs!{% endblocktrans %}</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="border-top:1px solid #f0f0f0;padding:.75rem">
+                <p class="text-muted mb-0" style="font-size:.75rem">
+                    <i class="bi bi-shield-check text-success me-1"></i>
+                    {% trans "Bezmaksas · Nav App Store nepieciešams · Darbojas offline" %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Cookie consent josla -->
 <div id="cookie-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a1d23;color:#e5e7eb;padding:1rem 1.5rem;box-shadow:0 -2px 16px rgba(0,0,0,.3)">
@@ -641,5 +773,10 @@ function togglePw(id, btn) {
 })();
 </script>
 {% block extra_js %}{% endblock %}
+<script>
+if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+}
+</script>
 </body>
 </html>

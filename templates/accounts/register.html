@@ -68,11 +68,6 @@
                     </div>
                 </div>
                 <div class="mt-2">
-                    <label class="form-label fw-500">Personas kods <span class="text-danger">*</span></label>
-                    <input type="text" name="personal_code" class="form-control" value="{{ post.personal_code|default:'' }}" placeholder="XXXXXX-XXXXX">
-                    <div class="form-text" style="font-size:.75rem">Netiek publicēts, izmanto tikai identifikācijai</div>
-                </div>
-                <div class="mt-2">
                     <label class="form-label fw-500">Adrese</label>
                     <input type="text" name="address" class="form-control" value="{{ post.address|default:'' }}" placeholder="Iela, pilsēta">
                 </div>
@@ -210,7 +205,17 @@
             </div>
             {% endfor %}
 
-            <button type="submit" class="btn btn-danger w-100 fw-700 py-2 mt-3" style="font-weight:700;border-radius:10px">
+            <!-- Piekrīšana noteikumiem -->
+            <div class="form-check mt-3 mb-1" style="background:#f8f9fa;border-radius:10px;padding:.75rem 1rem .75rem 2.5rem;border:1.5px solid #e9ecef">
+                <input class="form-check-input" type="checkbox" name="agree_terms" id="agree_terms"
+                    {% if post.agree_terms %}checked{% endif %} required
+                    style="width:1.1em;height:1.1em;margin-top:.15em;border-color:#ced4da;cursor:pointer">
+                <label class="form-check-label" for="agree_terms" style="font-size:.87rem;cursor:pointer">
+                    {% trans "Esmu izlasījis un piekrītu" %} <a href="{% url 'terms' %}" target="_blank" class="text-danger fw-600" style="font-weight:600">{% trans "lietošanas noteikumiem" %}</a>.
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100 fw-700 py-2 mt-2" style="font-weight:700;border-radius:10px">
                 <i class="bi bi-person-check me-2"></i>{% trans "Reģistrēties" %}
             </button>
         </form>

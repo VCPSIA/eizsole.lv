@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
+from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
 
 
 class Category(models.Model):
@@ -29,12 +30,23 @@ class Listing(models.Model):
         ('buy',   'Pērk'),
         ('trade', 'Maina'),
     ]
+    AGE_RANGE_CHOICES = [
+        ('18-30', '18–30 gadi'),
+        ('30-45', '30–45 gadi'),
+        ('45-60', '45–60 gadi'),
+        ('60+',   'No 60 gadiem'),
+    ]
+    GENDER_CHOICES = [
+        ('male',   'Vīrietis'),
+        ('female', 'Sieviete'),
+    ]
 
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(validators=[MaxLengthValidator(10000)])
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='listings')
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
-    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
+        validators=[MinValueValidator(Decimal('0.01')), MaxValueValidator(Decimal('9999999.99'))])
     condition = models.CharField(max_length=10, choices=CONDITION_CHOICES, default='used')
     deal_type = models.CharField(max_length=5, choices=DEAL_TYPE_CHOICES, blank=True, default='')
     year = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -58,7 +70,12 @@ class Listing(models.Model):
     contact_phone = models.CharField(max_length=30, blank=True)
     is_featured = models.BooleanField(default=False, verbose_name='TOP sludinājums')
     featured_at = models.DateTimeField(null=True, blank=True)
+    age_range = models.CharField(max_length=10, choices=AGE_RANGE_CHOICES, blank=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
+    seeking = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
     equipment = models.ManyToManyField('Equipment', blank=True, related_name='listings')
+    is_template = models.BooleanField(default=False)
+    template_created_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -243,6 +260,7 @@ class Report(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        unique_together = [('listing', 'reporter')]
 
     def __str__(self):
         return f"Ziņojums: {self.listing.title} ({self.get_reason_display()})"
@@ -327,6 +345,110 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f'{self.user.username} ♥ {self.listing.title}'
+
+
+class ListingView(models.Model):
+    SOURCE_CHOICES = [
+        ('google',   'Google'),
+        ('facebook', 'Facebook'),
+        ('internal', 'Eizsole.lv'),
+        ('direct',   'Tiešā'),
+        ('other',    'Cits'),
+    ]
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='view_events')
+    viewed_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(max_length=10, choices=SOURCE_CHOICES, default='direct')
+
+    class Meta:
+        ordering = ['-viewed_at']
+
+    @staticmethod
+    def detect_source(referer):
+        if not referer:
+            return 'direct'
+        r = referer.lower()
+        if 'google' in r or 'bing' in r or 'yahoo' in r or 'duckduckgo' in r:
+            return 'google'
+        if 'facebook' in r or 'fb.com' in r or 'instagram' in r:
+            return 'facebook'
+        if 'eizsole.lv' in r or '127.0.0.1' in r or 'localhost' in r:
+            return 'internal'
+        return 'other'
+
+
+class SavedSearch(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_searches')
+    query = models.CharField(max_length=200, blank=True)
+    price_min = models.CharField(max_length=20, blank=True)
+    price_max = models.CharField(max_length=20, blank=True)
+    condition = models.CharField(max_length=10, blank=True)
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    listing_type = models.CharField(max_length=10, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_notified = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def get_label(self):
+        parts = []
+        if self.query:
+            parts.append(f'"{self.query}"')
+        if self.category:
+            parts.append(self.category.name)
+        if self.condition:
+            parts.append({'new': 'Jauns', 'used': 'Lietots', 'damaged': 'Bojāts'}.get(self.condition, ''))
+        if self.price_min and self.price_max:
+            parts.append(f'€{self.price_min}–{self.price_max}')
+        elif self.price_min:
+            parts.append(f'no €{self.price_min}')
+        elif self.price_max:
+            parts.append(f'līdz €{self.price_max}')
+        if self.listing_type == 'auction':
+            parts.append('Izsoles')
+        elif self.listing_type == 'listing':
+            parts.append('Sludinājumi')
+        return ', '.join(parts) or 'Visi sludinājumi'
+
+    def get_url(self):
+        from urllib.parse import urlencode
+        params = {}
+        if self.query: params['q'] = self.query
+        if self.price_min: params['price_min'] = self.price_min
+        if self.price_max: params['price_max'] = self.price_max
+        if self.condition: params['condition'] = self.condition
+        if self.category_id: params['category'] = self.category_id
+        if self.listing_type: params['listing_type'] = self.listing_type
+        return f'/meklet/?{urlencode(params)}'
+
+    def get_matching_listings(self, since=None):
+        from django.db.models import Q
+        qs = Listing.objects.filter(is_active=True, moderation_status='approved')
+        if since:
+            qs = qs.filter(created_at__gt=since)
+        if self.query:
+            qs = qs.filter(Q(title__icontains=self.query) | Q(description__icontains=self.query))
+        if self.price_min:
+            qs = qs.filter(price__gte=self.price_min)
+        if self.price_max:
+            qs = qs.filter(price__lte=self.price_max)
+        if self.condition:
+            qs = qs.filter(condition=self.condition)
+        if self.category:
+            def collect_all(c):
+                r = [c]
+                for ch in c.children.all():
+                    r.extend(collect_all(ch))
+                return r
+            qs = qs.filter(category__in=collect_all(self.category))
+        if self.listing_type == 'auction':
+            qs = qs.filter(is_auction=True)
+        elif self.listing_type == 'listing':
+            qs = qs.filter(is_auction=False)
+        return qs
+
+    def __str__(self):
+        return f'{self.user.username}: {self.get_label()}'
 
 
 class SiteSettings(models.Model):

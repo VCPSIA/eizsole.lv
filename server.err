@@ -1,0 +1,468 @@
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\admin.py changed, reloading.
+Watching for file changes with StatReloader
+[06/May/2026 21:11:25] "GET /accounts/profile/ HTTP/1.1" 200 37645
+[06/May/2026 21:11:25] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:11:25] "GET /media/listings/2026/04/Laiva_1.jpg HTTP/1.1" 304 0
+[06/May/2026 21:11:25] "GET /media/listings/2026/05/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:11:37] "GET / HTTP/1.1" 200 68743
+[06/May/2026 21:11:41] "GET /kategorija/apgerbs/ HTTP/1.1" 200 56376
+[06/May/2026 21:11:41] "GET /static/icons/apavi-sievietes.svg HTTP/1.1" 200 342
+[06/May/2026 21:11:41] "GET /static/icons/apavi-viriesi.png HTTP/1.1" 200 1889802
+[06/May/2026 21:11:41] "GET /static/icons/apavi-berni.png HTTP/1.1" 200 3843493
+[06/May/2026 21:11:50] "GET /accounts/profile/ HTTP/1.1" 200 37645
+[06/May/2026 21:11:52] "POST /accounts/logout/ HTTP/1.1" 302 0
+[06/May/2026 21:11:52] "GET / HTTP/1.1" 200 65641
+[06/May/2026 21:11:54] "GET /accounts/login/ HTTP/1.1" 200 22100
+[06/May/2026 21:12:02] "POST /accounts/login/ HTTP/1.1" 302 0
+[06/May/2026 21:12:02] "GET / HTTP/1.1" 200 67129
+[06/May/2026 21:12:06] "GET / HTTP/1.1" 200 67129
+[06/May/2026 21:12:09] "GET /kategorija/transports/ HTTP/1.1" 200 80329
+[06/May/2026 21:12:24] "GET /accounts/profile/ HTTP/1.1" 200 39203
+[06/May/2026 21:12:24] "GET /media/avatars/dodge_xNUS7rI.png HTTP/1.1" 200 20939
+[06/May/2026 21:12:24] "GET /media/listings/2026/04/BMW.png HTTP/1.1" 304 0
+[06/May/2026 21:12:33] "GET /publicet/ HTTP/1.1" 200 115170
+[06/May/2026 21:12:40] "GET /baneris/veidot/ HTTP/1.1" 200 25869
+[06/May/2026 21:13:01] "POST /i18n/setlang/ HTTP/1.1" 302 0
+[06/May/2026 21:13:01] "GET /baneris/veidot/ HTTP/1.1" 200 26115
+[06/May/2026 21:13:01] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:14:53] "POST /baneris/veidot/ HTTP/1.1" 302 0
+[06/May/2026 21:14:53] "GET /accounts/profile/ HTTP/1.1" 200 40342
+[06/May/2026 21:14:53] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:14:53] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 200 89423
+[06/May/2026 21:15:17] "GET / HTTP/1.1" 200 70333
+[06/May/2026 21:15:17] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:15:24] "GET /kategorija/apgerbs/ HTTP/1.1" 200 57196
+[06/May/2026 21:15:24] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:22:22] "GET / HTTP/1.1" 200 69799
+[06/May/2026 21:22:22] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:22:22] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:22:41] "GET /kategorija/sadzives-preces/ HTTP/1.1" 200 54853
+[06/May/2026 21:23:24] "GET / HTTP/1.1" 200 69799
+[06/May/2026 21:23:24] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:35:52] "GET / HTTP/1.1" 200 72057
+[06/May/2026 21:35:52] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:35:52] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:36:23] "GET /kategorija/nekustamais-ipasums/ HTTP/1.1" 200 60764
+[06/May/2026 21:36:23] "GET /media/listings/2026/05/auction_47_img1.jpg HTTP/1.1" 304 0
+[06/May/2026 21:38:30] "GET /kategorija/ni-majas-pardod/ HTTP/1.1" 200 44865
+[06/May/2026 21:38:30] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:43:32] "GET /kategorija/ni-majas-ire/ HTTP/1.1" 200 45488
+[06/May/2026 21:43:32] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:43:32] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:43:34] "GET /kategorija/ni-vasarnicas/ HTTP/1.1" 200 45541
+[06/May/2026 21:43:37] "GET /kategorija/nekustamais-ipasums/ HTTP/1.1" 200 61408
+[06/May/2026 21:43:47] "GET / HTTP/1.1" 200 72701
+[06/May/2026 21:43:54] "GET /kategorija/nekustamais-ipasums/ HTTP/1.1" 200 61408
+[06/May/2026 21:43:57] "GET /kategorija/ni-noliktavas/ HTTP/1.1" 200 45538
+[06/May/2026 21:43:58] "GET /kategorija/ni-majas-ire/ HTTP/1.1" 200 45488
+[06/May/2026 21:58:07] "GET /publicet/ HTTP/1.1" 200 119904
+[06/May/2026 21:58:07] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[06/May/2026 21:58:07] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[06/May/2026 21:58:13] "GET /baneris/veidot/ HTTP/1.1" 200 29561
+[06/May/2026 21:59:05] "POST /baneris/veidot/ HTTP/1.1" 302 0
+[06/May/2026 21:59:05] "GET /accounts/profile/ HTTP/1.1" 200 43446
+[06/May/2026 21:59:05] "GET /media/banners/Ekr%C4%81nuz%C5%86%C4%93mums_2026-04-18_193611.png HTTP/1.1" 200 398334
+[06/May/2026 22:00:48] "GET / HTTP/1.1" 200 73437
+[06/May/2026 22:00:48] "GET /media/banners/Ekr%C4%81nuz%C5%86%C4%93mums_2026-04-18_193611.png HTTP/1.1" 304 0
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+[07/May/2026 19:44:24] "GET /kategorija/transports/ HTTP/1.1" 200 84697
+[07/May/2026 19:44:24] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/banners/Ekr%C4%81nuz%C5%86%C4%93mums_2026-04-18_193611.png HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/05/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/05/auction_46_img1.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/04/1lats.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/04/kubs_2.png HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/04/Gemini_Generated_Image_3m351p3m351p3m35.png HTTP/1.1" 304 0
+[07/May/2026 19:44:24] "GET /media/listings/2026/04/Laiva_5_Foram2R.jpg HTTP/1.1" 304 0
+[07/May/2026 19:44:27] "GET /kategorija/auto-automasinas/ HTTP/1.1" 200 79596
+[07/May/2026 20:00:01] "GET /kategorija/auto-automasinas/ HTTP/1.1" 200 79650
+[07/May/2026 22:45:27] "POST /accounts/logout/ HTTP/1.1" 302 0
+[07/May/2026 22:45:28] "GET / HTTP/1.1" 200 71968
+[07/May/2026 22:45:28] "GET /media/banners/Bez_nosaukuma.jpg HTTP/1.1" 304 0
+[07/May/2026 22:45:28] "GET /media/banners/ex120_autom.jpg HTTP/1.1" 304 0
+[07/May/2026 22:45:28] "GET /static/icons/amurs_sarkans.svg HTTP/1.1" 304 0
+[07/May/2026 22:45:28] "GET /media/banners/Ekr%C4%81nuz%C5%86%C4%93mums_2026-04-18_193611.png HTTP/1.1" 304 0
+[07/May/2026 22:45:28] "GET /static/icons/amurs_balts.svg HTTP/1.1" 304 0
+[07/May/2026 22:45:30] "GET /accounts/login/ HTTP/1.1" 200 26226
+[07/May/2026 22:45:36] "POST /accounts/login/ HTTP/1.1" 302 0
+[07/May/2026 22:45:37] "GET / HTTP/1.1" 200 74038
+C:\Users\USER\izsoles-platforma\listings\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\accounts\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\account\apps.py", line 19, in ready
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: allauth.account.middleware.AccountMiddleware must be added to settings.MIDDLEWARE
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\platforma\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\listings\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\commands\runserver.py", line 124, in inner_run
+    autoreload.raise_last_exception()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 86, in raise_last_exception
+    raise _exception[1]
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\core\management\__init__.py", line 395, in execute
+    autoreload.check_errors(django.setup)()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\django\apps\registry.py", line 124, in populate
+    app_config.ready()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\apps.py", line 18, in ready
+    registry.load()
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\__init__.py", line 43, in load
+    provider_module = importlib.import_module(module_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\provider.py", line 11, in <module>
+    from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\providers\google\views.py", line 20, in <module>
+    from allauth.socialaccount.internal import jwtkit
+  File "C:\Users\USER\izsoles-platforma\venv\Lib\site-packages\allauth\socialaccount\internal\jwtkit.py", line 9, in <module>
+    from cryptography.hazmat.backends import default_backend
+ModuleNotFoundError: No module named 'cryptography'
+C:\Users\USER\izsoles-platforma\listings\sitemaps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\auctions\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\sitemaps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\sitemaps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\platforma\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\sitemaps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\sitemaps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\izsoles-platforma\listings\views.py changed, reloading.
+Watching for file changes with StatReloader

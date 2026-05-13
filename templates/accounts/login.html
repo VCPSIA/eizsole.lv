@@ -16,11 +16,28 @@
         <p class="mb-0 mt-1" style="color:rgba(255,255,255,.7);font-size:.85rem">eizsole.lv kontā</p>
     </div>
     <div class="auth-body">
-        {% if form.errors %}
+        {% if locked_out %}
+        <div class="alert alert-danger mb-3">
+            <i class="bi bi-shield-lock me-2"></i>
+            <strong>Piekļuve bloķēta 15 minūtes</strong> — pārāk daudz neveiksmīgu mēģinājumu.
+        </div>
+        {% elif unverified %}
+        <div class="alert alert-warning mb-3">
+            <i class="bi bi-envelope-exclamation me-2"></i>
+            E-pasts nav apstiprināts. <a href="{% url 'resend_verification' %}" class="alert-link">Nosūtīt jaunu saiti.</a>
+        </div>
+        {% elif form.errors %}
         <div class="alert alert-danger mb-3">
             <i class="bi bi-exclamation-circle me-2"></i>{% trans "Nepareizs lietotājvārds vai parole." %}
+            {% if remaining is not None and remaining <= 2 %}
+            <div class="mt-1" style="font-size:.85rem">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                Vēl {{ remaining }} mēģinājum{{ remaining|pluralize:"s,i" }} pirms 15 min bloķēšanas.
+            </div>
+            {% endif %}
         </div>
         {% endif %}
+        {% if not locked_out %}
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -47,6 +64,7 @@
                 {% trans "Pieteikties sistēmā" %}
             </button>
         </form>
+        {% endif %}
         <hr class="my-3">
         <div class="d-grid gap-2 mb-3">
             <a href="{% url 'google_login' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" style="border-radius:10px;font-size:.9rem">

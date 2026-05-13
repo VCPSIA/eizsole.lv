@@ -152,7 +152,7 @@
                 <span class="badge" style="background:#f4f5f7;color:#6c757d;font-weight:600">{{ user.listings.count }}</span>
             </div>
             <div class="px-4 py-2">
-                {% for listing in user.listings.all %}
+                {% for listing in user.listings.all %}{% if not listing.is_template %}
                 <div class="listing-row">
                     <div class="d-flex align-items-center gap-3">
                         {% with listing.get_main_image as img %}
@@ -221,6 +221,13 @@
                         {% endif %}
                         {% if listing.is_auction %}
                             {% with listing.auction as a %}
+                            {% if a and not a.is_finished %}
+                            <div class="d-flex gap-1 mt-1 flex-wrap">
+                                <a href="{% url 'auction_edit' a.pk %}" class="btn btn-outline-secondary btn-sm" style="font-size:.72rem;padding:.2rem .5rem">
+                                    <i class="bi bi-pencil"></i> Labot
+                                </a>
+                            </div>
+                            {% endif %}
                             {% if a and a.is_finished and not a.winner %}
                             <div>
                                 <a href="{% url 'restart_auction' a.pk %}" class="btn btn-outline-danger btn-sm mt-1" style="font-size:.72rem;padding:.2rem .5rem">
@@ -243,7 +250,7 @@
                         {% endif %}
                     </div>
                 </div>
-                {% empty %}
+                {% endif %}{% empty %}
                 <div class="text-center py-5">
                     <i class="bi bi-inbox text-muted" style="font-size:2.5rem"></i>
                     <p class="text-muted mt-2 mb-0">Vēl nav sludinājumu.</p>
@@ -253,5 +260,63 @@
             </div>
         </div>
     </div>
+
+    <!-- Šabloni -->
+    {% if templates %}
+    <div class="col-12 col-md-8 offset-md-4 mt-4">
+        <div class="card p-0" style="border-radius:12px;overflow:hidden;border:1.5px solid #fde68a">
+            <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center" style="background:#fffbeb">
+                <h6 class="mb-0 fw-700" style="font-weight:700"><i class="bi bi-file-earmark-text text-warning me-2"></i>Šabloni (beigušies sludinājumi)</h6>
+                <span class="badge" style="background:#fef9c3;color:#92400e;font-weight:600">{{ templates.count }}</span>
+            </div>
+            <div class="px-4 py-2">
+                <p class="text-muted mb-3 mt-2" style="font-size:.82rem"><i class="bi bi-info-circle me-1"></i>Šabloni tiek automātiski dzēsti 30 dienu laikā pēc sludinājuma beigām.</p>
+                {% for listing in templates %}
+                <div class="listing-row" style="opacity:.9">
+                    <div class="d-flex align-items-center gap-3">
+                        {% with listing.get_main_image as img %}
+                        {% if img %}
+                        <img src="{{ img.image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;filter:grayscale(30%)">
+                        {% else %}
+                        <div style="width:44px;height:44px;background:#f4f5f7;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-image text-muted"></i>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        <div>
+                            <span class="fw-500" style="font-weight:500;color:#374151">{{ listing.title|truncatechars:45 }}</span>
+                            <div class="text-muted" style="font-size:.75rem">
+                                <span style="background:#f4f5f7;border-radius:4px;padding:0 4px;font-family:monospace;font-size:.7rem">#{{ listing.pk|stringformat:"06d" }}</span>
+                                Beidzās: {{ listing.template_created_at|date:"d.m.Y" }}
+                                {% if listing.price %} · €{{ listing.price }}{% endif %}
+                                <span class="ms-1 text-warning fw-600" style="font-size:.7rem">
+                                    Dzēsīs: {{ listing.template_created_at|date:"d.m.Y"|add:" +30d" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end" style="white-space:nowrap">
+                        <div class="d-flex gap-1 mt-1 flex-wrap justify-content-end">
+                            <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-outline-secondary btn-sm" style="font-size:.72rem;padding:.2rem .5rem">
+                                <i class="bi bi-pencil"></i> Labot
+                            </a>
+                            <a href="{% url 'publish_template' listing.pk %}" class="btn btn-warning btn-sm" style="font-size:.72rem;padding:.2rem .5rem;color:#92400e">
+                                <i class="bi bi-send"></i> Publicēt
+                            </a>
+                            <form method="post" action="{% url 'delete_template' listing.pk %}"
+                                  onsubmit="return confirm('Dzēst šo šablonu?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="font-size:.72rem;padding:.2rem .5rem">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

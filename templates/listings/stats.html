@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Statistika — {{ listing.title }}{% endblock %}
+
+{% block content %}
+<div style="max-width:860px;margin:0 auto">
+
+    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+        <div>
+            <h4 class="fw-800 mb-0" style="font-weight:800">
+                <i class="bi bi-bar-chart text-danger me-2"></i>Statistika
+            </h4>
+            <div class="text-muted mt-1" style="font-size:.85rem">
+                <a href="{% url 'listing_detail' listing.pk %}" class="text-danger text-decoration-none">{{ listing.title|truncatechars:60 }}</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kopsavilkums -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <div style="font-size:2rem;font-weight:800;color:#e63946">{{ views_total }}</div>
+                <div class="text-muted" style="font-size:.78rem;font-weight:600">Kopā skatījumi</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <div style="font-size:2rem;font-weight:800;color:#2563eb">{{ views_7d }}</div>
+                <div class="text-muted" style="font-size:.78rem;font-weight:600">Šajā nedēļā</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <div style="font-size:2rem;font-weight:800;color:#16a34a">{{ views_30d }}</div>
+                <div class="text-muted" style="font-size:.78rem;font-weight:600">Pēdējās 30 dienas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <div style="font-size:2rem;font-weight:800;color:#f59e0b">{{ favorites }}</div>
+                <div class="text-muted" style="font-size:.78rem;font-weight:600">Izlasē</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafiki -->
+    <div class="row g-3">
+        <div class="col-md-8">
+            <div class="card p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-graph-up text-danger me-2"></i>Skatījumi pa dienām (14 dienas)</h6>
+                <canvas id="viewsChart" height="100"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3" style="border-radius:12px;border:1px solid #e9ecef">
+                <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-pie-chart text-danger me-2"></i>No kurienes nāk</h6>
+                <canvas id="sourceChart"></canvas>
+                <div id="source-legend" class="mt-3" style="font-size:.8rem"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Atpakaļ uz sludinājumu
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const labels = {{ chart_labels|safe }};
+const data   = {{ chart_data|safe }};
+const sourceData = {{ source_data|safe }};
+
+new Chart(document.getElementById('viewsChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Skatījumi',
+            data: data,
+            backgroundColor: 'rgba(230,57,70,.15)',
+            borderColor: '#e63946',
+            borderWidth: 2,
+            borderRadius: 6,
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+});
+
+const srcLabels = Object.keys(sourceData);
+const srcValues = Object.values(sourceData);
+const colors = ['#2563eb','#1877F2','#e63946','#6c757d','#f59e0b'];
+
+new Chart(document.getElementById('sourceChart'), {
+    type: 'doughnut',
+    data: {
+        labels: srcLabels,
+        datasets: [{ data: srcValues, backgroundColor: colors, borderWidth: 2 }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        cutout: '65%',
+    }
+});
+
+const legend = document.getElementById('source-legend');
+srcLabels.forEach((l, i) => {
+    legend.innerHTML += `<div class="d-flex align-items-center gap-2 mb-1">
+        <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]};flex-shrink:0"></span>
+        <span>${l}</span>
+        <span class="ms-auto fw-600" style="font-weight:600">${srcValues[i]}</span>
+    </div>`;
+});
+</script>
+{% endblock %}
