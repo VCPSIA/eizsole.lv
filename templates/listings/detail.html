@@ -795,12 +795,10 @@
                 {% if listing.buyer %}<span class="text-muted" style="font-size:.82rem">Pircējs: <strong>{{ listing.buyer.username }}</strong></span>{% endif %}
             </div>
             {% if user == listing.seller and listing.buyer %}
-            {% with listing.ratings.filter(reviewer=user) as my_rev %}
             <a href="{% url 'rate_user' username=listing.buyer.username %}?listing={{ listing.pk }}"
                class="btn btn-success btn-sm w-100">
                 <i class="bi bi-star me-1"></i>Novērtēt pircēju
             </a>
-            {% endwith %}
             {% endif %}
             {% if user == listing.buyer %}
             <a href="{% url 'rate_user' username=listing.seller.username %}?listing={{ listing.pk }}"
