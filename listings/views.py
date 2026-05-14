@@ -1011,6 +1011,46 @@ def delete_template(request, pk):
 
 
 @login_required
+def mark_sold(request, pk):
+    from django.contrib.auth.models import User as AuthUser
+    from accounts.models import Notification
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_auction=False)
+    if request.method != 'POST':
+        return redirect('listing_detail', pk=pk)
+    buyer_username = request.POST.get('buyer_username', '').strip()
+    buyer = None
+    if buyer_username:
+        try:
+            buyer = AuthUser.objects.get(username=buyer_username)
+            if buyer == request.user:
+                messages.error(request, 'Pircējs nevar būt tu pats.')
+                return redirect('listing_detail', pk=pk)
+        except AuthUser.DoesNotExist:
+            messages.error(request, f'Lietotājs "{buyer_username}" nav atrasts.')
+            return redirect('listing_detail', pk=pk)
+    listing.is_sold = True
+    listing.is_active = False
+    listing.buyer = buyer
+    listing.save()
+    if buyer:
+        Notification.objects.create(
+            user=buyer,
+            text=f'Pārdevējs atzīmēja darījumu par "{listing.title}" kā pabeigtu. Atstājiet atsauksmi!',
+            link=f'/accounts/lietotajs/{listing.seller.username}/vertejums/?listing={listing.pk}',
+        )
+        Notification.objects.create(
+            user=request.user,
+            text=f'Sludinājums "{listing.title}" pārdots! Atstājiet atsauksmi par pircēju.',
+            link=f'/accounts/lietotajs/{buyer.username}/vertejums/?listing={listing.pk}',
+        )
+    else:
+        messages.success(request, 'Sludinājums atzīmēts kā pārdots.')
+        return redirect('listing_detail', pk=pk)
+    messages.success(request, 'Sludinājums atzīmēts kā pārdots! Atstājiet atsauksmi par pircēju.')
+    return redirect('listing_detail', pk=pk)
+
+
+@login_required
 def listing_promote(request, pk):
     listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_active=True)
     settings = SiteSettings.get()

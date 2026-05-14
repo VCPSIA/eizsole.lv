@@ -115,6 +115,11 @@
                             <i class="bi bi-star{% if forloop.counter <= r.stars %}-fill text-warning{% else %} text-muted{% endif %}" style="font-size:.78rem"></i>
                             {% endfor %}
                             <span class="text-muted ms-1" style="font-size:.75rem">{{ r.created_at|date:"d.m.Y" }}</span>
+                            {% if r.listing %}
+                            <a href="{% url 'listing_detail' r.listing.pk %}" class="ms-2 text-muted text-decoration-none" style="font-size:.72rem">
+                                <i class="bi bi-bag me-1"></i>{{ r.listing.title|truncatechars:30 }}
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -345,18 +345,48 @@ def public_profile(request, username):
 
 @login_required
 def rate_user(request, username):
+    from listings.models import Listing
     reviewed = get_object_or_404(User, username=username)
     if request.user == reviewed:
         messages.error(request, 'Nevar vērtēt sevi.')
         return redirect('public_profile', username=username)
+
+    listing_pk = request.GET.get('listing') or request.POST.get('listing')
+    listing = None
+    if listing_pk:
+        try:
+            listing = Listing.objects.get(pk=listing_pk)
+            # Pārbauda vai šis lietotājs drīkst novērtēt par šo darījumu
+            is_seller = listing.seller == reviewed and listing.buyer == request.user
+            is_buyer = listing.buyer == reviewed and listing.seller == request.user
+            # Izsoles gadījums
+            auction = getattr(listing, 'auction', None)
+            if auction:
+                is_seller = listing.seller == reviewed and auction.winner == request.user
+                is_buyer = auction.winner == reviewed and listing.seller == request.user
+            if not (is_seller or is_buyer):
+                listing = None
+        except Listing.DoesNotExist:
+            listing = None
+
+    if request.method == 'GET':
+        already = Rating.objects.filter(reviewer=request.user, reviewed=reviewed, listing=listing).first()
+        return render(request, 'accounts/rate_user.html', {
+            'reviewed': reviewed,
+            'listing': listing,
+            'already': already,
+        })
+
     if request.method == 'POST':
-        stars = int(request.POST.get('stars', 5))
+        stars = max(1, min(5, int(request.POST.get('stars', 5))))
         comment = request.POST.get('comment', '').strip()[:500]
-        rating, created = Rating.objects.update_or_create(
-            reviewer=request.user, reviewed=reviewed,
+        Rating.objects.update_or_create(
+            reviewer=request.user, reviewed=reviewed, listing=listing,
             defaults={'stars': stars, 'comment': comment},
         )
-        messages.success(request, 'Vērtējums saglabāts.')
+        messages.success(request, 'Atsauksme saglabāta!')
+        if listing:
+            return redirect('listing_detail', pk=listing.pk)
     return redirect('public_profile', username=username)
 
 

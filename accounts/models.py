@@ -177,12 +177,16 @@ class EmailChangeRequest(models.Model):
 class Rating(models.Model):
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings_given')
     reviewed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings_received')
+    listing = models.ForeignKey(
+        'listings.Listing', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='ratings',
+    )
     stars = models.PositiveSmallIntegerField(default=5)
     comment = models.TextField(blank=True, max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('reviewer', 'reviewed')
+        unique_together = ('reviewer', 'reviewed', 'listing')
         ordering = ['-created_at']
 
     def __str__(self):

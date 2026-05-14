@@ -76,6 +76,11 @@ class Listing(models.Model):
     equipment = models.ManyToManyField('Equipment', blank=True, related_name='listings')
     is_template = models.BooleanField(default=False)
     template_created_at = models.DateTimeField(null=True, blank=True)
+    is_sold = models.BooleanField(default=False)
+    buyer = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='purchases',
+    )
 
     def __str__(self):
         return self.title

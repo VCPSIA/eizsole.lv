@@ -785,6 +785,50 @@
         </div>
         {% endif %}
 
+        <!-- Pārdots / Atsauksmes -->
+        {% if not listing.is_auction %}
+        {% if listing.is_sold %}
+        <div class="info-card" style="border-color:#16a34a;background:#f0fdf4">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                <span class="fw-700 text-success" style="font-weight:700">Pārdots!</span>
+                {% if listing.buyer %}<span class="text-muted" style="font-size:.82rem">Pircējs: <strong>{{ listing.buyer.username }}</strong></span>{% endif %}
+            </div>
+            {% if user == listing.seller and listing.buyer %}
+            {% with listing.ratings.filter(reviewer=user) as my_rev %}
+            <a href="{% url 'rate_user' username=listing.buyer.username %}?listing={{ listing.pk }}"
+               class="btn btn-success btn-sm w-100">
+                <i class="bi bi-star me-1"></i>Novērtēt pircēju
+            </a>
+            {% endwith %}
+            {% endif %}
+            {% if user == listing.buyer %}
+            <a href="{% url 'rate_user' username=listing.seller.username %}?listing={{ listing.pk }}"
+               class="btn btn-success btn-sm w-100">
+                <i class="bi bi-star me-1"></i>Novērtēt pārdevēju
+            </a>
+            {% endif %}
+        </div>
+        {% elif user == listing.seller and listing.is_active %}
+        <div class="info-card" style="border-color:#d1d5db">
+            <p class="text-muted mb-2" style="font-size:.82rem"><i class="bi bi-bag-check me-1"></i>Pārdojāt šo preci? Atzīmējiet kā pārdotu.</p>
+            <button class="btn btn-outline-success btn-sm w-100" onclick="document.getElementById('mark-sold-form').classList.toggle('d-none')">
+                <i class="bi bi-check-lg me-1"></i>Atzīmēt kā pārdotu
+            </button>
+            <form id="mark-sold-form" method="post" action="{% url 'mark_sold' listing.pk %}" class="d-none mt-2">
+                {% csrf_token %}
+                <input type="text" name="buyer_username" class="form-control form-control-sm mb-2"
+                    placeholder="Pircēja lietotājvārds (neobligāti)"
+                    style="border-radius:8px;font-size:.82rem">
+                <div class="text-muted mb-2" style="font-size:.75rem">Norādiet pircēju, lai abi varētu atstāt atsauksmi.</div>
+                <button type="submit" class="btn btn-success btn-sm w-100">
+                    <i class="bi bi-check-circle me-1"></i>Apstiprināt
+                </button>
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
+
         <!-- Facebook dalīšanās pārdevējam -->
         {% if user == listing.seller %}
         <div class="info-card" style="border-color:#1877F2!important;border-width:1.5px">

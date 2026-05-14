@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Atstāt atsauksmi{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4" style="border-radius:14px;border:1px solid #e9ecef">
+            <h5 class="fw-800 mb-1" style="font-weight:800">
+                <i class="bi bi-star-fill text-warning me-2"></i>Atstāt atsauksmi
+            </h5>
+            <p class="text-muted mb-3" style="font-size:.88rem">
+                Par lietotāju <strong>{{ reviewed.username }}</strong>
+                {% if listing %} — darījums par <strong>{{ listing.title|truncatechars:40 }}</strong>{% endif %}
+            </p>
+
+            {% if already %}
+            <div class="alert alert-info py-2 mb-3" style="font-size:.85rem;border-radius:8px;background:#eff6ff;border-color:#bfdbfe;color:#1e40af">
+                <i class="bi bi-info-circle me-1"></i>Jūs jau esat atstājis atsauksmi. Varat to rediģēt.
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {% if listing %}<input type="hidden" name="listing" value="{{ listing.pk }}">{% endif %}
+
+                <div class="mb-4">
+                    <label class="form-label fw-600" style="font-weight:600">Vērtējums</label>
+                    <div class="d-flex gap-2" id="star-container">
+                        {% for i in "12345" %}
+                        <button type="button" class="star-btn"
+                            data-val="{{ i }}"
+                            style="background:none;border:none;font-size:2rem;cursor:pointer;color:#d1d5db;padding:0;line-height:1;transition:color .1s">
+                            ★
+                        </button>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="stars" id="stars-input" value="{{ already.stars|default:'5' }}">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-600" style="font-weight:600">Komentārs <span class="text-muted fw-400">(neobligāti)</span></label>
+                    <textarea name="comment" class="form-control" rows="4" maxlength="500"
+                        placeholder="Aprakstiet savu pieredzi ar šo lietotāju..."
+                        style="border-radius:8px;font-size:.88rem">{{ already.comment|default:'' }}</textarea>
+                    <div class="text-muted mt-1" style="font-size:.75rem">Maks. 500 rakstzīmes</div>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100 fw-700" style="font-weight:700">
+                    <i class="bi bi-send me-2"></i>{% if already %}Atjaunināt atsauksmi{% else %}Publicēt atsauksmi{% endif %}
+                </button>
+                <a href="{% if listing %}{% url 'listing_detail' listing.pk %}{% else %}{% url 'public_profile' username=reviewed.username %}{% endif %}"
+                   class="btn btn-outline-secondary w-100 mt-2">Atcelt</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+const starsInput = document.getElementById('stars-input');
+const btns = document.querySelectorAll('.star-btn');
+let current = parseInt(starsInput.value) || 5;
+
+function render(val) {
+    btns.forEach(b => {
+        b.style.color = parseInt(b.dataset.val) <= val ? '#f59e0b' : '#d1d5db';
+    });
+}
+
+btns.forEach(b => {
+    b.addEventListener('click', () => {
+        current = parseInt(b.dataset.val);
+        starsInput.value = current;
+        render(current);
+    });
+    b.addEventListener('mouseenter', () => render(parseInt(b.dataset.val)));
+    b.addEventListener('mouseleave', () => render(current));
+});
+
+render(current);
+</script>
+{% endblock %}

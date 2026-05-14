@@ -10,6 +10,7 @@ urlpatterns = [
     path('sludinajums/<int:pk>/dzest/', views.delete_listing, name='delete_listing'),
     path('sludinajums/<int:pk>/sazinaties/', views.contact_seller, name='contact_seller'),
     path('sludinajums/<int:pk>/pagarināt/', views.extend_listing, name='extend_listing'),
+    path('sludinajums/<int:pk>/pardots/', views.mark_sold, name='mark_sold'),
     path('sablons/<int:pk>/publicet/', views.publish_template, name='publish_template'),
     path('sablons/<int:pk>/dzest/', views.delete_template, name='delete_template'),
     path('sludinajums/<int:pk>/top/', views.listing_promote, name='listing_promote'),
