@@ -43,11 +43,11 @@ def _validate_price(value_str, field_name='Cena'):
     return val, None
 
 
-AUTO_DETAIL_SLUGS = {'auto-automasinas', 'auto-motocikli', 'auto-kravas'}
-YEAR_REQUIRED_SLUGS = {'auto-lauksaimnieciba', 'auto-udens'}
-TIRE_SLUGS = {'auto-riepas'}
-TIRE_EXCLUDE_SLUGS = {'riepas-tela-diski', 'riepas-al-diski'}
-RE_SLUGS = {'nekustamais-ipasums'}
+AUTO_DETAIL_SLUGS = set()
+YEAR_REQUIRED_SLUGS = set()
+TIRE_SLUGS = set()
+TIRE_EXCLUDE_SLUGS = set()
+RE_SLUGS = set()
 DATING_SLUGS = {'iepazisanas'}
 
 
