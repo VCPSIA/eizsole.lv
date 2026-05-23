@@ -166,7 +166,13 @@ def home(request):
     categories = Category.objects.filter(parent=None)
     deal_type_filter = request.GET.get('deal_type', '')
     qs = _active_listings().filter(is_auction=False)
-    if deal_type_filter:
+    if deal_type_filter == 'offer':
+        # Piedāvā: deal_type='offer' VAI Iepazīties kategorija (id=935 un bērni)
+        iepazities_ids = list(Category.objects.filter(
+            Q(id=935) | Q(parent=935) | Q(parent__parent=935)
+        ).values_list('id', flat=True))
+        qs = qs.filter(Q(deal_type='offer') | Q(category_id__in=iepazities_ids))
+    elif deal_type_filter:
         qs = qs.filter(deal_type=deal_type_filter)
     latest_listings = qs.order_by('-is_featured', '-featured_at', '-created_at')[:12]
     active_auctions = Auction.objects.filter(is_finished=False).select_related('listing').order_by('-listing__is_featured', '-listing__featured_at', 'ends_at')[:6]
