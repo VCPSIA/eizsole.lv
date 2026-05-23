@@ -113,7 +113,7 @@ def _is_dating_category(category):
     return False
 
 
-WORK_SERVICE_IDS = {10, 11}  # Darbs, Pakalpojumi
+WORK_SERVICE_IDS = {10, 11, 935}  # Darbs, Pakalpojumi, Iepazīties
 
 def _is_work_service_category(category):
     c = category
