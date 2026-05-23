@@ -466,10 +466,12 @@ def listing_create(request):
             messages.error(request, 'Apraksts ir pārāk garš — maksimums 10 000 rakstzīmes.')
             return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
-        _, price_err = _validate_price(request.POST.get('price', ''))
-        if price_err:
-            messages.error(request, price_err)
-            return render(request, 'listings/create.html', ctx({'post': request.POST}))
+        _deal_type_pre = request.POST.get('deal_type', '')
+        if _deal_type_pre != 'give':
+            _, price_err = _validate_price(request.POST.get('price', ''))
+            if price_err:
+                messages.error(request, price_err)
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         if contains_profanity(title) or contains_profanity(description):
             messages.error(request, 'Sludinājumā konstatēts nepiemērots saturs. Lūdzu pārbaudiet tekstu un mēģiniet vēlreiz.')
@@ -537,6 +539,10 @@ def listing_create(request):
                 return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         is_auction = 'is_auction' in request.POST
+
+        if is_auction and request.POST.get('deal_type', '') == 'give':
+            messages.error(request, '"Atdod" nevar pievienot izsolei.')
+            return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         # Atlaižu kods
         promo_code_str = request.POST.get('promo_code', '').strip().upper()
@@ -634,7 +640,7 @@ def listing_create(request):
             description=description,
             category=cat_for_listing,
             seller=request.user,
-            price=request.POST.get('price') or None,
+            price=None if request.POST.get('deal_type') == 'give' else (request.POST.get('price') or None),
             condition=request.POST.get('condition', 'used'),
             deal_type=request.POST.get('deal_type', '') if not is_auction else '',
             year=year_val,

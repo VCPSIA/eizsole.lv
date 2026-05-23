@@ -423,7 +423,7 @@
                 <label class="form-label fw-semibold">{% trans "Darījuma veids" %} <span class="text-danger">*</span></label>
                 <div class="d-flex gap-2">
                     {% for val, label in deal_type_choices %}
-                    <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required>
+                    <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required onchange="toggleDealType(this.value)">
                     <label class="btn btn-outline-danger btn-sm px-4" for="dt_{{ val }}">{% trans label %}</label>
                     {% endfor %}
                 </div>
@@ -588,11 +588,21 @@ document.getElementById('promo_code').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { e.preventDefault(); checkPromoCode(); }
 });
 
+function toggleDealType(val) {
+    const isGive = val === 'give';
+    const priceField = document.getElementById('price_field');
+    const priceInput = document.getElementById('price_input');
+    priceField.style.display = isGive ? 'none' : 'block';
+    priceInput.required = !isGive;
+    if (isGive) priceInput.value = '';
+}
+
 function toggleAuction(cb) {
     document.getElementById('auction_fields').style.display = cb.checked ? 'block' : 'none';
-    document.getElementById('price_field').style.display = cb.checked ? 'none' : 'block';
+    const isGive = document.querySelector('input[name="deal_type"]:checked')?.value === 'give';
+    document.getElementById('price_field').style.display = (cb.checked || isGive) ? 'none' : 'block';
     document.getElementById('deal_type_field').style.display = cb.checked ? 'none' : 'block';
-    document.getElementById('price_input').required = !cb.checked;
+    document.getElementById('price_input').required = !cb.checked && !isGive;
     document.querySelectorAll('input[name="deal_type"]').forEach(r => r.required = !cb.checked);
     const durBlock = document.getElementById('duration-block');
     durBlock.style.display = cb.checked ? 'none' : 'block';
