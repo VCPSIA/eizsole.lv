@@ -423,8 +423,10 @@
                 <label class="form-label fw-semibold">{% trans "Darījuma veids" %} <span class="text-danger">*</span></label>
                 <div class="d-flex gap-2">
                     {% for val, label in deal_type_choices %}
+                    {% if val == 'offer' %}<span id="offer_btn_wrap" style="display:none">{% endif %}
                     <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required onchange="toggleDealType(this.value)">
                     <label class="btn btn-outline-danger btn-sm px-4" for="dt_{{ val }}">{% trans label %}</label>
+                    {% if val == 'offer' %}</span>{% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -758,12 +760,26 @@ function updateFinal(level, selectedId, selectedName) {
         });
 }
 
+const WORK_SERVICE_IDS = new Set([10, 11]);
+
+function toggleOfferBtn(catId) {
+    const wrap = document.getElementById('offer_btn_wrap');
+    const offerInput = document.getElementById('dt_offer');
+    const show = WORK_SERVICE_IDS.has(catId);
+    wrap.style.display = show ? '' : 'none';
+    if (!show && offerInput && offerInput.checked) {
+        offerInput.checked = false;
+        toggleDealType('');
+    }
+}
+
 selects[1].addEventListener('change', function() {
     setAutoBlockVisibility(false);
     setTireBlockVisibility(false);
     setReBlockVisibility(RE_CAT_IDS.has(parseInt(this.value)));
     const slug = this.options[this.selectedIndex].dataset.slug || '';
     setDatingMode(slug === 'iepazisanas');
+    toggleOfferBtn(parseInt(this.value));
     updateFinal(1, this.value, this.options[this.selectedIndex].text);
 });
 selects[2].addEventListener('change', function() {

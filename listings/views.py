@@ -113,6 +113,17 @@ def _is_dating_category(category):
     return False
 
 
+WORK_SERVICE_IDS = {10, 11}  # Darbs, Pakalpojumi
+
+def _is_work_service_category(category):
+    c = category
+    while c:
+        if c.id in WORK_SERVICE_IDS:
+            return True
+        c = c.parent
+    return False
+
+
 def _save_re_details(listing, post):
     RealEstateDetails.objects.update_or_create(
         listing=listing,
@@ -543,6 +554,12 @@ def listing_create(request):
         if is_auction and request.POST.get('deal_type', '') == 'give':
             messages.error(request, '"Atdod" nevar pievienot izsolei.')
             return render(request, 'listings/create.html', ctx({'post': request.POST}))
+
+        if request.POST.get('deal_type', '') == 'offer':
+            _cat_check = Category.objects.filter(pk=request.POST.get('category', 0)).first()
+            if not _cat_check or not _is_work_service_category(_cat_check):
+                messages.error(request, '"Piedāvā" ir pieejams tikai Darba un Pakalpojumu sludinājumiem.')
+                return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         # Atlaižu kods
         promo_code_str = request.POST.get('promo_code', '').strip().upper()

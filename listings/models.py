@@ -30,6 +30,7 @@ class Listing(models.Model):
         ('buy',   'Pērk'),
         ('trade', 'Maina'),
         ('give',  'Atdod'),
+        ('offer', 'Piedāvā'),
     ]
     AGE_RANGE_CHOICES = [
         ('18-30', '18–30 gadi'),
