@@ -164,7 +164,11 @@ def _active_listings():
 
 def home(request):
     categories = Category.objects.filter(parent=None)
-    latest_listings = _active_listings().filter(is_auction=False).order_by('-is_featured', '-featured_at', '-created_at')[:12]
+    deal_type_filter = request.GET.get('deal_type', '')
+    qs = _active_listings().filter(is_auction=False)
+    if deal_type_filter:
+        qs = qs.filter(deal_type=deal_type_filter)
+    latest_listings = qs.order_by('-is_featured', '-featured_at', '-created_at')[:12]
     active_auctions = Auction.objects.filter(is_finished=False).select_related('listing').order_by('-listing__is_featured', '-listing__featured_at', 'ends_at')[:6]
     recently_ids = request.session.get('recently_viewed', [])
     recently_viewed = list(Listing.objects.filter(pk__in=recently_ids, is_active=True).prefetch_related('images'))
@@ -174,6 +178,8 @@ def home(request):
         'latest_listings': latest_listings,
         'active_auctions': active_auctions,
         'recently_viewed': recently_viewed,
+        'active_deal_type': deal_type_filter,
+        'deal_type_choices': Listing.DEAL_TYPE_CHOICES,
     })
 
 
