@@ -8,7 +8,7 @@
 {% block twitter_description %}{{ category.name }} sludinājumi Latvijā — pērc un pārdod eizsole.lv.{% endblock %}
 {% block meta_keywords %}{{ category.name }}, sludinājumi, pirkt, pārdot, Latvija, eizsole{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}">{% endblock %}
-{% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"{{ category.name }} — eizsole.lv","description":"{{ category.name }} sludinājumi Latvijā","url":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}"}</script>{% endblock %}
+{% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"{{ category.name }} — eizsole.lv","description":"{{ category.name }} sludinājumi Latvijā","url":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"eizsole.lv","item":"https://eizsole.lv"}{% if category.parent %},{"@type":"ListItem","position":2,"name":"{{ category.parent.name|escapejs }}","item":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.parent.slug %}"},{"@type":"ListItem","position":3,"name":"{{ category.name|escapejs }}","item":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}"}{% else %},{"@type":"ListItem","position":2,"name":"{{ category.name|escapejs }}","item":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}"}{% endif %}]}]}</script>{% endblock %}
 
 {% block content %}
 <style>

@@ -1306,3 +1306,18 @@ msgstr "Женщина ищет женщину"
 msgid "Iepazīsies vīrietis ar vīrieti"
 msgstr "Мужчина ищет мужчину"
 
+msgid "Atdod"
+msgstr "Отдаёт"
+
+msgid "Piedāvā"
+msgstr "Предлагает"
+
+msgid "Jaunākie sludinājumi"
+msgstr "Последние объявления"
+
+msgid "Skatīt visus"
+msgstr "Смотреть все"
+
+msgid "Iepazīties"
+msgstr "Знакомства"
+
