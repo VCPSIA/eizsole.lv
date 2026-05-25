@@ -10,6 +10,8 @@
 {% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"eizsole.lv","url":"https://eizsole.lv","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://eizsole.lv/meklet/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>{% endblock %}
 
 {% block content %}
+<div class="row g-4">
+<div class="col-12 col-lg-9">
 
 <!-- Hero -->
 <div class="hero-section mb-5">
@@ -258,4 +260,27 @@
 </div>
 {% endif %}
 
+</div>{# /col-lg-9 #}
+
+<!-- Sānjosla ar reklāmas baneriem -->
+<div class="col-12 col-lg-3 d-none d-lg-block">
+    <div class="sticky-top" style="top:80px">
+        {% for banner in sidebar_banners %}
+        <div class="mb-3">
+            {% if banner.link_url %}
+            <a href="{{ banner.link_url }}" target="_blank" rel="noopener noreferrer nofollow">
+                <img src="{{ banner.image.url }}" alt="{{ banner.title }}"
+                     style="width:100%;border-radius:10px;display:block;box-shadow:0 2px 12px rgba(0,0,0,.10);transition:opacity .2s"
+                     onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+            </a>
+            {% else %}
+            <img src="{{ banner.image.url }}" alt="{{ banner.title }}"
+                 style="width:100%;border-radius:10px;display:block;box-shadow:0 2px 12px rgba(0,0,0,.10)">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+</div>{# /row #}
 {% endblock %}

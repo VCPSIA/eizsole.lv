@@ -500,3 +500,21 @@ class Banner(models.Model):
 
     def __str__(self):
         return f'Baneris #{self.pk} — {self.user.username}'
+
+
+class SidebarBanner(models.Model):
+    SLOT_CHOICES = [(1, '1. slots (augšā)'), (2, '2. slots (vidū)'), (3, '3. slots (apakšā)')]
+    slot = models.PositiveSmallIntegerField(choices=SLOT_CHOICES, unique=True, verbose_name='Pozīcija')
+    title = models.CharField(max_length=100, blank=True, verbose_name='Nosaukums (tikai admin)')
+    image = models.ImageField(upload_to='sidebar_banners/', verbose_name='Attēls')
+    link_url = models.URLField(blank=True, verbose_name='Saite (pēc klikšķa)')
+    is_active = models.BooleanField(default=True, verbose_name='Aktīvs')
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Sānjoslas baneris'
+        verbose_name_plural = 'Sānjoslas baneri'
+        ordering = ['slot']
+
+    def __str__(self):
+        return f'Slots {self.slot} — {self.title or self.image.name}'

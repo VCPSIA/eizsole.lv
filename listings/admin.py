@@ -6,7 +6,7 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages as admin_messages
 from django.http import HttpResponse
-from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner
+from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner
 
 
 class ListingImageInline(admin.TabularInline):
@@ -132,6 +132,24 @@ class BannerAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" style="height:40px;border-radius:4px">', obj.image.url)
         return '—'
     preview.short_description = 'Priekšskatījums'
+
+
+@admin.register(SidebarBanner)
+class SidebarBannerAdmin(admin.ModelAdmin):
+    list_display = ['slot', 'title', 'is_active', 'preview', 'link_url', 'updated_at']
+    list_editable = ['is_active']
+    ordering = ['slot']
+    readonly_fields = ['preview']
+    fields = ['slot', 'title', 'image', 'preview', 'link_url', 'is_active']
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-height:80px;max-width:200px;border-radius:6px;border:1px solid #dee2e6">', obj.image.url)
+        return '—'
+    preview.short_description = 'Priekšskatījums'
+
+    def has_add_permission(self, request):
+        return SidebarBanner.objects.count() < 3
 
 
 @admin.register(Report)
