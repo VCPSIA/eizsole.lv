@@ -855,7 +855,6 @@ function addPreview(files) {
 // Pievienojam event listeners failiem (nav inline, lai darbojas ar CSP nonce)
 document.getElementById('gallery-input').addEventListener('change', function() { addPreview(this.files); });
 document.getElementById('camera-input').addEventListener('change', function() { addPreview(this.files); });
-document.getElementById('drop-input').addEventListener('change', function() { addPreview(this.files); });
 
 function handleVideo(file) {
     if (!file) return;
@@ -884,14 +883,9 @@ if (imgZone) {
     imgZone.addEventListener('dragleave', () => imgZone.classList.remove('dragover'));
     imgZone.addEventListener('drop', e => {
         e.preventDefault(); imgZone.classList.remove('dragover');
-        try {
-            const dt2 = new DataTransfer();
-            Array.from(e.dataTransfer.files).forEach(f => dt2.items.add(f));
-            document.getElementById('drop-input').files = dt2.files;
-        } catch(_) {}
         addPreview(e.dataTransfer.files);
     });
-    imgZone.addEventListener('click', () => document.getElementById('drop-input').click());
+    imgZone.addEventListener('click', () => document.getElementById('gallery-input').click());
 }
 
 // Drag & drop video

@@ -548,7 +548,7 @@ def listing_create(request):
             return render(request, 'listings/create.html', ctx({'post': request.POST}))
 
         # Bilžu servera validācija
-        _ALLOWED_IMG = {'image/jpeg', 'image/png', 'image/webp'}
+        _ALLOWED_IMG = {'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'}
         _MAX_IMG_SIZE = 10 * 1024 * 1024  # 10 MB
         if len(uploaded_images) > 8:
             messages.error(request, 'Maksimums 8 bildes atļautas.')
@@ -956,7 +956,7 @@ def listing_edit(request, pk):
         # Jaunas bildes (ja augšupielādētas) — servera validācija
         new_images = request.FILES.getlist('images')
         if new_images:
-            _ALLOWED_IMG = {'image/jpeg', 'image/png', 'image/webp'}
+            _ALLOWED_IMG = {'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'}
             _MAX_IMG_SIZE = 10 * 1024 * 1024
             if len(new_images) > 8:
                 messages.error(request, 'Maksimums 8 bildes atļautas.')
