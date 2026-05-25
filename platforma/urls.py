@@ -14,7 +14,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('eizsole-panelis-2026/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('listings.urls')),
     path('accounts/', include('accounts.urls')),

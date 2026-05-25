@@ -802,6 +802,12 @@ def banner_create(request):
         if not image:
             messages.error(request, 'Lūdzu augšupielādējiet banera attēlu.')
             return render(request, 'listings/banner_create.html', {'site_settings': settings})
+        if image.content_type not in _ALLOWED_IMG:
+            messages.error(request, 'Banerim atbalstīti tikai JPG, PNG, WEBP formāti.')
+            return render(request, 'listings/banner_create.html', {'site_settings': settings})
+        if image.size > _MAX_IMG_SIZE:
+            messages.error(request, 'Banera bilde pārāk liela — maks. 10 MB.')
+            return render(request, 'listings/banner_create.html', {'site_settings': settings})
 
         from accounts.models import Wallet, WalletTransaction
         wallet, _ = Wallet.objects.get_or_create(user=request.user)

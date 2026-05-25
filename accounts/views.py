@@ -631,17 +631,15 @@ def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE', '')
 
+    if not webhook_secret:
+        return HttpResponse(status=400)
+
     try:
-        if webhook_secret:
-            import stripe as stripe_lib
-            stripe_lib.api_key = stripe_secret
-            event = stripe_lib.Webhook.construct_event(payload, sig_header, webhook_secret)
-            event_type = event.type
-            session = event.data.object
-        else:
-            data = json.loads(payload)
-            event_type = data.get('type', '')
-            session = data.get('data', {}).get('object', {})
+        import stripe as stripe_lib
+        stripe_lib.api_key = stripe_secret
+        event = stripe_lib.Webhook.construct_event(payload, sig_header, webhook_secret)
+        event_type = event.type
+        session = event.data.object
     except Exception:
         return HttpResponse(status=400)
 

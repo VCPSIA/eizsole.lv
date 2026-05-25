@@ -1,8 +1,15 @@
 User-agent: *
 Allow: /
+Disallow: /eizsole-panelis-2026/
 Disallow: /admin/
 Disallow: /accounts/
+Disallow: /moderacija/
 Disallow: /izsoles/solit/
 Disallow: /izsoles/stripe/
+Disallow: /iesutne/
+Disallow: /saruna/
+Disallow: /favoriti/
+Disallow: /saglabatas-meklesanas/
+Disallow: /api/
 
 Sitemap: https://eizsole.lv/sitemap.xml
