@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static i18n %}
-{% block title %}{% trans category.name %}{% endblock %}
+{% block title %}{{ category.name }} — sludinājumi | eizsole.lv{% endblock %}
+{% block meta_description %}{{ category.name }} sludinājumi Latvijā — pērc un pārdod eizsole.lv. Atrodi labākos piedāvājumus kategorijā {{ category.name }}.{% endblock %}
+{% block og_title %}{{ category.name }} — sludinājumi | eizsole.lv{% endblock %}
+{% block og_description %}{{ category.name }} sludinājumi Latvijā — pērc un pārdod eizsole.lv.{% endblock %}
+{% block twitter_title %}{{ category.name }} — sludinājumi | eizsole.lv{% endblock %}
+{% block twitter_description %}{{ category.name }} sludinājumi Latvijā — pērc un pārdod eizsole.lv.{% endblock %}
+{% block meta_keywords %}{{ category.name }}, sludinājumi, pirkt, pārdot, Latvija, eizsole{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}">{% endblock %}
+{% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"{{ category.name }} — eizsole.lv","description":"{{ category.name }} sludinājumi Latvijā","url":"{{ request.scheme }}://{{ request.get_host }}{% url 'category' category.slug %}"}</script>{% endblock %}
 
 {% block content %}
 <style>

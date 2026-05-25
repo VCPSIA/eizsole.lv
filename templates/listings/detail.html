@@ -5,6 +5,10 @@
 {% block og_title %}{{ listing.title }}{% endblock %}
 {% block og_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
 {% block og_image %}{% with listing.get_main_image as img %}{% if img %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
+{% block twitter_title %}{{ listing.title }}{% endblock %}
+{% block twitter_description %}{{ listing.description|truncatechars:155 }}{% endblock %}
+{% block twitter_image %}{% with listing.get_main_image as img %}{% if img %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
+{% block meta_keywords %}{{ listing.title }}, {{ listing.category.name }}, sludinājumi, pirkt, pārdot, Latvija, eizsole{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}">{% endblock %}
 
 {% block schema_json %}

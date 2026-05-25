@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 {% load static i18n %}
-{% block title %}{{ auction.listing.title }}{% endblock %}
+{% block title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
+{% block meta_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
+{% block og_title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
+{% block og_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
+{% with auction.listing.get_main_image as img %}{% if img %}{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% endblock %}{% block twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% endblock %}{% endif %}{% endwith %}
+{% block twitter_title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
+{% block twitter_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
+{% block meta_keywords %}{{ auction.listing.title }}, izsole, solīšana, {{ auction.listing.category.name }}, eizsole.lv{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}">{% endblock %}
+{% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"{{ auction.listing.title|escapejs }}","description":"{{ auction.listing.description|truncatechars:300|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}","offers":{"@type":"AggregateOffer","priceCurrency":"EUR","lowPrice":"{{ auction.current_price }}","offerCount":"{{ auction.bids.count }}","availability":"https://schema.org/InStock"}}</script>{% endblock %}
 
 {% block content %}
 <style>

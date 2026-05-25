@@ -12,9 +12,19 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="eizsole.lv">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-    {% block og_image %}<meta property="og:image" content="{% static 'icons/amurs_balts.svg' %}">{% endblock %}
-    {% block canonical %}{% endblock %}
-    {% block schema_json %}{% endblock %}
+    {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'icons/pwa/icon-512.png' %}">{% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@eizsole_lv">
+    <meta name="twitter:title" content="{% block twitter_title %}eizsole.lv{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Latvijas izsoļu un sludinājumu platforma.{% endblock %}">
+    {% block twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'icons/pwa/icon-512.png' %}">{% endblock %}
+    <meta name="keywords" content="{% block meta_keywords %}izsoles, sludinājumi, pārdot, pirkt, Latvija, eizsole, marketplace{% endblock %}">
+    <link rel="alternate" hreflang="lv" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <link rel="alternate" hreflang="ru" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">{% endblock %}
+    {% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"eizsole.lv","url":"https://eizsole.lv","logo":"https://eizsole.lv{% static 'favicon.svg' %}","sameAs":[]}</script>{% endblock %}
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#e63946">
