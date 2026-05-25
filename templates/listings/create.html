@@ -127,21 +127,23 @@
     <!-- Bildes -->
     <div class="mb-3">
         <label class="form-label fw-semibold">{% trans "Bildes" %} <span class="text-danger">*</span> <span class="text-muted fw-normal" style="font-size:.82rem">— {% trans "vismaz 1, max 8" %}</span></label>
-        <div id="image-drop-zone" class="drop-zone" onclick="document.getElementById('image-input').click()">
+        <div id="image-drop-zone" class="drop-zone d-none d-md-flex">
             <i class="bi bi-images" style="font-size:2rem;color:#9ca3af"></i>
             <div class="mt-1" style="font-size:.88rem;color:#6c757d">{% trans "Spied vai velc bildes šeit" %}</div>
             <div style="font-size:.75rem;color:#9ca3af">{% trans "JPG, PNG, WEBP · max 8 bildes" %}</div>
         </div>
         <div class="d-flex gap-2 mt-2">
-            <label class="btn btn-outline-secondary btn-sm mb-0" style="cursor:pointer">
+            <label class="btn btn-outline-secondary btn-sm mb-0 position-relative overflow-hidden" style="cursor:pointer">
                 <i class="bi bi-folder2-open me-1"></i>{% trans "Galerija" %}
-                <input type="file" id="image-input" name="images" multiple accept="image/*"
-                       style="display:none" onchange="handleImages(this.files)">
+                <input type="file" id="image-input" multiple accept="image/*"
+                       style="position:absolute;inset:0;opacity:0;cursor:pointer"
+                       onchange="handleImages(this.files)">
             </label>
-            <label class="btn btn-outline-danger btn-sm mb-0" style="cursor:pointer">
+            <label class="btn btn-outline-danger btn-sm mb-0 position-relative overflow-hidden" style="cursor:pointer">
                 <i class="bi bi-camera me-1"></i>{% trans "Fotografēt" %}
-                <input type="file" name="images" accept="image/*" capture="environment"
-                       style="display:none" onchange="handleImages(this.files)">
+                <input type="file" accept="image/*" capture="environment"
+                       style="position:absolute;inset:0;opacity:0;cursor:pointer"
+                       onchange="handleImages(this.files)">
             </label>
         </div>
         <div id="image-preview" class="d-flex flex-wrap gap-2 mt-2"></div>
@@ -836,13 +838,34 @@ function updateFeaturedBlock() {
 }
 if (isAuctionCb) isAuctionCb.addEventListener('change', updateFeaturedBlock);
 
-// Validācija pirms iesniegšanas
+// Validācija un iesniegšana ar FormData (mobilā saderībai)
 document.getElementById('listing-form').addEventListener('submit', function(e) {
+    e.preventDefault();
     if (!finalInput.value) {
-        e.preventDefault();
         submitHint.style.display = 'block';
         selects[1].focus();
+        return;
     }
+    const form = this;
+    const fd = new FormData(form);
+    // Noņem images no veidlapas laukiem (tos pievienosim manuāli)
+    fd.delete('images');
+    selectedImages.forEach(f => fd.append('images', f, f.name));
+
+    const btn = form.querySelector('button[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Saglabā...'; }
+
+    fetch(form.action || location.href, { method: 'POST', body: fd })
+        .then(r => {
+            if (r.redirected || r.url !== location.href) {
+                window.location.href = r.url;
+            } else {
+                return r.text().then(html => {
+                    document.open(); document.write(html); document.close();
+                });
+            }
+        })
+        .catch(() => { if (btn) { btn.disabled = false; btn.textContent = 'Publicēt'; } });
 });
 
 // ── MEDIA UPLOAD ──
@@ -883,9 +906,7 @@ function removeImage(idx) {
 }
 
 function syncImageInput() {
-    const dt = new DataTransfer();
-    selectedImages.forEach(f => dt.items.add(f));
-    document.getElementById('image-input').files = dt.files;
+    // nekā — faili glabājas selectedImages masīvā, nosūta ar FormData
 }
 
 function handleVideo(file) {
@@ -908,14 +929,17 @@ function removeVideo() {
     document.getElementById('video-drop-zone').style.display = '';
 }
 
-// Drag & drop bildes
+// Drag & drop bildes (tikai desktop)
 const imgZone = document.getElementById('image-drop-zone');
-imgZone.addEventListener('dragover', e => { e.preventDefault(); imgZone.classList.add('dragover'); });
-imgZone.addEventListener('dragleave', () => imgZone.classList.remove('dragover'));
-imgZone.addEventListener('drop', e => {
-    e.preventDefault(); imgZone.classList.remove('dragover');
-    handleImages(e.dataTransfer.files);
-});
+if (imgZone) {
+    imgZone.addEventListener('dragover', e => { e.preventDefault(); imgZone.classList.add('dragover'); });
+    imgZone.addEventListener('dragleave', () => imgZone.classList.remove('dragover'));
+    imgZone.addEventListener('drop', e => {
+        e.preventDefault(); imgZone.classList.remove('dragover');
+        handleImages(e.dataTransfer.files);
+    });
+    imgZone.addEventListener('click', () => document.getElementById('image-input').click());
+}
 
 // Drag & drop video
 const vidZone = document.getElementById('video-drop-zone');
