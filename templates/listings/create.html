@@ -127,26 +127,14 @@
     <!-- Bildes -->
     <div class="mb-3">
         <label class="form-label fw-semibold">{% trans "Bildes" %} <span class="text-danger">*</span> <span class="text-muted fw-normal" style="font-size:.82rem">— {% trans "vismaz 1, max 8" %}</span></label>
-        <div id="image-drop-zone" class="drop-zone d-none d-md-flex">
-            <i class="bi bi-images" style="font-size:2rem;color:#9ca3af"></i>
-            <div class="mt-1" style="font-size:.88rem;color:#6c757d">{% trans "Spied vai velc bildes šeit" %}</div>
-            <div style="font-size:.75rem;color:#9ca3af">{% trans "JPG, PNG, WEBP · max 8 bildes" %}</div>
+        <div class="mb-2">
+            <input id="gallery-input" type="file" name="images" multiple accept="image/*"
+                   class="form-control">
         </div>
-        <input type="file" id="drop-input" name="images" multiple accept="image/*"
-               style="display:none" onchange="addPreview(this.files)">
-        <div class="d-flex gap-2 mt-2">
-            <label class="btn btn-outline-secondary btn-sm mb-0 position-relative overflow-hidden" style="cursor:pointer;min-height:34px">
-                <i class="bi bi-folder2-open me-1"></i>{% trans "Galerija" %}
-                <input type="file" name="images" multiple accept="image/*"
-                       style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer"
-                       onchange="addPreview(this.files)">
-            </label>
-            <label class="btn btn-outline-danger btn-sm mb-0 position-relative overflow-hidden" style="cursor:pointer;min-height:34px">
-                <i class="bi bi-camera me-1"></i>{% trans "Fotografēt" %}
-                <input type="file" name="images" accept="image/*" capture="environment"
-                       style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer"
-                       onchange="addPreview(this.files)">
-            </label>
+        <div class="mb-2">
+            <label class="form-label small text-muted mb-1"><i class="bi bi-camera me-1"></i>{% trans "Fotografēt ar kameru" %}</label>
+            <input id="camera-input" type="file" name="images" accept="image/*" capture="environment"
+                   class="form-control">
         </div>
         <div id="image-preview" class="d-flex flex-wrap gap-2 mt-2"></div>
         <div id="image-count" class="form-text"></div>
@@ -863,6 +851,11 @@ function addPreview(files) {
     const n = wrap.querySelectorAll('img').length;
     count.textContent = n ? `${n}/8 bilde${n > 1 ? 's' : ''} izvēlēta` : '';
 }
+
+// Pievienojam event listeners failiem (nav inline, lai darbojas ar CSP nonce)
+document.getElementById('gallery-input').addEventListener('change', function() { addPreview(this.files); });
+document.getElementById('camera-input').addEventListener('change', function() { addPreview(this.files); });
+document.getElementById('drop-input').addEventListener('change', function() { addPreview(this.files); });
 
 function handleVideo(file) {
     if (!file) return;
