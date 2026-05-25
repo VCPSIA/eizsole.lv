@@ -438,7 +438,7 @@
             </div>
             {% endif %}
 
-<script>
+<script nonce="{{ csp_nonce }}">
 document.querySelectorAll('.thumb-img').forEach((el, i) => {
     el.addEventListener('click', () => {
         document.querySelectorAll('.thumb-img').forEach(t => t.style.opacity = '.7');
@@ -564,7 +564,7 @@ function switchTab(tab) {
     <div id="lb-hint">Klikšķis — tuvināt &nbsp;·&nbsp; Velkt — pārvietot &nbsp;·&nbsp; Ritenis — zoom</div>
 </div>
 
-<script>
+<script nonce="{{ csp_nonce }}">
 (function(){
     const srcs = [{% for img in auction.listing.images.all %}"{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}];
     const lb    = document.getElementById('lightbox');

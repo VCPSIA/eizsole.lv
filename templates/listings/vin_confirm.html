@@ -111,7 +111,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
+<script nonce="{{ csp_nonce }}">
 function setVatType(type) {
     const euBlock = document.getElementById('eu-vat-block');
     const totalDisplay = document.getElementById('total-display');

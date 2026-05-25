@@ -73,7 +73,7 @@
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 </style>
 
-<script>
+<script nonce="{{ csp_nonce }}">
 function previewBanner(input) {
     if (input.files && input.files[0]) {
         var img = document.getElementById('banner-preview-img');

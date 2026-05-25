@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,8 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
+
+security_log = logging.getLogger('security')
 from .models import Profile, EmailVerification, PhoneVerification, Wallet, WalletTransaction, AccountDeletionRequest, Notification, Rating, EmailChangeRequest
 from .sms import send_sms
 from decimal import Decimal, InvalidOperation
@@ -45,6 +48,9 @@ def login_view(request):
             new_count = fail_count + 1
             cache.set(cache_key, new_count, BRUTE_FORCE_TIMEOUT)
             remaining = max(0, BRUTE_FORCE_LIMIT - new_count)
+            security_log.warning(f'LOGIN_FAIL ip={ip} attempt={new_count} user={request.POST.get("username","")!r}')
+            if new_count >= BRUTE_FORCE_LIMIT:
+                security_log.warning(f'LOCKOUT ip={ip}')
 
             username = request.POST.get('username', '')
             password = request.POST.get('password', '')

@@ -35,13 +35,13 @@
     <link rel="apple-touch-icon" href="{% static 'icons/pwa/icon-152.png' %}">
     <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SND8DRSTT7"></script>
-    <script>
+    <script nonce="{{ csp_nonce }}">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-SND8DRSTT7');
     </script>
-    <script>
+    <script nonce="{{ csp_nonce }}">
     (function(){
         var KEY='eizsole_sw_clean', VER='v3';
         if(localStorage.getItem(KEY)!==VER && 'serviceWorker' in navigator){
@@ -503,7 +503,7 @@
 @keyframes bcursor{0%,100%{opacity:1}50%{opacity:0}}
 #banner-widget.dragging{cursor:grabbing;box-shadow:0 8px 32px rgba(0,0,0,.22);opacity:.92}
 </style>
-<script>
+<script nonce="{{ csp_nonce }}">
 (function(){
     var widget = document.getElementById('banner-widget');
     var slides = widget.querySelectorAll('.bslide');
@@ -758,7 +758,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
+<script nonce="{{ csp_nonce }}">
 function togglePw(id, btn) {
     var inp = document.getElementById(id);
     var icon = btn.querySelector('i');
@@ -771,7 +771,7 @@ function togglePw(id, btn) {
     }
 }
 </script>
-<script>
+<script nonce="{{ csp_nonce }}">
 (function(){
     if (!localStorage.getItem('cookie_consent')) {
         document.getElementById('cookie-bar').style.display = 'block';
@@ -783,7 +783,7 @@ function togglePw(id, btn) {
 })();
 </script>
 {% block extra_js %}{% endblock %}
-<script>
+<script nonce="{{ csp_nonce }}">
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
     navigator.serviceWorker.register('/sw.js').catch(function(){});
 }

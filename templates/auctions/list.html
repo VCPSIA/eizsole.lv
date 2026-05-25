@@ -184,7 +184,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
+<script nonce="{{ csp_nonce }}">
 document.querySelectorAll('.countdown-badge').forEach(el => {
     const ends = new Date(el.dataset.ends);
     function tick() {

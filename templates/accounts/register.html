@@ -227,7 +227,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ csp_nonce }}">
 function selectType(type) {
     document.getElementById('account_type_input').value = type;
     document.getElementById('fields-private').style.display = type === 'private' ? 'block' : 'none';

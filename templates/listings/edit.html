@@ -363,7 +363,7 @@
 </div>
 </div>
 
-<script>
+<script nonce="{{ csp_nonce }}">
 // Kategoriju kaskāde ar iepriekšēju vērtību
 const CURRENT_CAT_ID = {{ listing.category.pk }};
 const cats = document.querySelectorAll('[id^="cat-"]');

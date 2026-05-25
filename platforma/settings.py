@@ -98,6 +98,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.notifications',
                 'accounts.context_processors.banners',
+                'platforma.context_processors.csp_nonce',
             ],
         },
     },
@@ -242,10 +243,10 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-# Content-Security-Policy
+# Content-Security-Policy — {csp_nonce} tiek aizstāts ar reālo nonce katrā requestā
 CONTENT_SECURITY_POLICY = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline' "
+    "script-src 'self' 'nonce-{csp_nonce}' "
         "https://www.googletagmanager.com "
         "https://www.google-analytics.com "
         "https://cdn.jsdelivr.net; "
@@ -255,10 +256,55 @@ CONTENT_SECURITY_POLICY = (
     "font-src 'self' "
         "https://fonts.gstatic.com "
         "https://cdn.jsdelivr.net; "
-    "img-src 'self' data: https:; "
+    "img-src 'self' data: blob: https:; "
     "connect-src 'self' "
         "https://www.google-analytics.com "
-        "https://region1.google-analytics.com; "
-    "frame-src 'self'; "
-    "object-src 'none';"
+        "https://region1.google-analytics.com "
+        "https://maps.googleapis.com; "
+    "frame-src 'self' https://www.google.com; "
+    "object-src 'none'; "
+    "base-uri 'self';"
 )
+
+# Drošības loģika
+import os as _os
+_LOG_DIR = BASE_DIR / 'logs'
+_LOG_DIR.mkdir(exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'security': {
+            'format': '[{asctime}] {levelname} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'handlers': {
+        'security_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': str(BASE_DIR / 'logs' / 'security.log'),
+            'maxBytes': 5 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'security',
+            'encoding': 'utf-8',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'security',
+        },
+    },
+    'loggers': {
+        'security': {
+            'handlers': ['security_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['security_file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}

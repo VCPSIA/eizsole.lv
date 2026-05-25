@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ csp_nonce }}">
 const starsInput = document.getElementById('stars-input');
 const btns = document.querySelectorAll('.star-btn');
 let current = parseInt(starsInput.value) || 5;

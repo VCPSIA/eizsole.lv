@@ -183,7 +183,7 @@
 </div>
 {% endif %}
 
-<script>
+<script nonce="{{ csp_nonce }}">
 function removeFromCompare(pk, btn) {
     fetch(`/api/salidzinat/${pk}/`, {method:'POST', headers:{'X-CSRFToken': getCsrf()}})
     .then(r => r.json()).then(() => location.reload());
