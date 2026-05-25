@@ -467,6 +467,7 @@ def listing_create(request):
         return base
 
     if request.method == 'POST':
+        import logging as _log; _log.getLogger('listings.create').warning('POST keys=%s is_auction=%s price=%r deal_type=%r images=%d cat=%r', list(request.POST.keys()), request.POST.get('is_auction'), request.POST.get('price'), request.POST.get('deal_type'), len(request.FILES.getlist('images')), request.POST.get('category'))
         # Rate limiting: max 5 sludinājumi stundā vienam lietotājam
         recent = Listing.objects.filter(
             seller=request.user,
