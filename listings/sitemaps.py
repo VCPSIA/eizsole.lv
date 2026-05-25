@@ -35,7 +35,7 @@ class AuctionSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
-        return Auction.objects.filter(is_finished=False, ends_at__gt=timezone.now())
+        return Auction.objects.filter(is_finished=False, ends_at__gt=timezone.now()).order_by('ends_at')
 
     def lastmod(self, obj):
         return obj.ends_at

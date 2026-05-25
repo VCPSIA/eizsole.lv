@@ -175,7 +175,10 @@ def _send_verification_email(user, token, request):
         f'Ja jūs nereģistrējāties eizsole.lv, ignorējiet šo e-pastu.\n\n'
         f'— eizsole.lv komanda'
     )
-    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=True)
+    try:
+        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+    except Exception:
+        pass
 
 
 def verify_email_sent(request):
@@ -416,7 +419,10 @@ def _send_email_change_link(user, new_email, token, request):
         f'Ja jūs neprasījāt mainīt e-pastu, ignorējiet šo ziņu — jūsu adrese paliks nemainīta.\n\n'
         f'— eizsole.lv komanda'
     )
-    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=True)
+    try:
+        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+    except Exception:
+        pass
 
 
 def profile_edit(request):
@@ -493,17 +499,20 @@ def request_account_deletion(request):
 
         # Nosūta e-pastu
         link = request.build_absolute_uri(f'/accounts/dzest-kontu/apstiprinat/{deletion.email_token}/')
-        send_mail(
-            'Konta dzēšanas apstiprinājums — eizsole.lv',
-            f'Sveiki, {request.user.username}!\n\n'
-            f'Saņēmām pieprasījumu dzēst jūsu kontu.\n\n'
-            f'Lai apstiprinātu, spiediet uz saites:\n{link}\n\n'
-            f'Pēc tam ievadiet SMS kodu, kas nosūtīts uz {profile.phone}.\n\n'
-            f'Saite derīga 1 stundu. Ja jūs to nepieprasījāt — ignorējiet šo e-pastu.',
-            settings.DEFAULT_FROM_EMAIL,
-            [request.user.email],
-            fail_silently=True,
-        )
+        try:
+            send_mail(
+                'Konta dzēšanas apstiprinājums — eizsole.lv',
+                f'Sveiki, {request.user.username}!\n\n'
+                f'Saņēmām pieprasījumu dzēst jūsu kontu.\n\n'
+                f'Lai apstiprinātu, spiediet uz saites:\n{link}\n\n'
+                f'Pēc tam ievadiet SMS kodu, kas nosūtīts uz {profile.phone}.\n\n'
+                f'Saite derīga 1 stundu. Ja jūs to nepieprasījāt — ignorējiet šo e-pastu.',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
+            )
+        except Exception:
+            pass
 
         # Nosūta SMS
         from .sms import send_sms
