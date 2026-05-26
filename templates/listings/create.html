@@ -620,6 +620,8 @@ function toggleAuction(cb) {
         endsAt.min = fmt(min);
         endsAt.max = fmt(max);
     }
+    document.querySelector('input[name="starting_price"]').required = cb.checked;
+    document.getElementById('ends_at').required = cb.checked;
 }
 
 const equipmentBlock = document.getElementById('equipment-block');
@@ -837,24 +839,48 @@ document.getElementById('listing-form').addEventListener('submit', function(e) {
     }
 });
 
-// ── ATTĒLU PRIEKŠSKATĪJUMS ──
-function addPreview(files) {
+// ── ATTĒLU PĀRVALDĪBA ar dzēšanu ──
+let selectedFiles = [];
+
+function renderImagePreviews() {
     const wrap = document.getElementById('image-preview');
     const count = document.getElementById('image-count');
-    Array.from(files).forEach(f => {
-        if (!f.type.startsWith('image/')) return;
+    wrap.innerHTML = '';
+    selectedFiles.forEach((f, i) => {
         const div = document.createElement('div');
         div.className = 'thumb-wrap';
-        div.innerHTML = `<img src="${URL.createObjectURL(f)}" class="img-thumb">`;
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        img.className = 'img-thumb';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'thumb-remove';
+        btn.textContent = '×';
+        btn.title = 'Noņemt';
+        btn.addEventListener('click', () => { selectedFiles.splice(i, 1); renderImagePreviews(); });
+        div.appendChild(img);
+        div.appendChild(btn);
         wrap.appendChild(div);
     });
-    const n = wrap.querySelectorAll('img').length;
+    const n = selectedFiles.length;
     count.textContent = n ? `${n}/8 bilde${n > 1 ? 's' : ''} izvēlēta` : '';
+    try {
+        const dt = new DataTransfer();
+        selectedFiles.forEach(f => dt.items.add(f));
+        document.getElementById('gallery-input').files = dt.files;
+    } catch(e) {}
 }
 
-// Pievienojam event listeners failiem (nav inline, lai darbojas ar CSP nonce)
-document.getElementById('gallery-input').addEventListener('change', function() { addPreview(this.files); });
-document.getElementById('camera-input').addEventListener('change', function() { addPreview(this.files); });
+document.getElementById('gallery-input').addEventListener('change', function() {
+    Array.from(this.files).forEach(f => { if (f.type.startsWith('image/') && selectedFiles.length < 8) selectedFiles.push(f); });
+    this.value = '';
+    renderImagePreviews();
+});
+document.getElementById('camera-input').addEventListener('change', function() {
+    Array.from(this.files).forEach(f => { if (f.type.startsWith('image/') && selectedFiles.length < 8) selectedFiles.push(f); });
+    this.value = '';
+    renderImagePreviews();
+});
 
 function handleVideo(file) {
     if (!file) return;
@@ -985,5 +1011,9 @@ vidZone.addEventListener('drop', e => {
     });
     {% endif %}
 })();
+
+// Auto-scroll uz kļūdas ziņojumu pēc neveiksmīgas publicēšanas
+const firstAlert = document.querySelector('.alert');
+if (firstAlert) firstAlert.scrollIntoView({behavior: 'smooth', block: 'center'});
 </script>
 {% endblock %}
