@@ -1325,10 +1325,7 @@ def moderate_listing(request, pk):
 
     elif action == 'delete':
         title = listing.title
-        listing.delete()
-        Report.objects.filter(listing=listing, status='new').update(
-            status='resolved', resolved_by=request.user, resolved_at=timezone.now()
-        )
+        listing.delete()  # CASCADE dzēš arī Reports, tāpēc update nav vajadzīgs
         messages.success(request, f'Sludinājums "{title}" dzēsts.')
         return redirect('moderation_panel')
 
