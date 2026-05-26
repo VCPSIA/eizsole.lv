@@ -308,3 +308,5 @@ LOGGING = {
         },
     },
 }
+
+MESSAGE_TAGS = {40: 'danger'}  # messages.ERROR → Bootstrap alert-danger

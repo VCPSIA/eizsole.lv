@@ -143,13 +143,13 @@
     <!-- Video -->
     <div class="mb-4">
         <label class="form-label fw-semibold">Video <span class="text-muted fw-normal" style="font-size:.82rem">— {% trans "nav obligāts, max 1" %}</span></label>
-        <div id="video-drop-zone" class="drop-zone" onclick="document.getElementById('video-input').click()">
+        <div id="video-drop-zone" class="drop-zone">
             <i class="bi bi-camera-video" style="font-size:2rem;color:#9ca3af"></i>
             <div class="mt-1" style="font-size:.88rem;color:#6c757d">{% trans "Spied vai velc video šeit" %}</div>
             <div style="font-size:.75rem;color:#9ca3af">{% trans "MP4, WEBM, MOV · max 1 video" %}</div>
         </div>
         <input type="file" id="video-input" name="video" accept="video/*"
-               style="display:none" onchange="handleVideo(this.files[0])">
+               style="display:none">
         <div id="video-preview" class="mt-2"></div>
     </div>
 
@@ -243,7 +243,7 @@
                 <div class="col-12">
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" name="has_inspection" id="has_inspection"
-                               checked onchange="toggleInspection(this)">
+                               checked>
                         <label class="form-check-label fw-semibold" for="has_inspection">
                             {% trans "Ir tehniskā apskate" %}
                         </label>
@@ -374,7 +374,7 @@
     <div class="card bg-light mb-3" id="auction-card">
         <div class="card-body">
             <div class="form-check mb-3">
-                <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input" onchange="toggleAuction(this)">
+                <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input">
                 <label for="is_auction" class="form-check-label fw-semibold">
                     <i class="bi bi-hammer text-danger"></i> {% trans "Publicēt kā izsoli" %}
                 </label>
@@ -426,7 +426,7 @@
                 <div class="d-flex gap-2">
                     {% for val, label in deal_type_choices %}
                     {% if val == 'offer' %}<span id="offer_btn_wrap" style="display:none">{% endif %}
-                    <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required onchange="toggleDealType(this.value)">
+                    <input type="radio" class="btn-check" name="deal_type" id="dt_{{ val }}" value="{{ val }}" required>
                     <label class="btn btn-outline-danger btn-sm px-4" for="dt_{{ val }}">{% trans label %}</label>
                     {% if val == 'offer' %}</span>{% endif %}
                     {% endfor %}
@@ -863,11 +863,11 @@ function handleVideo(file) {
     preview.innerHTML = `
         <div class="position-relative d-inline-block">
             <video src="${url}" controls style="max-width:100%;max-height:200px;border-radius:10px;border:2px solid #e9ecef"></video>
-            <button type="button" class="thumb-remove" style="top:-8px;right:-8px;width:24px;height:24px;font-size:13px;line-height:24px"
-                onclick="removeVideo()">×</button>
+            <button type="button" class="thumb-remove" id="video-remove-btn" style="top:-8px;right:-8px;width:24px;height:24px;font-size:13px;line-height:24px">×</button>
         </div>
         <div class="text-muted mt-1" style="font-size:.78rem">${file.name}</div>`;
     document.getElementById('video-drop-zone').style.display = 'none';
+    document.getElementById('video-remove-btn').addEventListener('click', removeVideo);
 }
 
 function removeVideo() {
@@ -887,6 +887,16 @@ if (imgZone) {
     });
     imgZone.addEventListener('click', () => document.getElementById('gallery-input').click());
 }
+
+// Inline event handler aizstājēji (CSP nonce nav saderīgs ar onchange/onclick atribūtiem)
+document.getElementById('is_auction').addEventListener('change', function() { toggleAuction(this); });
+document.querySelectorAll('input[name="deal_type"]').forEach(r => {
+    r.addEventListener('change', function() { toggleDealType(this.value); });
+});
+const hasInspCb = document.getElementById('has_inspection');
+if (hasInspCb) hasInspCb.addEventListener('change', function() { toggleInspection(this); });
+document.getElementById('video-drop-zone').addEventListener('click', () => document.getElementById('video-input').click());
+document.getElementById('video-input').addEventListener('change', function() { handleVideo(this.files[0]); });
 
 // Drag & drop video
 const vidZone = document.getElementById('video-drop-zone');
