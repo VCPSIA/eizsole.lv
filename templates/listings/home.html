@@ -90,7 +90,7 @@
     position: absolute;
     top: 0;
     left: 100%;
-    z-index: 1000;
+    z-index: 1025;
     width: 230px;
     max-height: 420px;
     overflow-y: auto;
@@ -158,9 +158,9 @@
                     {% if cat.icon|slice:":4" == "svg:" %}
                         {% with name=cat.icon|slice:'4:' %}
                         {% if name|slice:"-4:" == ".png" %}
-                        <img src="{% static 'icons/' %}{{ name }}" style="width:1.8rem;height:1.8rem;object-fit:contain">
+                        <img src="{% static 'icons/' %}{{ name }}" alt="" aria-hidden="true" style="width:1.8rem;height:1.8rem;object-fit:contain">
                         {% else %}
-                        <img src="{% static 'icons/' %}{{ name }}.svg" style="width:1.8rem;height:1.8rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
+                        <img src="{% static 'icons/' %}{{ name }}.svg" alt="" aria-hidden="true" style="width:1.8rem;height:1.8rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
                         {% endif %}
                         {% endwith %}
                     {% elif cat.icon|slice:":3" == "ti-" %}
@@ -208,8 +208,8 @@
             <a href="{% url 'listing_detail' listing.pk %}" class="text-decoration-none text-dark">
                 <div class="listing-card h-100">
                     {% with listing.get_main_image as img %}
-                    {% if img %}<img src="{{ img.image.url }}" class="card-img-top" alt="{{ listing.title }}">
-                    {% else %}<div class="no-img"><i class="bi bi-image text-secondary fs-2"></i></div>{% endif %}
+                    {% if img %}<img src="{{ img.image.url }}" class="card-img-top" alt="{{ listing.title }}" loading="lazy">
+                    {% else %}<div class="no-img"><i class="bi bi-image text-secondary fs-2" aria-hidden="true"></i></div>{% endif %}
                     {% endwith %}
                     <div class="card-body">
                         {% if listing.is_featured %}<span class="badge mb-1" style="background:#fef9c3;color:#92400e;border-radius:20px;font-size:.7rem"><i class="bi bi-star-fill me-1"></i>TOP</span>{% endif %}
@@ -244,7 +244,7 @@
             <a href="{% url 'listing_detail' l.pk %}" class="text-decoration-none text-dark">
                 <div class="card h-100" style="border-radius:10px;overflow:hidden;border:1px solid #e9ecef;transition:all .18s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.09)'" onmouseout="this.style.boxShadow='none'">
                     {% with l.get_main_image as img %}
-                    {% if img %}<img src="{{ img.image.url }}" style="width:100%;height:110px;object-fit:cover">
+                    {% if img %}<img src="{{ img.image.url }}" alt="{{ l.title }}" loading="lazy" style="width:100%;height:110px;object-fit:cover">
                     {% else %}<div style="height:110px;background:#f4f5f7;display:flex;align-items:center;justify-content:center"><i class="bi bi-image text-muted"></i></div>{% endif %}
                     {% endwith %}
                     <div class="p-2">
@@ -263,7 +263,7 @@
 </div>{# /col-lg-9 #}
 
 <!-- Sānjosla ar reklāmas baneriem -->
-<div class="col-12 col-lg-3 d-none d-lg-block">
+<div class="col-12 col-lg-3 d-none d-lg-block" style="position:relative;z-index:0">
     <div class="sticky-top" style="top:80px">
         {% for banner in sidebar_banners %}
         <div class="mb-3">
