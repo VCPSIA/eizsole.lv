@@ -208,7 +208,7 @@
             <a href="{% url 'listing_detail' listing.pk %}" class="text-decoration-none text-dark">
                 <div class="listing-card h-100">
                     {% with listing.get_main_image as img %}
-                    {% if img %}<img src="{{ img.image.url }}" class="card-img-top" alt="{{ listing.title }}" loading="lazy">
+                    {% if img %}<img src="{{ img.image.url }}" class="card-img-top" alt="{{ listing.title }}"{% if forloop.counter == 1 %} fetchpriority="high"{% elif forloop.counter > 4 %} loading="lazy"{% endif %}>
                     {% else %}<div class="no-img"><i class="bi bi-image text-secondary fs-2" aria-hidden="true"></i></div>{% endif %}
                     {% endwith %}
                     <div class="card-body">
