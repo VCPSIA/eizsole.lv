@@ -32,7 +32,7 @@
   "itemCondition": "https://schema.org/{% if listing.condition == 'new' %}NewCondition{% elif listing.condition == 'used' %}UsedCondition{% else %}DamagedCondition{% endif %}",
   "offers": {
     "@type": "Offer",
-    {% if listing.price %}"price": "{{ listing.price }}",{% elif listing.deal_type == 'give' %}"price": "0",{% endif %}
+    "price": "{% if listing.price %}{{ listing.price }}{% else %}0{% endif %}",
     "priceCurrency": "EUR",
     "availability": "https://schema.org/{% if listing.is_active %}InStock{% else %}OutOfStock{% endif %}",
     "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
