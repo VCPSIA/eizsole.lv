@@ -68,7 +68,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
@@ -182,6 +182,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Draugiem.lv auto-publicēšana
+# Reģistrē app: https://www.draugiem.lv/applications/add/
+# Pēc reģistrācijas izpildi: python manage.py draugiem_auth
+DRAUGIEM_APP_ID       = os.environ.get('DRAUGIEM_APP_ID', '')
+DRAUGIEM_API_KEY      = os.environ.get('DRAUGIEM_API_KEY', '')
+DRAUGIEM_ACCESS_TOKEN = os.environ.get('DRAUGIEM_ACCESS_TOKEN', '')
+
+# Facebook auto-publicēšana
+# Norādījumi: https://developers.facebook.com/docs/pages/getting-started
+FACEBOOK_PAGE_ID    = os.environ.get('FACEBOOK_PAGE_ID', '')
+FACEBOOK_PAGE_TOKEN = os.environ.get('FACEBOOK_PAGE_TOKEN', '')
 
 # Anthropic API (AI moderācijai) — iestatīt .env vai šeit
 ANTHROPIC_API_KEY = ''

@@ -33,13 +33,26 @@ def _submit_indexnow(urls):
 
 @receiver(post_save, sender='listings.Listing')
 def listing_indexnow(sender, instance, created, **kwargs):
-    """Kad sludinājums tiek apstiprināts — iesniedz IndexNow."""
+    """Kad sludinājums tiek apstiprināts — iesniedz IndexNow + sociālie."""
     if instance.moderation_status == 'approved' and instance.is_active:
         try:
             url = SITE_URL + reverse('listing_detail', args=[instance.pk])
             _submit_indexnow([url])
         except Exception:
             pass
+
+        # Sociālie tīkli — tikai jauniem sludinājumiem
+        if created:
+            try:
+                from .social_publishers import post_to_draugiem, post_to_facebook
+                import threading
+                threading.Thread(
+                    target=lambda: (post_to_draugiem(instance),
+                                   post_to_facebook(instance)),
+                    daemon=True
+                ).start()
+            except Exception:
+                pass
 
 
 @receiver(post_save, sender='auctions.Auction')
