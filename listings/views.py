@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q, Count
+from django.core.cache import cache
 from .models import Category, Listing, ListingImage, ListingVideo, Report, Equipment, Message, AutoDetails, TireDetails, RealEstateDetails, SiteSettings, VinReport, DiscountCode, Favorite, Banner, SavedSearch, ListingView
 from .profanity import contains_profanity
 from .ai_moderation import check_listing_images
@@ -163,22 +164,48 @@ def _active_listings():
 
 
 def home(request):
-    categories = Category.objects.filter(parent=None)
+    # Kategorijas — kešo 1 stundu (mainās reti)
+    categories = cache.get('home_categories')
+    if categories is None:
+        categories = list(Category.objects.filter(parent=None))
+        cache.set('home_categories', categories, 3600)
+
     deal_type_filter = request.GET.get('deal_type', '')
-    qs = _active_listings().filter(is_auction=False)
-    if deal_type_filter == 'offer':
-        # Piedāvā: deal_type='offer' VAI Iepazīties kategorija (id=935 un bērni)
-        iepazities_ids = list(Category.objects.filter(
-            Q(id=935) | Q(parent=935) | Q(parent__parent=935)
-        ).values_list('id', flat=True))
-        qs = qs.filter(Q(deal_type='offer') | Q(category_id__in=iepazities_ids))
-    elif deal_type_filter:
-        qs = qs.filter(deal_type=deal_type_filter)
-    latest_listings = qs.order_by('-is_featured', '-featured_at', '-created_at')[:12]
-    active_auctions = Auction.objects.filter(is_finished=False).select_related('listing').order_by('-listing__is_featured', '-listing__featured_at', 'ends_at')[:6]
+
+    # Sludinājumi — kešo 5 min, atsevišķi katram deal_type filtram
+    listings_key = f'home_listings_{deal_type_filter or "all"}'
+    latest_listings = cache.get(listings_key)
+    if latest_listings is None:
+        qs = _active_listings().filter(is_auction=False)
+        if deal_type_filter == 'offer':
+            iepazities_ids = list(Category.objects.filter(
+                Q(id=935) | Q(parent=935) | Q(parent__parent=935)
+            ).values_list('id', flat=True))
+            qs = qs.filter(Q(deal_type='offer') | Q(category_id__in=iepazities_ids))
+        elif deal_type_filter:
+            qs = qs.filter(deal_type=deal_type_filter)
+        latest_listings = list(
+            qs.order_by('-is_featured', '-featured_at', '-created_at')
+            .prefetch_related('images')[:12]
+        )
+        cache.set(listings_key, latest_listings, 300)
+
+    # Izsoles — kešo 2 min
+    active_auctions = cache.get('home_active_auctions')
+    if active_auctions is None:
+        active_auctions = list(
+            Auction.objects.filter(is_finished=False)
+            .select_related('listing')
+            .prefetch_related('listing__images')
+            .order_by('-listing__is_featured', '-listing__featured_at', 'ends_at')[:6]
+        )
+        cache.set('home_active_auctions', active_auctions, 120)
+
+    # Pēdējās skatītās — sesijas specifiskas, nekešo
     recently_ids = request.session.get('recently_viewed', [])
     recently_viewed = list(Listing.objects.filter(pk__in=recently_ids, is_active=True).prefetch_related('images'))
     recently_viewed.sort(key=lambda l: recently_ids.index(l.pk) if l.pk in recently_ids else 999)
+
     return render(request, 'listings/home.html', {
         'categories': categories,
         'latest_listings': latest_listings,
@@ -1539,6 +1566,10 @@ def favorites_list(request):
 
 def privacy_policy(request):
     return render(request, 'listings/privacy_policy.html')
+
+
+def facebook_data_deletion(request):
+    return render(request, 'listings/facebook_data_deletion.html')
 
 
 def terms(request):
