@@ -4,12 +4,50 @@
 {% block meta_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
 {% block og_title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
 {% block og_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
-{% with auction.listing.get_main_image as img %}{% if img %}{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% endblock %}{% block twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% endblock %}{% endif %}{% endwith %}
+{% with auction.listing.get_main_image as img %}{% if img %}{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta property="og:image:alt" content="{{ auction.listing.title }} — izsole eizsole.lv">{% endblock %}{% block twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta name="twitter:image:alt" content="{{ auction.listing.title }} — izsole eizsole.lv">{% endblock %}{% endif %}{% endwith %}
 {% block twitter_title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
 {% block twitter_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
-{% block meta_keywords %}{{ auction.listing.title }}, izsole, solīšana, {{ auction.listing.category.name }}, eizsole.lv{% endblock %}
+{% block meta_keywords %}{{ auction.listing.title }}, izsole Latvijā, solīšana, {{ auction.listing.category.name }}, eizsole.lv{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}">{% endblock %}
-{% block schema_json %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"{{ auction.listing.title|escapejs }}","description":"{{ auction.listing.description|truncatechars:300|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}","offers":{"@type":"AggregateOffer","priceCurrency":"EUR","lowPrice":"{{ auction.current_price }}","offerCount":"{{ auction.bids.count }}","availability":"https://schema.org/InStock"}}</script>{% endblock %}
+{% block og_type %}product{% endblock %}
+<meta property="product:price:amount" content="{{ auction.current_price }}">
+<meta property="product:price:currency" content="EUR">
+<meta property="product:availability" content="{% if not auction.is_finished %}in stock{% else %}out of stock{% endif %}">
+{% block schema_json %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": "{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}",
+  "name": "{{ auction.listing.title|escapejs }}",
+  "description": "{{ auction.listing.description|truncatechars:500|escapejs }}",
+  "sku": "EIZ-AUC-{{ auction.pk }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}",
+  "image": [{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "brand": {"@type": "Brand", "name": "eizsole.lv"},
+  "category": "{{ auction.listing.category.name|escapejs }}",
+  "itemCondition": "https://schema.org/{% if auction.listing.condition == 'new' %}NewCondition{% else %}UsedCondition{% endif %}",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "EUR",
+    "lowPrice": "{{ auction.starting_price }}",
+    "highPrice": "{{ auction.current_price }}",
+    "offerCount": {{ auction.bids.count }},
+    "availability": "https://schema.org/{% if not auction.is_finished %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}",
+    "seller": {"@type": "Organization", "name": "eizsole.lv", "url": "https://eizsole.lv"}
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Sākumlapa", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+      {"@type": "ListItem", "position": 2, "name": "Izsoles", "item": "{{ request.scheme }}://{{ request.get_host }}/izsoles/"},
+      {"@type": "ListItem", "position": 3, "name": "{{ auction.listing.title|escapejs }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}"}
+    ]
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <style>

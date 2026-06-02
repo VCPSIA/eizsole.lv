@@ -9,7 +9,7 @@
     <meta name="description" content="{% block meta_description %}eizsole.lv — Latvijas lētākā izsoļu un sludinājumu platforma. Pērc un pārdod viegli un droši.{% endblock %}">
     <meta property="og:title" content="{% block og_title %}eizsole.lv{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Latvijas lētākā izsoļu un sludinājumu platforma.{% endblock %}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:site_name" content="eizsole.lv">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'icons/pwa/icon-512.png' %}">{% endblock %}

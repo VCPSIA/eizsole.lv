@@ -4,23 +4,31 @@
 {% block meta_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
 {% block og_title %}{{ listing.title }}{% endblock %}
 {% block og_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
-{% block og_image %}{% with listing.get_main_image as img %}{% if img %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
+{% block og_image %}{% with listing.get_main_image as img %}{% if img %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta property="og:image:alt" content="{{ listing.title }} — {{ listing.category.name }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
 {% block twitter_title %}{{ listing.title }}{% endblock %}
 {% block twitter_description %}{{ listing.description|truncatechars:155 }}{% endblock %}
-{% block twitter_image %}{% with listing.get_main_image as img %}{% if img %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
-{% block meta_keywords %}{{ listing.title }}, {{ listing.category.name }}, sludinājumi, pirkt, pārdot, Latvija, eizsole{% endblock %}
+{% block twitter_image %}{% with listing.get_main_image as img %}{% if img %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta name="twitter:image:alt" content="{{ listing.title }} — {{ listing.category.name }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
+{% block meta_keywords %}{{ listing.title }}, {{ listing.category.name }}, sludinājumi Latvijā, pirkt, pārdot, eizsole.lv{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}">{% endblock %}
+{% if listing.price %}<meta property="product:price:amount" content="{{ listing.price }}">
+<meta property="product:price:currency" content="EUR">
+<meta property="product:availability" content="{% if listing.is_active %}in stock{% else %}out of stock{% endif %}">
+<meta property="product:condition" content="{{ listing.condition }}">{% endif %}
 
+{% block og_type %}product{% endblock %}
 {% block schema_json %}
-{% with listing.get_main_image as img %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Product",
+  "@id": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
   "name": "{{ listing.title|escapejs }}",
   "description": "{{ listing.description|truncatechars:500|escapejs }}",
+  "sku": "EIZ-{{ listing.pk }}",
   "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
-  {% if img %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}",{% endif %}
+  "image": [{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "brand": {"@type": "Brand", "name": "eizsole.lv"},
+  "category": "{{ listing.category.name|escapejs }}",
   "itemCondition": "https://schema.org/{% if listing.condition == 'new' %}NewCondition{% elif listing.condition == 'used' %}UsedCondition{% else %}DamagedCondition{% endif %}",
   {% if listing.price %}
   "offers": {
@@ -29,16 +37,20 @@
     "priceCurrency": "EUR",
     "availability": "https://schema.org/{% if listing.is_active %}InStock{% else %}OutOfStock{% endif %}",
     "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
-    "seller": {
-      "@type": "Person",
-      "name": "{{ listing.seller.username|escapejs }}"
-    }
+    "priceValidUntil": "{{ listing.expires_at|date:'Y-m-d'|default:'2027-12-31' }}",
+    "seller": {"@type": "Person", "name": "{{ listing.seller.username|escapejs }}"}
   },
   {% endif %}
-  "category": "{{ listing.category.name|escapejs }}"
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Sākumlapa", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+      {"@type": "ListItem", "position": 2, "name": "{{ listing.category.name|escapejs }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'category' listing.category.slug %}"},
+      {"@type": "ListItem", "position": 3, "name": "{{ listing.title|escapejs }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}"}
+    ]
+  }
 }
 </script>
-{% endwith %}
 {% endblock %}
 
 {% block content %}
