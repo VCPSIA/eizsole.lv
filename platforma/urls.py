@@ -34,4 +34,8 @@ urlpatterns = [
         '<?xml version="1.0"?>\n<users>\n\t<user>32FA50CBA8264DB505C818F1356C8977</user>\n</users>',
         content_type='application/xml'
     )),
+    path('9ee765937c5ab780463252b28f1ae312.txt', lambda r: HttpResponse(
+        '9ee765937c5ab780463252b28f1ae312',
+        content_type='text/plain'
+    )),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
