@@ -99,7 +99,7 @@
                 <div class="listing-card h-100">
                     {% with listing.get_main_image as img %}
                     {% if img %}
-                    <img src="{{ img.image.url }}" class="card-img">
+                    <img src="{{ img.image.url }}" class="card-img" alt="{{ listing.title }} — {{ listing.category.name }}" loading="lazy">
                     {% else %}
                     <div class="no-img"><i class="bi bi-image text-secondary fs-2"></i></div>
                     {% endif %}

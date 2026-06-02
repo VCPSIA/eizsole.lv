@@ -157,10 +157,10 @@
                     <div class="d-flex align-items-center gap-3">
                         {% with listing.get_main_image as img %}
                         {% if img %}
-                        <img src="{{ img.image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">
+                        <img src="{{ img.image.url }}" alt="{{ listing.title }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">
                         {% else %}
                         <div style="width:44px;height:44px;background:#f4f5f7;border-radius:8px;display:flex;align-items:center;justify-content:center">
-                            <i class="bi bi-image text-muted"></i>
+                            <i class="bi bi-image text-muted" aria-hidden="true"></i>
                         </div>
                         {% endif %}
                         {% endwith %}
@@ -276,7 +276,7 @@
                     <div class="d-flex align-items-center gap-3">
                         {% with listing.get_main_image as img %}
                         {% if img %}
-                        <img src="{{ img.image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;filter:grayscale(30%)">
+                        <img src="{{ img.image.url }}" alt="{{ listing.title }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;filter:grayscale(30%)">
                         {% else %}
                         <div style="width:44px;height:44px;background:#f4f5f7;border-radius:8px;display:flex;align-items:center;justify-content:center">
                             <i class="bi bi-image text-muted"></i>

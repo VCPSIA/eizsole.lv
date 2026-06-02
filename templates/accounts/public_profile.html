@@ -12,7 +12,7 @@
     <div class="col-md-3">
         <div class="card p-4 text-center">
             {% if seller_profile.avatar %}
-            <img src="{{ seller_profile.avatar.url }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 1rem">
+            <img src="{{ seller_profile.avatar.url }}" alt="{{ seller_profile.display_name }} — pārdevēja profils eizsole.lv" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 1rem">
             {% else %}
             <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#e63946,#c1121f);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;color:white;font-weight:800">
                 {{ seller.username|first|upper }}
@@ -55,7 +55,7 @@
             <div class="col-sm-6 col-lg-4">
                 <a href="{% url 'listing_detail' l.pk %}" class="text-decoration-none text-dark listing-mini d-block">
                     {% with l.get_main_image as img %}
-                    {% if img %}<img src="{{ img.image.url }}" style="width:100%;height:150px;object-fit:cover">
+                    {% if img %}<img src="{{ img.image.url }}" alt="{{ l.title }} — pārdod {{ seller_profile.display_name }}" loading="lazy" style="width:100%;height:150px;object-fit:cover">
                     {% else %}<div style="height:150px;background:#f4f5f7;display:flex;align-items:center;justify-content:center"><i class="bi bi-image text-muted fs-2"></i></div>{% endif %}
                     {% endwith %}
                     <div class="p-3">

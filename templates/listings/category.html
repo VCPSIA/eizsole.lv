@@ -156,9 +156,9 @@
                         {% if sub.icon|slice:":4" == "svg:" %}
                             {% with name=sub.icon|slice:'4:' %}
                             {% if name|slice:"-4:" == ".png" %}
-                            <img src="{% static 'icons/' %}{{ name }}" style="width:1.5rem;height:1.5rem;object-fit:contain">
+                            <img src="{% static 'icons/' %}{{ name }}" alt="{{ sub.name }} kategorija" style="width:1.5rem;height:1.5rem;object-fit:contain">
                             {% else %}
-                            <img src="{% static 'icons/' %}{{ name }}.svg" style="width:1.5rem;height:1.5rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
+                            <img src="{% static 'icons/' %}{{ name }}.svg" alt="{{ sub.name }} kategorija" style="width:1.5rem;height:1.5rem;filter:invert(26%) sepia(83%) saturate(2000%) hue-rotate(336deg) brightness(90%)">
                             {% endif %}
                             {% endwith %}
                         {% elif sub.icon|slice:":3" == "ti-" %}

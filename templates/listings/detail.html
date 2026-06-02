@@ -193,34 +193,23 @@
         {% with listing.images.all as images %}
         {% if images %}
         <div class="detail-img-wrap mb-3">
-            <div id="carousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for img in images %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <div class="lb-img-wrap" onclick="lbOpen({{ forloop.counter0 }})">
-                            <img src="{{ img.image.url }}" class="d-block mx-auto" data-lb-src="{{ img.image.url }}" data-lb-idx="{{ forloop.counter0 }}">
-                        </div>
-                    </div>
-                    {% endfor %}
+            <div id="gallery-main" class="lb-img-wrap">
+                {% for img in images %}
+                <div class="gallery-slide"{% if not forloop.first %} style="display:none"{% endif %}>
+                    <img src="{{ img.image.url }}" class="d-block mx-auto" alt="{{ listing.title }} — {{ listing.category.name }} Latvijā, foto {{ forloop.counter }}">
                 </div>
-                {% if images|length > 1 %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-                <!-- Thumbnails -->
-                <div class="d-flex gap-2 p-2 flex-wrap">
-                    {% for img in images %}
-                    <img src="{{ img.image.url }}"
-                         onclick="bootstrap.Carousel.getInstance(document.getElementById('carousel')).to({{ forloop.counter0 }})"
-                         style="height:56px;width:72px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;opacity:.7"
-                         class="thumb-img">
-                    {% endfor %}
-                </div>
-                {% endif %}
+                {% endfor %}
             </div>
+            {% if images|length > 1 %}
+            <div class="d-flex gap-2 p-2 flex-wrap" id="thumb-strip">
+                {% for img in images %}
+                <img src="{{ img.image.url }}"
+                     alt="{{ listing.title }} sīktēls {{ forloop.counter }}"
+                     style="height:56px;width:72px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;opacity:.7"
+                     class="thumb-img">
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         {% else %}
         <div class="no-img-lg mb-3">
@@ -231,12 +220,12 @@
 
         <!-- LIGHTBOX -->
         <div id="lightbox">
-            <button id="lb-close" onclick="lbClose()"><i class="bi bi-x-lg"></i></button>
-            <button class="lb-nav" id="lb-prev" onclick="lbNav(-1)"><i class="bi bi-chevron-left"></i></button>
+            <button id="lb-close"><i class="bi bi-x-lg"></i></button>
+            <button class="lb-nav" id="lb-prev"><i class="bi bi-chevron-left"></i></button>
             <div id="lb-img-container">
                 <img id="lb-img" src="" alt="">
             </div>
-            <button class="lb-nav" id="lb-next" onclick="lbNav(1)"><i class="bi bi-chevron-right"></i></button>
+            <button class="lb-nav" id="lb-next"><i class="bi bi-chevron-right"></i></button>
             <div id="lb-thumbs"></div>
             <div id="lb-hint">Klikšķis — tuvināt &nbsp;·&nbsp; Velkt — pārvietot &nbsp;·&nbsp; Ritenis — zoom</div>
         </div>
@@ -449,6 +438,38 @@
             lb.addEventListener('mousedown', function(e) {
                 if (e.target === lb) lbClose();
             });
+
+            // ── lightbox pogu klausītāji ──
+            document.getElementById('lb-close').addEventListener('click', lbClose);
+            prevBtn.addEventListener('click', function() { lbNav(-1); });
+            nextBtn.addEventListener('click', function() { lbNav(1); });
+
+            // ── Galērija: thumbnail navigācija + klikšķis atver lightbox ──
+            var galSlides = document.querySelectorAll('.gallery-slide');
+            var galThumbs = document.querySelectorAll('.thumb-img');
+            var galIdx = 0;
+
+            function galGoTo(idx) {
+                galSlides[galIdx].style.display = 'none';
+                galSlides[idx].style.display = 'block';
+                galThumbs.forEach(function(t, i) {
+                    t.style.opacity = i === idx ? '1' : '.7';
+                    t.style.borderColor = i === idx ? '#0d6efd' : 'transparent';
+                });
+                galIdx = idx;
+            }
+
+            galThumbs.forEach(function(t, i) {
+                t.addEventListener('click', function() { galGoTo(i); });
+            });
+
+            var galMain = document.getElementById('gallery-main');
+            if (galMain) galMain.addEventListener('click', function() { lbOpen(galIdx); });
+
+            if (galThumbs.length) {
+                galThumbs[0].style.opacity = '1';
+                galThumbs[0].style.borderColor = '#0d6efd';
+            }
         })();
         </script>
 
@@ -472,7 +493,7 @@
             <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
                 <h3 class="fw-800 mb-0" style="font-weight:800">{{ listing.title }}</h3>
                 {% if user.is_authenticated %}
-                <button id="fav-btn" onclick="toggleFavDetail({{ listing.pk }}, this)"
+                <button id="fav-btn" data-pk="{{ listing.pk }}"
                     class="fav-btn-detail flex-shrink-0 {% if is_favorited %}active{% endif %}">
                     <i class="bi {% if is_favorited %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
                     <span id="fav-label" style="font-size:.78rem;font-weight:600">{% if is_favorited %}Saglabāts{% else %}Saglabāt{% endif %}</span>
@@ -750,7 +771,7 @@
         <div class="info-card">
             <div class="d-flex align-items-center gap-3 mb-3">
                 {% if listing.seller.profile.avatar %}
-                <img src="{{ listing.seller.profile.avatar.url }}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0">
+                <img src="{{ listing.seller.profile.avatar.url }}" alt="{{ listing.seller.username }} — pārdevējs eizsole.lv" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0">
                 {% else %}
                 <div class="seller-avatar">{{ listing.seller.username|first|upper }}</div>
                 {% endif %}
@@ -763,7 +784,7 @@
             {% if phone %}
             <div id="phone-block" class="d-flex align-items-center gap-2">
                 <span id="phone-masked" style="font-weight:600;font-size:.95rem;font-family:monospace"></span>
-                <button onclick="revealPhone(this)" class="btn btn-outline-danger btn-sm"
+                <button id="reveal-phone-btn" class="btn btn-outline-danger btn-sm"
                         data-phone="{{ phone }}" style="font-size:.78rem;padding:.2rem .6rem;border-radius:6px">
                     <i class="bi bi-telephone me-1"></i>Parādīt tālruni
                 </button>
@@ -814,7 +835,7 @@
         {% elif user == listing.seller and listing.is_active %}
         <div class="info-card" style="border-color:#d1d5db">
             <p class="text-muted mb-2" style="font-size:.82rem"><i class="bi bi-bag-check me-1"></i>Pārdojāt šo preci? Atzīmējiet kā pārdotu.</p>
-            <button class="btn btn-outline-success btn-sm w-100" onclick="document.getElementById('mark-sold-form').classList.toggle('d-none')">
+            <button id="mark-sold-btn" class="btn btn-outline-success btn-sm w-100">
                 <i class="bi bi-check-lg me-1"></i>Atzīmēt kā pārdotu
             </button>
             <form id="mark-sold-form" method="post" action="{% url 'mark_sold' listing.pk %}" class="d-none mt-2">
@@ -878,8 +899,7 @@
                     <button type="submit" name="action" value="deactivate" class="btn btn-warning btn-sm flex-fill">
                         <i class="bi bi-eye-slash me-1"></i>Deaktivēt
                     </button>
-                    <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm flex-fill"
-                        onclick="return confirm('Dzēst šo sludinājumu?')">
+                    <button id="delete-listing-btn" type="submit" name="action" value="delete" class="btn btn-danger btn-sm flex-fill">
                         <i class="bi bi-trash me-1"></i>Dzēst
                     </button>
                 </div>
@@ -904,7 +924,7 @@
             <a href="{% url 'listing_detail' l.pk %}" class="text-decoration-none text-dark">
                 <div class="card h-100" style="border-radius:10px;overflow:hidden;border:1px solid #e9ecef;transition:all .18s" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,0,0,.10)'" onmouseout="this.style.boxShadow='none'">
                     {% with l.get_main_image as img %}
-                    {% if img %}<img src="{{ img.image.url }}" style="width:100%;height:130px;object-fit:cover">
+                    {% if img %}<img src="{{ img.image.url }}" alt="{{ l.title }} — {{ l.category.name }} Latvijā" loading="lazy" style="width:100%;height:130px;object-fit:cover">
                     {% else %}<div style="height:130px;background:#f4f5f7;display:flex;align-items:center;justify-content:center"><i class="bi bi-image text-muted fs-3"></i></div>{% endif %}
                     {% endwith %}
                     <div class="p-2">
@@ -921,18 +941,6 @@
 {% endif %}
 
 <script nonce="{{ csp_nonce }}">
-document.querySelectorAll('.thumb-img').forEach((el, i) => {
-    el.addEventListener('click', () => {
-        document.querySelectorAll('.thumb-img').forEach(t => t.style.opacity = '.7');
-        el.style.opacity = '1';
-        el.style.borderColor = '#e63946';
-    });
-});
-if (document.querySelectorAll('.thumb-img').length) {
-    document.querySelectorAll('.thumb-img')[0].style.opacity = '1';
-    document.querySelectorAll('.thumb-img')[0].style.borderColor = '#e63946';
-}
-
 function getCsrf() {
     return document.cookie.split('; ').find(r => r.startsWith('csrftoken='))?.split('=')[1] || '';
 }
@@ -954,5 +962,13 @@ function revealPhone(btn) {
     btn.disabled = true;
     btn.style.background = '#fff0f0';
 }
+var _rpb = document.getElementById('reveal-phone-btn');
+if (_rpb) _rpb.addEventListener('click', function() { revealPhone(this); });
+var _fav = document.getElementById('fav-btn');
+if (_fav) _fav.addEventListener('click', function() { toggleFavDetail(parseInt(this.dataset.pk), this); });
+var _ms = document.getElementById('mark-sold-btn');
+if (_ms) _ms.addEventListener('click', function() { document.getElementById('mark-sold-form').classList.toggle('d-none'); });
+var _del = document.getElementById('delete-listing-btn');
+if (_del) _del.addEventListener('click', function(e) { if (!confirm('Dzēst šo sludinājumu?')) e.preventDefault(); });
 </script>
 {% endblock %}
