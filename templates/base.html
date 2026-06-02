@@ -318,6 +318,7 @@
 
         .text-muted, .form-text { color: var(--text-muted) !important; }
         :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 800; font-display: swap; src: local('Inter'); size-adjust: 100%; }
 
         /* ── BREADCRUMB ── */
         .breadcrumb { font-size: 0.82rem; }
@@ -627,7 +628,7 @@
 </script>
 {% endif %}
 
-<div id="main-content" class="container main-container">
+<main id="main-content" class="container main-container">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3">
         {{ message }}
@@ -635,7 +636,7 @@
     </div>
     {% endfor %}
     {% block content %}{% endblock %}
-</div>
+</main>
 
 <footer class="py-5">
     <div class="container">

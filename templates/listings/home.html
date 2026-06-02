@@ -151,7 +151,7 @@
 </div>
 <div class="row g-2 mb-5 justify-content-center">
     {% for cat in categories %}
-    <div class="col-4 col-md-2 col-lg-2 category-wrapper">
+    <div class="col-4 col-md-2 col-lg-2 category-wrapper" tabindex="0" aria-label="{{ cat.name }}">
         <a href="{% url 'category' cat.slug %}" class="text-decoration-none">
             <div class="cat-card">
                 <div class="cat-icon">
