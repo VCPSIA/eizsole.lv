@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 {% block title %}{{ listing.title }} — eizsole.lv{% endblock %}
 {% block meta_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
 {% block og_title %}{{ listing.title }}{% endblock %}
@@ -26,7 +26,7 @@
   "description": "{{ listing.description|truncatechars:500|escapejs }}",
   "sku": "EIZ-{{ listing.pk }}",
   "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}",
-  "image": [{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "image": [{% if images %}{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}{% else %}"{{ request.scheme }}://{{ request.get_host }}{% static 'icons/pwa/icon-512.png' %}"{% endif %}],
   "brand": {"@type": "Brand", "name": "eizsole.lv"},
   "category": "{{ listing.category.name|escapejs }}",
   "itemCondition": "https://schema.org/{% if listing.condition == 'new' %}NewCondition{% elif listing.condition == 'used' %}UsedCondition{% else %}DamagedCondition{% endif %}",

@@ -23,7 +23,7 @@
   "description": "{{ auction.listing.description|truncatechars:500|escapejs }}",
   "sku": "EIZ-AUC-{{ auction.pk }}",
   "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}",
-  "image": [{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "image": [{% if images %}{% for img in images %}"{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}{% else %}"{{ request.scheme }}://{{ request.get_host }}{% static 'icons/pwa/icon-512.png' %}"{% endif %}],
   "brand": {"@type": "Brand", "name": "eizsole.lv"},
   "category": "{{ auction.listing.category.name|escapejs }}",
   "itemCondition": "https://schema.org/{% if auction.listing.condition == 'new' %}NewCondition{% else %}UsedCondition{% endif %}",
