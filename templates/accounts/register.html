@@ -59,17 +59,17 @@
                 <div class="section-label">Personas dati</div>
                 <div class="row g-2">
                     <div class="col-6">
-                        <label class="form-label fw-500">{% trans "Vārds" %} <span class="text-danger">*</span></label>
-                        <input type="text" name="first_name" class="form-control" value="{{ post.first_name|default:'' }}" placeholder="Jānis">
+                        <label class="form-label fw-500" for="reg-first-name">{% trans "Vārds" %} <span class="text-danger">*</span></label>
+                        <input type="text" name="first_name" id="reg-first-name" class="form-control" value="{{ post.first_name|default:'' }}" placeholder="Jānis">
                     </div>
                     <div class="col-6">
-                        <label class="form-label fw-500">{% trans "Uzvārds" %} <span class="text-danger">*</span></label>
-                        <input type="text" name="last_name" class="form-control" value="{{ post.last_name|default:'' }}" placeholder="Bērziņš">
+                        <label class="form-label fw-500" for="reg-last-name">{% trans "Uzvārds" %} <span class="text-danger">*</span></label>
+                        <input type="text" name="last_name" id="reg-last-name" class="form-control" value="{{ post.last_name|default:'' }}" placeholder="Bērziņš">
                     </div>
                 </div>
                 <div class="mt-2">
-                    <label class="form-label fw-500">Adrese</label>
-                    <input type="text" name="address" class="form-control" value="{{ post.address|default:'' }}" placeholder="Iela, pilsēta">
+                    <label class="form-label fw-500" for="reg-address">Adrese</label>
+                    <input type="text" name="address" id="reg-address" class="form-control" value="{{ post.address|default:'' }}" placeholder="Iela, pilsēta">
                 </div>
             </div>
 
@@ -77,26 +77,26 @@
             <div id="fields-company" {% if post.account_type != 'company' %}style="display:none"{% endif %}>
                 <div class="section-label">Uzņēmuma rekvizīti</div>
                 <div class="mb-2">
-                    <label class="form-label fw-500">Uzņēmuma nosaukums <span class="text-danger">*</span></label>
-                    <input type="text" name="company_name" class="form-control" value="{{ post.company_name|default:'' }}" placeholder="SIA Piemērs">
+                    <label class="form-label fw-500" for="reg-company-name">Uzņēmuma nosaukums <span class="text-danger">*</span></label>
+                    <input type="text" name="company_name" id="reg-company-name" class="form-control" value="{{ post.company_name|default:'' }}" placeholder="SIA Piemērs">
                 </div>
                 <div class="row g-2">
                     <div class="col-6">
-                        <label class="form-label fw-500">Reģ. numurs <span class="text-danger">*</span></label>
-                        <input type="text" name="reg_number" class="form-control" value="{{ post.reg_number|default:'' }}" placeholder="40000000000">
+                        <label class="form-label fw-500" for="reg-reg-number">Reģ. numurs <span class="text-danger">*</span></label>
+                        <input type="text" name="reg_number" id="reg-reg-number" class="form-control" value="{{ post.reg_number|default:'' }}" placeholder="40000000000">
                     </div>
                     <div class="col-6">
-                        <label class="form-label fw-500">PVN numurs</label>
-                        <input type="text" name="vat_number" class="form-control" value="{{ post.vat_number|default:'' }}" placeholder="LV40000000000">
+                        <label class="form-label fw-500" for="reg-vat-number">PVN numurs</label>
+                        <input type="text" name="vat_number" id="reg-vat-number" class="form-control" value="{{ post.vat_number|default:'' }}" placeholder="LV40000000000">
                     </div>
                 </div>
                 <div class="mt-2">
-                    <label class="form-label fw-500">Juridiskā adrese <span class="text-danger">*</span></label>
-                    <input type="text" name="legal_address" class="form-control" value="{{ post.legal_address|default:'' }}" placeholder="Iela 1, Rīga, LV-1001">
+                    <label class="form-label fw-500" for="reg-legal-address">Juridiskā adrese <span class="text-danger">*</span></label>
+                    <input type="text" name="legal_address" id="reg-legal-address" class="form-control" value="{{ post.legal_address|default:'' }}" placeholder="Iela 1, Rīga, LV-1001">
                 </div>
                 <div class="mt-2">
-                    <label class="form-label fw-500">Kontaktpersona <span class="text-danger">*</span></label>
-                    <input type="text" name="contact_person" class="form-control" value="{{ post.contact_person|default:'' }}" placeholder="Vārds Uzvārds, amats">
+                    <label class="form-label fw-500" for="reg-contact-person">Kontaktpersona <span class="text-danger">*</span></label>
+                    <input type="text" name="contact_person" id="reg-contact-person" class="form-control" value="{{ post.contact_person|default:'' }}" placeholder="Vārds Uzvārds, amats">
                 </div>
             </div>
 
@@ -104,8 +104,8 @@
             <div class="section-label">Atrašanās vieta</div>
             <div class="row g-2 mb-2">
                 <div class="col-6">
-                    <label class="form-label fw-500">{% trans "Valsts" %} <span class="text-danger">*</span></label>
-                    <select name="country" class="form-select" required>
+                    <label class="form-label fw-500" for="reg-country">{% trans "Valsts" %} <span class="text-danger">*</span></label>
+                    <select name="country" id="reg-country" class="form-select" required>
                         <option value="" disabled {% if not post.country %}selected{% endif %}>— izvēlieties —</option>
                         {% with countries="Latvija,Lietuva,Igaunija,Polija,Vācija,Zviedrija,Somija,Norvēģija,Dānija,Lielbritānija,Nīderlande,Beļģija,Francija,Itālija,Spānija,Austrija,Šveice,Čehija,Ungārija,Rumānija,Bulgārija,Grieķija,Portugāle,Ukraina,Krievija,ASV,Kanāda,Austrālija,Cita" %}
                         <option value="Latvija" {% if post.country == "Latvija" %}selected{% endif %}>Latvija</option>
@@ -141,17 +141,17 @@
                     </select>
                 </div>
                 <div class="col-6">
-                    <label class="form-label fw-500">{% trans "Pilsēta" %} <span class="text-danger">*</span></label>
-                    <input type="text" name="city" class="form-control" value="{{ post.city|default:'' }}" placeholder="Rīga" required>
+                    <label class="form-label fw-500" for="reg-city">{% trans "Pilsēta" %} <span class="text-danger">*</span></label>
+                    <input type="text" name="city" id="reg-city" class="form-control" value="{{ post.city|default:'' }}" placeholder="Rīga" required>
                 </div>
             </div>
 
             <!-- Kopīgie lauki -->
             <div class="section-label">Konta dati</div>
             <div class="mb-2">
-                <label class="form-label fw-500">{% trans "Tālrunis" %} <span class="text-danger">*</span></label>
+                <label class="form-label fw-500" for="reg-phone-number">{% trans "Tālrunis" %} <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <select name="phone_code" class="form-select" style="max-width:140px">
+                    <select name="phone_code" id="reg-phone-code" class="form-select" aria-label="{% trans 'Valsts kods' %}" style="max-width:140px">
                         <option value="+371" {% if post.phone_code == '+371' or not post.phone_code %}selected{% endif %}>🇱🇻 +371</option>
                         <option value="+370" {% if post.phone_code == '+370' %}selected{% endif %}>🇱🇹 +370</option>
                         <option value="+372" {% if post.phone_code == '+372' %}selected{% endif %}>🇪🇪 +372</option>
@@ -171,27 +171,27 @@
                         <option value="+34"  {% if post.phone_code == '+34' %}selected{% endif %}>🇪🇸 +34</option>
                         <option value="+39"  {% if post.phone_code == '+39' %}selected{% endif %}>🇮🇹 +39</option>
                     </select>
-                    <input type="tel" name="phone_number" class="form-control"
+                    <input type="tel" name="phone_number" id="reg-phone-number" class="form-control"
                            value="{{ post.phone_number|default:'' }}" placeholder="20000000" required>
                 </div>
                 <div class="form-text" style="font-size:.75rem">Tikai cipari, bez valsts koda</div>
             </div>
             <div class="mb-2">
-                <label class="form-label fw-500">{% trans "E-pasta adrese" %} <span class="text-danger">*</span></label>
-                <input type="email" name="email" class="form-control" value="{{ post.email|default:'' }}" placeholder="jusu@epasts.lv" required>
+                <label class="form-label fw-500" for="reg-email">{% trans "E-pasta adrese" %} <span class="text-danger">*</span></label>
+                <input type="email" name="email" id="reg-email" class="form-control" value="{{ post.email|default:'' }}" placeholder="jusu@epasts.lv" required>
                 <div class="form-text" style="font-size:.75rem">Uz šo adresi nosūtīsim apstiprinājuma saiti</div>
             </div>
 
             <div class="section-label">Parole</div>
             {% for field in form %}
             <div class="mb-2">
-                <label class="form-label fw-500">{{ field.label }}</label>
+                <label class="form-label fw-500" for="reg-pw-{{ forloop.counter }}">{{ field.label }}</label>
                 {% if field.field.widget.input_type == 'password' %}
                 <div class="input-group">
                     <input type="password" name="{{ field.html_name }}" id="reg-pw-{{ forloop.counter }}"
                         class="form-control" placeholder="{{ field.label }}">
-                    <button type="button" class="input-group-text bg-white border-start-0" onclick="togglePw('reg-pw-{{ forloop.counter }}',this)" tabindex="-1">
-                        <i class="bi bi-eye text-muted"></i>
+                    <button type="button" class="input-group-text bg-white border-start-0" onclick="togglePw('reg-pw-{{ forloop.counter }}',this)" tabindex="-1" aria-label="{% trans 'Rādīt/slēpt paroli' %}">
+                        <i class="bi bi-eye text-muted" aria-hidden="true"></i>
                     </button>
                 </div>
                 {% else %}
