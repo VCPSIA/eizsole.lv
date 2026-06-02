@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'listings',
     'auctions',
+    'blog',
 ]
 
 SITE_ID = 1

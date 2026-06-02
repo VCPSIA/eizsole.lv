@@ -6,6 +6,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView, TemplateView
 from django.http import HttpResponse
 from listings.sitemaps import ListingSitemap, CategorySitemap, StaticSitemap, AuctionSitemap, CitySitemap
+from blog.sitemaps import BlogSitemap
 
 sitemaps = {
     'listings':   ListingSitemap,
@@ -13,6 +14,7 @@ sitemaps = {
     'categories': CategorySitemap,
     'static':     StaticSitemap,
     'cities':     CitySitemap,
+    'blog':       BlogSitemap,
 }
 
 urlpatterns = [
@@ -26,6 +28,7 @@ urlpatterns = [
     path('', include('allauth.socialaccount.providers.google.urls')),
     path('', include('allauth.socialaccount.providers.facebook.urls')),
     path('izsoles/', include('auctions.urls')),
+    path('blogs/', include('blog.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json')),
