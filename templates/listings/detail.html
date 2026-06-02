@@ -8,7 +8,7 @@
 {% block twitter_title %}{{ listing.title }}{% endblock %}
 {% block twitter_description %}{{ listing.description|truncatechars:155 }}{% endblock %}
 {% block twitter_image %}{% with listing.get_main_image as img %}{% if img %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta name="twitter:image:alt" content="{{ listing.title }} — {{ listing.category.name }}">{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
-{% block meta_keywords %}{{ listing.title }}, {{ listing.category.name }}, sludinājumi Latvijā, pirkt, pārdot, eizsole.lv{% endblock %}
+{% block meta_keywords %}{{ listing.title }}, {{ listing.category.name }} Latvijā, pirkt {{ listing.category.name }}, {{ listing.title }} pārdod, sludinājumi Latvijā, eizsole.lv, izsolis.lv, andele, {{ listing.city|default:'' }}{% if listing.city %}, {{ listing.city }} sludinājumi{% endif %}, pirkt lēti Latvijā, pārdot tiešsaistē{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'listing_detail' listing.pk %}">{% endblock %}
 {% if listing.price %}<meta property="product:price:amount" content="{{ listing.price }}">
 <meta property="product:price:currency" content="EUR">

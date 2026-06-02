@@ -7,7 +7,7 @@
 {% with auction.listing.get_main_image as img %}{% if img %}{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta property="og:image:alt" content="{{ auction.listing.title }} — izsole eizsole.lv">{% endblock %}{% block twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"><meta name="twitter:image:alt" content="{{ auction.listing.title }} — izsole eizsole.lv">{% endblock %}{% endif %}{% endwith %}
 {% block twitter_title %}{{ auction.listing.title }} — Izsole | eizsole.lv{% endblock %}
 {% block twitter_description %}{{ auction.listing.description|truncatechars:155 }}{% endblock %}
-{% block meta_keywords %}{{ auction.listing.title }}, izsole Latvijā, solīšana, {{ auction.listing.category.name }}, eizsole.lv{% endblock %}
+{% block meta_keywords %}{{ auction.listing.title }}, izsole Latvijā, online izsole, interneta izsole, solīšana tiešsaistē, {{ auction.listing.category.name }} izsole, {{ auction.listing.category.name }} Latvijā, eizsole.lv, izsolis.lv, andele, andele mandele, bezmaksas izsole, pirkt izsolē, lēti pirkt Latvijā{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'auction_detail' auction.pk %}">{% endblock %}
 {% block og_type %}product{% endblock %}
 <meta property="product:price:amount" content="{{ auction.current_price }}">
