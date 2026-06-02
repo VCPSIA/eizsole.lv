@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView, TemplateView
+from django.http import HttpResponse
 from listings.sitemaps import ListingSitemap, CategorySitemap, StaticSitemap, AuctionSitemap
 
 sitemaps = {
@@ -29,4 +30,8 @@ urlpatterns = [
     path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json')),
     path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript')),
     path('offline/', TemplateView.as_view(template_name='offline.html'), name='offline'),
+    path('BingSiteAuth.xml', lambda r: HttpResponse(
+        '<?xml version="1.0"?>\n<users>\n\t<user>32FA50CBA8264DB505C818F1356C8977</user>\n</users>',
+        content_type='application/xml'
+    )),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
