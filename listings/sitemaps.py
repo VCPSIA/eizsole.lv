@@ -53,3 +53,15 @@ class StaticSitemap(Sitemap):
 
     def location(self, item):
         return reverse(item)
+
+
+class CitySitemap(Sitemap):
+    changefreq = 'daily'
+    priority = 0.7
+
+    def items(self):
+        from .views import CITY_SLUGS
+        return list(CITY_SLUGS.keys())
+
+    def location(self, city_slug):
+        return reverse('city_listings', args=[city_slug])

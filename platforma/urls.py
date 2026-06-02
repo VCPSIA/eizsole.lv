@@ -5,13 +5,14 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView, TemplateView
 from django.http import HttpResponse
-from listings.sitemaps import ListingSitemap, CategorySitemap, StaticSitemap, AuctionSitemap
+from listings.sitemaps import ListingSitemap, CategorySitemap, StaticSitemap, AuctionSitemap, CitySitemap
 
 sitemaps = {
-    'listings': ListingSitemap,
-    'auctions': AuctionSitemap,
+    'listings':   ListingSitemap,
+    'auctions':   AuctionSitemap,
     'categories': CategorySitemap,
-    'static': StaticSitemap,
+    'static':     StaticSitemap,
+    'cities':     CitySitemap,
 }
 
 urlpatterns = [

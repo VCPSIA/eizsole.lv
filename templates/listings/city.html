@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}Sludinājumi {{ city_name }} — pirkt un pārdot | eizsole.lv{% endblock %}
+{% block meta_description %}Sludinājumi {{ city_name }}ā — pērc un pārdod vietēji eizsole.lv. Aktīvie sludinājumi {{ city_name }}ā: auto, nekustamais īpašums, elektronika un daudz kas cits.{% endblock %}
+{% block og_title %}Sludinājumi {{ city_name }} | eizsole.lv{% endblock %}
+{% block og_description %}Pērc un pārdod {{ city_name }}ā — bezmaksas sludinājumi eizsole.lv{% endblock %}
+{% block meta_keywords %}sludinājumi {{ city_name }}, {{ city_name }} sludinājumi, pirkt {{ city_name }}, pārdot {{ city_name }}, {{ city_name }}as sludinājumi, eizsole.lv, izsolis.lv, andele{{ city_name }}{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://eizsole.lv/sludinajumi-{{ city_slug }}/">{% endblock %}
+
+{% block schema_json %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "name": "Sludinājumi {{ city_name }} — eizsole.lv",
+      "description": "Aktīvie sludinājumi {{ city_name }}ā",
+      "url": "https://eizsole.lv/sludinajumi-{{ city_slug }}/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Sākumlapa", "item": "https://eizsole.lv/"},
+        {"@type": "ListItem", "position": 2, "name": "Sludinājumi {{ city_name }}", "item": "https://eizsole.lv/sludinajumi-{{ city_slug }}/"}
+      ]
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Sākumlapa</a></li>
+    <li class="breadcrumb-item active">Sludinājumi {{ city_name }}</li>
+  </ol>
+</nav>
+
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h1 style="font-size:1.6rem;font-weight:800;margin:0">
+      <i class="bi bi-geo-alt-fill text-danger me-2"></i>Sludinājumi {{ city_name }}ā
+    </h1>
+    <p class="text-muted mb-0" style="font-size:.88rem">
+      Atrasti {{ listings|length }} sludinājumi {{ city_name }}ā
+    </p>
+  </div>
+  <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm px-3" style="border-radius:20px">
+    <i class="bi bi-grid me-1"></i>Visas pilsētas
+  </a>
+</div>
+
+{% if listings %}
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 mb-5">
+  {% for listing in listings %}
+  <div class="col">
+    <a href="{% url 'listing_detail' listing.pk %}" class="text-decoration-none text-dark">
+      <div class="listing-card h-100">
+        {% with listing.get_main_image as img %}
+        {% if img %}<img src="{{ img.image.url }}" class="card-img-top" alt="{{ listing.title }} — {{ city_name }}"
+          {% if forloop.counter > 4 %}loading="lazy"{% endif %}>
+        {% else %}<div class="no-img"><i class="bi bi-image text-secondary fs-2" aria-hidden="true"></i></div>{% endif %}
+        {% endwith %}
+        <div class="card-body">
+          {% if listing.is_featured %}<span class="badge mb-1" style="background:#fef9c3;color:#92400e;border-radius:20px;font-size:.7rem"><i class="bi bi-star-fill me-1"></i>TOP</span>{% endif %}
+          <div class="fw-600 mb-1" style="font-size:.85rem;font-weight:600;line-height:1.35">{{ listing.title|truncatechars:55 }}</div>
+          <div class="text-muted" style="font-size:.75rem"><i class="bi bi-geo-alt me-1"></i>{{ listing.city|default:listing.location|default:'—' }}</div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          {% if listing.price %}<span class="fw-bold" style="color:#16a34a;font-size:.95rem">€{{ listing.price }}</span>
+          {% elif listing.deal_type == 'give' %}<span class="text-success fw-bold" style="font-size:.85rem">Bezmaksas</span>
+          {% else %}<span class="text-muted" style="font-size:.8rem">Pēc vienošanās</span>{% endif %}
+          <span class="text-muted" style="font-size:.72rem">{{ listing.created_at|date:"d.m.Y" }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+  <i class="bi bi-geo-alt" style="font-size:3rem;color:#dee2e6;display:block;margin-bottom:1rem"></i>
+  <p class="text-muted">Nav sludinājumu {{ city_name }}ā.</p>
+  <a href="{% url 'listing_create' %}" class="btn btn-danger px-4" style="border-radius:20px">
+    <i class="bi bi-plus-lg me-1"></i>Publicēt sludinājumu
+  </a>
+</div>
+{% endif %}
+
+<!-- Citas pilsētas -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-geo-alt me-1"></i>Sludinājumi citās pilsētās</div>
+  <div class="card-body">
+    <div class="d-flex flex-wrap gap-2">
+      {% for slug, name in all_cities.items %}
+      {% if slug != city_slug %}
+      <a href="{% url 'city_listings' slug %}"
+         class="btn btn-sm btn-outline-secondary px-3" style="border-radius:20px;font-size:.82rem">
+        <i class="bi bi-geo-alt me-1"></i>{{ name }}
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

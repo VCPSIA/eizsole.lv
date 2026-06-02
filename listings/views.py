@@ -156,11 +156,50 @@ def _save_auto_details(listing, post):
     )
 
 
+CITY_SLUGS = {
+    'riga':        'Rīga',
+    'daugavpils':  'Daugavpils',
+    'liepaja':     'Liepāja',
+    'jelgava':     'Jelgava',
+    'jurmala':     'Jūrmala',
+    'ventspils':   'Ventspils',
+    'rezekne':     'Rēzekne',
+    'valmiera':    'Valmiera',
+    'jekabpils':   'Jēkabpils',
+    'ogre':        'Ogre',
+    'cesis':       'Cēsis',
+    'salaspils':   'Salaspils',
+    'tukums':      'Tukums',
+    'sigulda':     'Sigulda',
+    'bauska':      'Bauska',
+}
+
+
 def _active_listings():
     return Listing.objects.filter(
         is_active=True,
         moderation_status='approved',
     ).filter(Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now()))
+
+
+def city_listings(request, city_slug):
+    from django.http import Http404
+    city_name = CITY_SLUGS.get(city_slug)
+    if not city_name:
+        raise Http404
+    listings = list(
+        _active_listings()
+        .filter(Q(city__icontains=city_name) | Q(location__icontains=city_name),
+                is_auction=False)
+        .order_by('-is_featured', '-featured_at', '-created_at')
+        .prefetch_related('images')[:48]
+    )
+    return render(request, 'listings/city.html', {
+        'city_name':  city_name,
+        'city_slug':  city_slug,
+        'listings':   listings,
+        'all_cities': CITY_SLUGS,
+    })
 
 
 def home(request):

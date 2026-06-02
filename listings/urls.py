@@ -31,10 +31,12 @@ urlpatterns = [
     path('api/favoriti/<int:pk>/', views.favorite_toggle, name='favorite_toggle'),
     path('favoriti/', views.favorites_list, name='favorites_list'),
     path('privatuma-politika/', views.privacy_policy, name='privacy_policy'),
+    path('facebook-datu-dzesana/', views.facebook_data_deletion, name='facebook_data_deletion'),
     path('lietosanas-noteikumi/', views.terms, name='terms'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sludinajums/<int:pk>/statistika/', views.listing_stats, name='listing_stats'),
     path('saglabatas-meklesanas/', views.saved_searches, name='saved_searches'),
     path('saglabatas-meklesanas/saglabat/', views.save_search, name='save_search'),
     path('saglabatas-meklesanas/<int:pk>/dzest/', views.delete_saved_search, name='delete_saved_search'),
+    path('sludinajumi-<slug:city_slug>/', views.city_listings, name='city_listings'),
 ]
