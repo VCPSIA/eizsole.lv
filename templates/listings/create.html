@@ -2,11 +2,91 @@
 {% load i18n %}
 {% block title %}{% trans "Publicēt sludinājumu" %}{% endblock %}
 
+{% block extra_css %}
+<style>
+:root { --c-blue:#2196c9; --c-orange:#f97316; }
+
+/* Card header */
+.card-header { background:#e8f5fd; border-bottom:1px solid #b3d9f0; color:#1a6fa0; }
+.card-header h5 { color:#1a6fa0; }
+
+/* Required asterisk */
+.text-danger { color:var(--c-orange) !important; }
+
+/* Icons overrides */
+.bi-geo-alt-fill, .bi-car-front, .bi-person-lines-fill,
+.bi-clock, .bi-tag, .bi-hammer, .bi-check2-square,
+.ti-heart { color:var(--c-blue) !important; }
+
+/* Auto block */
+#auto-block { border-color:#b3d9f0 !important; }
+#auto-block .card-header { background:#e8f5fd; }
+
+/* Dating block */
+#dating-block .card { border-color:#b3d9f0 !important; }
+#dating-block .card-header { background:#e8f5fd; border-radius:12px 12px 0 0; }
+
+/* Equipment group headers */
+.text-danger.border-bottom { color:var(--c-blue) !important; border-color:#b3d9f0 !important; }
+
+/* Drop zone */
+.drop-zone:hover, .drop-zone.dragover {
+    border-color:var(--c-orange);
+    background:#fff7ed;
+}
+
+/* Thumb remove button */
+.thumb-remove { background:var(--c-orange) !important; }
+
+/* Address hint */
+#address-hint { color:var(--c-orange) !important; }
+#address-input { padding-left:2.4rem; }
+
+/* Geo icon */
+.bi-geo-alt-fill.position-absolute { color:var(--c-blue) !important; }
+
+/* Deal type radio buttons */
+.btn-outline-danger {
+    border-color:var(--c-blue) !important;
+    color:var(--c-blue) !important;
+}
+.btn-outline-danger:hover, .btn-check:checked + .btn-outline-danger {
+    background:var(--c-orange) !important;
+    border-color:var(--c-orange) !important;
+    color:#fff !important;
+}
+
+/* Duration buttons */
+.btn-outline-danger.w-100 {
+    border-color:var(--c-blue) !important;
+    color:var(--c-blue) !important;
+}
+.btn-check:checked + .btn-outline-danger.w-100 {
+    background:var(--c-orange) !important;
+    border-color:var(--c-orange) !important;
+    color:#fff !important;
+}
+
+/* Submit button */
+#submit-btn { background:var(--c-blue); border-color:var(--c-blue); }
+#submit-btn:hover:not(:disabled) { background:var(--c-orange); border-color:var(--c-orange); }
+
+/* Submit hint */
+#submit-hint { color:var(--c-orange) !important; }
+
+/* Form focus */
+.form-control:focus, .form-select:focus {
+    border-color:var(--c-blue);
+    box-shadow:0 0 0 3px rgba(33,150,201,.15);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
 <div class="col-md-8">
 <div class="card shadow-sm">
-<div class="card-header"><h5 class="mb-0"><i class="bi bi-plus-lg"></i> {% trans "Publicēt sludinājumu" %}</h5></div>
+<div class="card-header"><h5 class="mb-0"><i class="bi bi-plus-lg" style="color:var(--c-blue)"></i> {% trans "Publicēt sludinājumu" %}</h5></div>
 <div class="card-body">
 <form method="post" enctype="multipart/form-data" id="listing-form">
     {% csrf_token %}
@@ -46,9 +126,9 @@
 
     <!-- Iepazīšanās vecuma amplitūda -->
     <div id="dating-block" class="mb-3" style="display:none">
-        <div class="card" style="border-color:#fecdd3;border-radius:12px">
-            <div class="card-header fw-semibold" style="background:#fff1f2;border-radius:12px 12px 0 0">
-                <i class="ti ti-heart text-danger"></i> {% trans "Iepazīšanās parametri" %}
+        <div class="card" style="border-color:#b3d9f0;border-radius:12px">
+            <div class="card-header fw-semibold" style="background:#e8f5fd;border-radius:12px 12px 0 0">
+                <i class="ti ti-heart" style="color:var(--c-blue)"></i> {% trans "Iepazīšanās parametri" %}
             </div>
             <div class="card-body">
                 <div class="row g-3 mb-3">
@@ -109,7 +189,7 @@
             {% trans "Dzīvesvieta" %} <span class="text-danger" id="address-required-star">*</span>
         </label>
         <div class="position-relative">
-            <i class="bi bi-geo-alt-fill position-absolute" style="left:.85rem;top:50%;transform:translateY(-50%);color:#e63946;font-size:.9rem;pointer-events:none"></i>
+            <i class="bi bi-geo-alt-fill position-absolute" style="left:.85rem;top:50%;transform:translateY(-50%);color:#2196c9;font-size:.9rem;pointer-events:none"></i>
             <input type="text" id="address-input" class="form-control" placeholder="{% trans "Sāciet rakstīt adresi..." %}"
                 style="padding-left:2.4rem"
                 value="{{ post.location|default:'' }}" autocomplete="off">
@@ -119,7 +199,7 @@
         <input type="hidden" name="city"     id="city-val"     value="{{ post.city|default:profile_city }}">
         <input type="hidden" name="lat"      id="lat-val"      value="">
         <input type="hidden" name="lng"      id="lng-val"      value="">
-        <div id="address-hint" class="form-text" style="display:none;color:#e63946">
+        <div id="address-hint" class="form-text" style="display:none;color:#f97316">
             <i class="bi bi-exclamation-circle me-1"></i>{% trans "Lūdzu izvēlieties adresi no saraksta." %}
         </div>
     </div>
@@ -164,8 +244,8 @@
         background: #fafafa;
     }
     .drop-zone:hover, .drop-zone.dragover {
-        border-color: #e63946;
-        background: #fff5f5;
+        border-color: #f97316;
+        background: #fff7ed;
     }
     .img-thumb {
         width: 80px; height: 80px;
@@ -178,7 +258,7 @@
     .thumb-remove {
         position: absolute; top: -6px; right: -6px;
         width: 20px; height: 20px;
-        background: #e63946; color: white;
+        background: #f97316; color: white;
         border: none; border-radius: 50%;
         font-size: 11px; line-height: 20px; text-align: center;
         cursor: pointer; padding: 0;
@@ -186,9 +266,9 @@
     </style>
 
     <!-- Auto detaļas (tikai Transports kategorija) -->
-    <div id="auto-block" class="card mb-3" style="display:none;border-color:#fecaca">
-        <div class="card-header fw-semibold" style="background:#fff5f5">
-            <i class="bi bi-car-front text-danger"></i> {% trans "Transportlīdzekļa dati" %}
+    <div id="auto-block" class="card mb-3" style="display:none;border-color:#b3d9f0">
+        <div class="card-header fw-semibold" style="background:#e8f5fd">
+            <i class="bi bi-car-front" style="color:#2196c9"></i> {% trans "Transportlīdzekļa dati" %}
             <span class="text-muted fw-normal small ms-2">{% trans "Obligāti lauki" %}</span>
         </div>
         <div class="card-body">
@@ -345,13 +425,13 @@
     <!-- Aprīkojums (tikai Auto) -->
     <div id="equipment-block" class="card mb-3" style="display:none">
         <div class="card-header fw-semibold">
-            <i class="bi bi-check2-square text-danger"></i> {% trans "Aprīkojums" %}
+            <i class="bi bi-check2-square" style="color:#2196c9"></i> {% trans "Aprīkojums" %}
             <span class="text-muted fw-normal small ms-2">{% trans "Atzīmējiet visu pieejamo aprīkojumu" %}</span>
         </div>
         <div class="card-body">
             {% for group_name, items in equipment_by_group.items %}
             <div class="mb-4">
-                <h6 class="text-danger border-bottom pb-1 mb-3">{{ group_name }}</h6>
+                <h6 class="border-bottom pb-1 mb-3" style="color:#2196c9;border-color:#b3d9f0!important">{{ group_name }}</h6>
                 <div class="row g-2">
                     {% for eq in items %}
                     <div class="col-md-6 col-lg-4">
@@ -376,7 +456,7 @@
             <div class="form-check mb-3">
                 <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input">
                 <label for="is_auction" class="form-check-label fw-semibold">
-                    <i class="bi bi-hammer text-danger"></i> {% trans "Publicēt kā izsoli" %}
+                    <i class="bi bi-hammer" style="color:#2196c9"></i> {% trans "Publicēt kā izsoli" %}
                 </label>
             </div>
             <div id="auction_fields" style="display:none">
@@ -442,7 +522,7 @@
     <!-- Kontaktinformācija -->
     <div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
         <div class="card-body">
-            <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-person-lines-fill text-danger me-2"></i>{% trans "Kontaktinformācija" %}</h6>
+            <h6 class="fw-700 mb-3" style="font-weight:700"><i class="bi bi-person-lines-fill me-2" style="color:#2196c9"></i>{% trans "Kontaktinformācija" %}</h6>
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label fw-600" style="font-weight:600">
@@ -468,7 +548,7 @@
     <!-- Publicēšanas ilgums (tikai sludinājumiem, ne izsolēm) -->
     <div id="duration-block" class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
         <div class="card-body">
-            <label class="form-label fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock text-danger me-2"></i>{% trans "Publicēšanas ilgums" %} <span class="text-danger">*</span></label>
+            <label class="form-label fw-700 mb-3" style="font-weight:700"><i class="bi bi-clock me-2" style="color:#2196c9"></i>{% trans "Publicēšanas ilgums" %} <span style="color:#f97316">*</span></label>
             <div class="row g-2">
                 {% for val, label in duration_choices %}
                 <div class="col-6 col-md-3">
@@ -485,7 +565,7 @@
     <div class="card mb-3" style="border-radius:12px;border:1px solid #e9ecef">
         <div class="card-body">
             <label class="form-label fw-700" style="font-weight:700">
-                <i class="bi bi-tag text-danger me-2"></i>{% trans "Atlaižu kods" %}
+                <i class="bi bi-tag me-2" style="color:#2196c9"></i>{% trans "Atlaižu kods" %}
                 <span class="text-muted fw-normal" style="font-size:.82rem">{% trans "— nav obligāta" %}</span>
             </label>
             <div class="input-group">
