@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
 from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
+from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
@@ -26,11 +27,11 @@ class Listing(models.Model):
         ('damaged', 'Bojāts'),
     ]
     DEAL_TYPE_CHOICES = [
-        ('sell',  'Pārdod'),
-        ('buy',   'Pērk'),
-        ('trade', 'Maina'),
-        ('give',  'Atdod'),
-        ('offer', 'Piedāvā'),
+        ('sell',  _('Pārdod')),
+        ('buy',   _('Pērk')),
+        ('trade', _('Maina')),
+        ('give',  _('Atdod')),
+        ('offer', _('Piedāvā')),
     ]
     AGE_RANGE_CHOICES = [
         ('18-30', '18–30 gadi'),
