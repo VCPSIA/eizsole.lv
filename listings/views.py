@@ -1615,6 +1615,40 @@ def terms(request):
     return render(request, 'listings/terms.html')
 
 
+def faq(request):
+    faqs = [
+        {'q': 'Vai eizsole.lv ir bezmaksas?',
+         'a': 'Jā, eizsole.lv ir pilnīgi bezmaksas gan pircējiem, gan pārdevējiem. Sludinājumu publicēšana, solīšana un ziņapmaiņa ar pārdevēju ir bez maksas.'},
+        {'q': 'Kā publicēt sludinājumu eizsole.lv?',
+         'a': 'Reģistrējieties vai piesakieties kontā → nospiediet "Publicēt" → aizpildiet informāciju (nosaukums, apraksts, cena, kategorija, atrašanās vieta) → pievienojiet fotogrāfijas → nospiediet "Publicēt". Sludinājums parādīsies pēc moderatora apstiprinājuma.'},
+        {'q': 'Kā darbojas izsoles eizsole.lv?',
+         'a': 'Izsole sākas ar minimālo cenu un beidzas noteiktā laikā. Uzvar tas, kurš piedāvājis augstāko cenu. Anti-snipe aizsardzība: ja solījums iesniegts pēdējās 60 sekundēs, izsoles laiks automātiski pagarinās par 3 minūtēm.'},
+        {'q': 'Kā solīt izsolē?',
+         'a': 'Atveriet izsoles lapu → piesakieties kontā → ievadiet solīšanas summu (ne mazāku par minimālo soli) → nospiediet "Solīt". Saņemsiet e-pasta paziņojumu, ja jūs pārsolīs.'},
+        {'q': 'Kā sazināties ar pārdevēju?',
+         'a': 'Katram sludinājumam ir poga "Sazināties". Nosūtiet ziņu tieši pārdevējam caur eizsole.lv iekšējo ziņapmaiņas sistēmu. Visas sarunas saglabājas jūsu profilā.'},
+        {'q': 'Cik ilgi darbojas sludinājums?',
+         'a': 'Sludinājums darbojas 30 dienas no publicēšanas brīža. Pēc tam to var pagarināt vai atkārtoti publicēt. Izsoles darbojas pārdevēja noteiktu laiku — parasti 3 līdz 14 dienas.'},
+        {'q': 'Kādas kategorijas ir pieejamas?',
+         'a': 'eizsole.lv piedāvā: Auto un transports, Nekustamais īpašums, Elektronikas un tehnika, Mājsaimniecība, Apģērbs un mode, Sports un hobiji, Lauksaimniecība, Celtniecība, Kolekcionēšana un daudz ko citu.'},
+        {'q': 'Kā ziņot par aizdomīgu sludinājumu?',
+         'a': 'Katram sludinājumam ir poga "Ziņot". Izvēlieties iemeslu un nosūtiet ziņojumu. Moderatori izskata ziņojumus 24 stundu laikā.'},
+        {'q': 'Vai varu pārdot jebko?',
+         'a': 'Nav atļauts pārdot: ieročus, narkotikas, viltotus produktus, dzīvniekus bez dokumentiem un jebko pretrunā Latvijas likumiem. Skatiet Lietošanas noteikumus.'},
+        {'q': 'Vai eizsole.lv darbojas mobilajā tālrunī?',
+         'a': 'Jā! eizsole.lv ir optimizēts mobilajām ierīcēm un instalējams kā lietotne (PWA) bez App Store. Nospiediet "Mobilā lietotne" mājaslapas apakšā.'},
+    ]
+    quick_links = [
+        {'url': '/publicet/', 'icon': 'plus-circle', 'title': 'Publicēt sludinājumu', 'desc': 'Bezmaksas, 2 minūtes'},
+        {'url': '/izsoles/', 'icon': 'hammer', 'title': 'Aktīvās izsoles', 'desc': 'Solī un uzvari'},
+        {'url': '/meklet/', 'icon': 'search', 'title': 'Meklēt', 'desc': 'Atrodi ko meklē'},
+        {'url': '/blogs/', 'icon': 'journal-text', 'title': 'Blogs', 'desc': 'Padomi un ceļveži'},
+        {'url': '/privatuma-politika/', 'icon': 'shield-check', 'title': 'Privātuma politika', 'desc': 'Datu aizsardzība'},
+        {'url': '/lietosanas-noteikumi/', 'icon': 'file-text', 'title': 'Lietošanas noteikumi', 'desc': 'Noteikumi un nosacījumi'},
+    ]
+    return render(request, 'listings/faq.html', {'faqs': faqs, 'quick_links': quick_links})
+
+
 def robots_txt(request):
     from django.http import HttpResponse
     content = (

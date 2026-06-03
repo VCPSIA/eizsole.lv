@@ -39,4 +39,5 @@ urlpatterns = [
     path('saglabatas-meklesanas/saglabat/', views.save_search, name='save_search'),
     path('saglabatas-meklesanas/<int:pk>/dzest/', views.delete_saved_search, name='delete_saved_search'),
     path('sludinajumi-<slug:city_slug>/', views.city_listings, name='city_listings'),
+    path('jautajumi/', views.faq, name='faq'),
 ]
