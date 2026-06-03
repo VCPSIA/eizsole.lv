@@ -27,6 +27,35 @@
 </div>
 
 <style>
+/* Deal type filter buttons */
+.deal-btn {
+    display: inline-block;
+    border-radius: 20px;
+    font-size: .78rem;
+    padding: .2rem .75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid #3b9fd8;
+    background: #e8f5fd;
+    color: #1a6fa0;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.deal-btn:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #fff;
+}
+.deal-btn-active {
+    background: #2196c9;
+    border-color: #2196c9;
+    color: #fff;
+}
+.deal-btn-active:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #fff;
+}
+
 /* Categories */
 .cat-card {
     background: white;
@@ -105,9 +134,9 @@
     </span>
     <div style="flex:1;height:1px;background:var(--border);min-width:1rem"></div>
     <div class="d-flex gap-1 flex-wrap">
-        <a href="/" class="btn btn-sm {% if not active_deal_type %}btn-danger{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;font-size:.78rem;padding:.2rem .75rem">{% trans "Visi" %}</a>
+        <a href="/" class="deal-btn {% if not active_deal_type %}deal-btn-active{% endif %}">{% trans "Visi" %}</a>
         {% for val, label in deal_type_choices %}
-        <a href="/?deal_type={{ val }}" class="btn btn-sm {% if active_deal_type == val %}btn-danger{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;font-size:.78rem;padding:.2rem .75rem">{% trans label %}</a>
+        <a href="/?deal_type={{ val }}" class="deal-btn {% if active_deal_type == val %}deal-btn-active{% endif %}">{% trans label %}</a>
         {% endfor %}
     </div>
 </div>
