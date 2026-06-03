@@ -14,10 +14,16 @@
 <div class="col-12 col-lg-9">
 
 <!-- Hero -->
-<div class="mb-4">
-    <a href="{% url 'auction_list' %}">
-        <img src="{% static 'images/hero_banner.png' %}" alt="eizsole.lv — Bezmaksas izsoļu un sludinājumu platforma" fetchpriority="high" style="width:100%;border-radius:16px;display:block">
-    </a>
+<div class="mb-4" style="position:relative;display:block">
+    <img src="{% static 'images/hero_banner.png' %}" alt="eizsole.lv — Bezmaksas izsoļu un sludinājumu platforma" fetchpriority="high" style="width:100%;border-radius:16px;display:block">
+    <div style="position:absolute;bottom:7%;left:3%;display:flex;gap:.6rem;flex-wrap:wrap">
+        <a href="{% url 'auction_list' %}">
+            <img src="{% static 'images/btn_skatit_izsoles.png' %}" alt="Skatīt izsoles" style="height:clamp(32px,5.5vw,52px);width:auto;border-radius:8px;display:block">
+        </a>
+        <a href="{% url 'listing_create' %}">
+            <img src="{% static 'images/btn_publicet.png' %}" alt="Publicēt" style="height:clamp(32px,5.5vw,52px);width:auto;border-radius:8px;display:block">
+        </a>
+    </div>
 </div>
 
 <style>
