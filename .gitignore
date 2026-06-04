@@ -32,6 +32,10 @@ Thumbs.db
 # Static collected
 staticfiles/
 
+# Vite build output
+static/dist/
+frontend/node_modules/
+
 # Testa skripti
 create_test_data.py
 create_auctions.py

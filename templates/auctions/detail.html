@@ -241,11 +241,35 @@
     <!-- Labā puse -->
     <div class="col-lg-4">
         <div class="info-card">
+            {% if auction.auction_type == 'dutch' %}
+            <!-- Holandiešu izsole: krītoša cena -->
+            <div class="mb-2 d-flex align-items-center gap-2">
+                <span class="badge fw-bold px-3 py-1" style="background:#fff7ed;color:#f97316;border:1.5px solid #fed7aa;border-radius:20px;font-size:.8rem">
+                    📉 Holandiešu izsole
+                </span>
+            </div>
+            <div class="text-muted mb-1" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Pašreizējā cena</div>
+            <div class="mb-1" style="font-size:2.4rem;font-weight:900;color:#f97316;line-height:1" id="dutch-price-display">
+                €<span id="dutch-price-value">{{ dutch_price }}</span>
+            </div>
+            <div class="text-muted mb-2" style="font-size:.82rem">
+                Sākumcena: €{{ auction.starting_price }} · Min: €{{ auction.dutch_min_price }}
+                · Kritums: €{{ auction.dutch_price_step }} ik {{ auction.dutch_interval_minutes }} min
+            </div>
+            {% if dutch_next_drop and auction.is_active %}
+            <div class="p-2 rounded mb-3" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.82rem">
+                <i class="bi bi-arrow-down-circle me-1" style="color:#f97316"></i>
+                Cena samazināsies pēc <strong id="dutch-next-drop-timer">--:--</strong>
+            </div>
+            {% endif %}
+            {% else %}
+            <!-- Angļu izsole: augošā cena -->
             <div class="text-muted mb-1" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px">{% trans "Pašreizējā cena" %}</div>
             <div class="price-huge mb-1">€{{ auction.current_price }}</div>
             <div class="d-flex flex-wrap gap-2 align-items-center mb-2" style="font-size:.82rem">
                 <span class="text-muted">{% trans "Sākumcena" %}: €{{ auction.starting_price }} · <strong>{{ auction.bid_count }}</strong> {% trans "solījumi" %}</span>
             </div>
+            {% endif %}
             {% if auction.reserve_price %}
             <div class="mb-3">
                 {% if auction.reserve_met %}
@@ -345,7 +369,17 @@
 
             {% if auction.is_active %}
                 {% if user.is_authenticated and user != auction.listing.seller %}
-
+                {% if auction.auction_type == 'dutch' %}
+                <!-- Holandiešu izsole: tikai pirkšanas poga -->
+                <a href="{% url 'dutch_buy' auction.pk %}" class="btn btn-lg w-100 fw-bold mb-2"
+                   style="background:#f97316;color:white;border-radius:12px;font-size:1.05rem">
+                    <i class="bi bi-bag-check me-2"></i>Pirkt par €<span id="dutch-buy-price">{{ dutch_price }}</span>
+                </a>
+                <div class="text-muted text-center" style="font-size:.75rem">
+                    <i class="bi bi-info-circle me-1"></i>Pirmais pircējs iegūst preci par pašreizējo cenu.
+                </div>
+                {% else %}
+                <!-- Angļu izsole: solīšanas tabs -->
                 <!-- Tabs: manuālais / automātiskais -->
                 <ul class="nav nav-pills mb-3" style="font-size:.82rem">
                     <li class="nav-item">
@@ -447,6 +481,7 @@
                     </form>
                 </div>
 
+                {% endif %}{# /auction_type == 'dutch' #}
                 {% elif not user.is_authenticated %}
                 <a href="{% url 'login' %}" class="btn btn-outline-danger w-100 fw-700" style="font-weight:700">
                     <i class="bi bi-box-arrow-in-right me-2"></i>{% trans "Pieteikties, lai solītu" %}
@@ -466,6 +501,36 @@
             {% endif %}
 
 <script nonce="{{ csp_nonce }}">
+{% if auction.auction_type == 'dutch' and dutch_next_drop and auction.is_active %}
+(function() {
+    var dropEnd = new Date("{{ dutch_next_drop|date:'c' }}");
+    var priceVal = parseFloat("{{ dutch_price }}");
+    var step = parseFloat("{{ auction.dutch_price_step|default:0 }}");
+    var minP = parseFloat("{{ auction.dutch_min_price|default:0 }}");
+
+    function tick() {
+        var s = Math.max(0, Math.round((dropEnd - new Date()) / 1000));
+        var m = Math.floor(s / 60), sec = s % 60;
+        var el = document.getElementById('dutch-next-drop-timer');
+        if (el) el.textContent = (m > 0 ? m + 'min ' : '') + sec + 'sek';
+        if (s > 0) {
+            setTimeout(tick, 1000);
+        } else {
+            // Cena nokritusi — atjauninām displeju
+            var newPrice = Math.max(priceVal - step, minP);
+            priceVal = newPrice;
+            var pEl = document.getElementById('dutch-price-value');
+            var bEl = document.getElementById('dutch-buy-price');
+            if (pEl) pEl.textContent = newPrice.toFixed(2);
+            if (bEl) bEl.textContent = newPrice.toFixed(2);
+            dropEnd = new Date(dropEnd.getTime() + {{ auction.dutch_interval_minutes|default:60 }} * 60000);
+            tick();
+        }
+    }
+    tick();
+})();
+{% endif %}
+
 function switchTab(tab) {
     var pm = document.getElementById('panel-manual');
     var pp = document.getElementById('panel-proxy');

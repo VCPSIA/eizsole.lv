@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/perc-tulīt/', views.buy_now, name='buy_now'),
     path('<int:pk>/labot/', views.auction_edit, name='auction_edit'),
     path('<int:pk>/atjaunot/', views.restart_auction, name='restart_auction'),
+    path('<int:pk>/holandiesu-pirkt/', views.dutch_buy, name='dutch_buy'),
 ]

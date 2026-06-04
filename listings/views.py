@@ -430,13 +430,34 @@ def listing_detail(request, pk):
                .filter(category=listing.category)
                .exclude(pk=listing.pk)
                .order_by('-created_at')[:4])
+
+    # Iekšējās saites — pilsētas slug
+    city_slug = None
+    if listing.city:
+        city_lower = listing.city.lower()
+        for slug, name in CITY_SLUGS.items():
+            if name.lower() == city_lower or slug in city_lower:
+                city_slug = slug
+                break
+
+    # Saistīts blog raksts
+    from blog.models import BlogPost
+    cat_name = listing.category.name.lower()
+    blog_post = BlogPost.objects.filter(
+        is_published=True,
+        meta_keywords__icontains=cat_name
+    ).first() or BlogPost.objects.filter(is_published=True).first()
+
     return render(request, 'listings/detail.html', {
-        'listing': listing,
-        'auction': auction,
+        'listing':      listing,
+        'auction':      auction,
         'site_settings': SiteSettings.get(),
         'is_favorited': is_favorited,
-        'related': related,
-        'is_dating': _is_dating_category(listing.category),
+        'related':      related,
+        'is_dating':    _is_dating_category(listing.category),
+        'city_slug':    city_slug,
+        'blog_post':    blog_post,
+        'all_cities':   CITY_SLUGS,
     })
 
 
@@ -804,14 +825,27 @@ def listing_create(request):
                     ends_at_dt = min_ends
             except (ValueError, Exception):
                 ends_at_dt = timezone.now() + timedelta(days=7)
+            auction_type = request.POST.get('auction_type', 'english')
+            dutch_step, _ = _validate_price(request.POST.get('dutch_price_step', ''))
+            dutch_min, _  = _validate_price(request.POST.get('dutch_min_price', ''))
+            try:
+                dutch_interval = int(request.POST.get('dutch_interval_minutes', 60))
+                if dutch_interval < 1:
+                    dutch_interval = 60
+            except (ValueError, TypeError):
+                dutch_interval = 60
             Auction.objects.create(
                 listing=listing,
+                auction_type=auction_type,
                 starting_price=sp_val,
                 current_price=sp_val,
                 min_bid_increment=request.POST.get('min_bid_increment', 1),
                 ends_at=ends_at_dt,
-                buy_now_price=_validate_price(request.POST.get('buy_now_price', ''))[0],
-                reserve_price=_validate_price(request.POST.get('reserve_price', ''))[0],
+                buy_now_price=_validate_price(request.POST.get('buy_now_price', ''))[0] if auction_type == 'english' else None,
+                reserve_price=_validate_price(request.POST.get('reserve_price', ''))[0] if auction_type == 'english' else None,
+                dutch_price_step=dutch_step if auction_type == 'dutch' else None,
+                dutch_interval_minutes=dutch_interval if auction_type == 'dutch' else None,
+                dutch_min_price=dutch_min if auction_type == 'dutch' else None,
             )
 
         # Novilkt maksu no maka

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}Pirkt Holandiešu izsolē — {{ auction.listing.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card shadow-sm" style="border-radius:16px;overflow:hidden">
+    <div class="card-header text-white fw-bold" style="background:#2196c9;font-size:1.05rem">
+        <i class="bi bi-hourglass-split me-2"></i>Holandiešu izsole — apstiprinājums
+    </div>
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-1">{{ auction.listing.title }}</h5>
+        <p class="text-muted small mb-4">Cena samazinās ik pa {{ auction.dutch_interval_minutes }} min. Pirmais pircējs uzvar.</p>
+
+        <div class="text-center mb-4">
+            <div class="text-muted small mb-1">Pašreizējā cena</div>
+            <div style="font-size:3rem;font-weight:900;color:#f97316;line-height:1">€{{ price }}</div>
+            {% if next_drop %}
+            <div class="text-muted small mt-2">
+                <i class="bi bi-arrow-down-circle me-1"></i>Nākamā cenas samazināšana pēc
+                <strong id="next-drop-timer"></strong>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="alert" style="background:#e8f5fd;border:1px solid #b3d9f0;border-radius:10px;font-size:.88rem">
+            <i class="bi bi-wallet2 me-2" style="color:#2196c9"></i>
+            Jūsu maka atlikums: <strong>€{{ wallet.balance }}</strong>
+        </div>
+
+        {% if wallet.balance >= price %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-lg w-100 fw-bold" style="background:#f97316;color:white;border-radius:12px;font-size:1.1rem">
+                <i class="bi bi-bag-check me-2"></i>Pirkt par €{{ price }}
+            </button>
+        </form>
+        {% else %}
+        <a href="{% url 'wallet_topup' %}" class="btn btn-lg w-100 fw-bold" style="background:#2196c9;color:white;border-radius:12px">
+            <i class="bi bi-plus-circle me-2"></i>Papildināt maku
+        </a>
+        {% endif %}
+
+        <a href="{% url 'auction_detail' auction.pk %}" class="btn btn-outline-secondary w-100 mt-2">Atpakaļ uz izsoli</a>
+    </div>
+</div>
+</div>
+</div>
+
+{% if next_drop %}
+<script nonce="{{ csp_nonce }}">
+(function(){
+    var end = new Date("{{ next_drop|date:'c' }}");
+    function tick(){
+        var s = Math.max(0, Math.round((end - new Date()) / 1000));
+        var m = Math.floor(s/60), sec = s%60;
+        document.getElementById('next-drop-timer').textContent =
+            (m > 0 ? m + ' min ' : '') + sec + ' sek';
+        if (s > 0) setTimeout(tick, 1000);
+        else location.reload();
+    }
+    tick();
+})();
+</script>
+{% endif %}
+{% endblock %}

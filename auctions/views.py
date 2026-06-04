@@ -131,6 +131,8 @@ def auction_detail(request, pk):
         'bids': bids,
         'user_proxy': user_proxy,
         'increment': get_increment(auction.current_price),
+        'dutch_price': auction.dutch_current_price() if auction.auction_type == 'dutch' else None,
+        'dutch_next_drop': auction.dutch_next_drop() if auction.auction_type == 'dutch' else None,
     })
 
 
@@ -365,6 +367,60 @@ def auction_edit(request, pk):
         return redirect('auction_detail', pk=pk)
 
     return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+
+@login_required
+def dutch_buy(request, pk):
+    """Pircējs pieņem pašreizējo cenu Holandiešu izsolē."""
+    auction = get_object_or_404(Auction, pk=pk)
+
+    if auction.auction_type != 'dutch':
+        messages.error(request, 'Šī nav Holandiešu izsole.')
+        return redirect('auction_detail', pk=pk)
+    if not auction.is_active():
+        messages.error(request, 'Izsole ir beigusies.')
+        return redirect('auction_detail', pk=pk)
+    if request.user == auction.listing.seller:
+        messages.error(request, 'Nevarat pirkt savu izsoli.')
+        return redirect('auction_detail', pk=pk)
+
+    price = auction.dutch_current_price()
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        if wallet.balance < price:
+            messages.error(request,
+                f'Nepietiek maka atlikuma. Nepieciešams: €{price:.2f}. '
+                f'Jūsu atlikums: €{wallet.balance:.2f}.')
+            return redirect('wallet_topup')
+
+        WalletTransaction.make_spend(
+            wallet, price,
+            description=f'Holandiešu izsole: {auction.listing.title[:80]}',
+            reference=f'dutch_{auction.pk}',
+        )
+        Bid.objects.create(auction=auction, bidder=request.user, amount=price, is_auto=False)
+        auction.current_price = price
+        auction.winner = request.user
+        auction.is_finished = True
+        auction.save()
+        auction.listing.is_active = False
+        auction.listing.save()
+
+        notify(auction.listing.seller, 'bid',
+               f'Jūsu Holandiešu izsole "{auction.listing.title}" pārdota par €{price:.2f}! '
+               f'Pircējs: {request.user.username}.',
+               url=f'/izsoles/{auction.pk}/')
+        messages.success(request,
+            f'Apsveicam! Iegādājāties par €{price:.2f}. Summa norakstīta no maka.')
+        return redirect('auction_detail', pk=pk)
+
+    return render(request, 'auctions/dutch_buy_confirm.html', {
+        'auction': auction,
+        'price': price,
+        'wallet': wallet,
+        'next_drop': auction.dutch_next_drop(),
+    })
 
 
 @login_required
