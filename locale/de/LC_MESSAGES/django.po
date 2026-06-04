@@ -1,1323 +1,2523 @@
-# German translations for eizsole.lv
+﻿# German translations for eizsole.lv
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-04 05:40+0300\n"
+"Language: de\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 
-msgid "Meklēt sludinājumus..."
-msgstr "Anzeigen suchen..."
-
-msgid "Izsoles"
-msgstr "Auktionen"
-
-msgid "Publicēt"
-msgstr "Anzeige aufgeben"
-
-msgid "Paziņojumi"
-msgstr "Benachrichtigungen"
-
-msgid "Mans profils"
-msgstr "Mein Profil"
-
-msgid "Moderācija"
-msgstr "Moderation"
-
-msgid "Admin panelis"
-msgstr "Admin-Panel"
-
-msgid "Iziet"
-msgstr "Abmelden"
-
-msgid "Pieteikties"
-msgstr "Anmelden"
-
-msgid "Reģistrēties"
-msgstr "Registrieren"
-
-msgid "Valoda"
-msgstr "Sprache"
-
-msgid "Platforma"
-msgstr "Plattform"
-
-msgid "Sākumlapa"
-msgstr "Startseite"
-
-msgid "Konts"
-msgstr "Konto"
-
-msgid "Kontakti"
-msgstr "Kontakte"
-
-msgid "Bezmaksas izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši."
-msgstr "Kostenlose Auktions- und Anzeigenplattform. Kaufen, verkaufen und bieten Sie sicher."
-
-msgid "Reģ. Nr."
-msgstr "Reg.-Nr."
-
-msgid "Privātuma politika"
-msgstr "Datenschutzrichtlinie"
-
-msgid "Lietošanas noteikumi"
-msgstr "Nutzungsbedingungen"
-
-msgid "Lietotājvārds vai e-pasts"
-msgstr "Benutzername oder E-Mail"
-
-msgid "Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. Turpinot lietot vietni, jūs piekrītat"
-msgstr "Wir verwenden Cookies für eine bessere Nutzererfahrung. Durch die weitere Nutzung stimmen Sie der"
-
-msgid "privātuma politikai"
-msgstr "Datenschutzrichtlinie"
-
-msgid "Piekrītu"
-msgstr "Akzeptieren"
-
-msgid "Lietotājvārds"
-msgstr "Benutzername"
-
-msgid "Parole"
-msgstr "Passwort"
-
-msgid "Pieteikties sistēmā"
-msgstr "Anmelden"
-
-msgid "Nav konta?"
-msgstr "Kein Konto?"
-
-msgid "Reģistrējieties šeit"
-msgstr "Hier registrieren"
-
-msgid "Aizmirsi paroli?"
-msgstr "Passwort vergessen?"
-
-msgid "Izveidot kontu"
-msgstr "Konto erstellen"
-
-msgid "Privātpersona"
-msgstr "Privatperson"
-
-msgid "Uzņēmums"
-msgstr "Unternehmen"
-
-msgid "Vārds"
-msgstr "Vorname"
-
-msgid "Uzvārds"
-msgstr "Nachname"
-
-msgid "E-pasta adrese"
-msgstr "E-Mail-Adresse"
-
-msgid "Tālrunis"
-msgstr "Telefon"
-
-msgid "Valsts"
-msgstr "Land"
-
-msgid "Pilsēta"
-msgstr "Stadt"
-
-msgid "Apstiprināt paroli"
-msgstr "Passwort bestätigen"
-
-msgid "Publicēt sludinājumu"
-msgstr "Anzeige aufgeben"
-
-msgid "Virsraksts"
-msgstr "Titel"
-
-msgid "Apraksts"
-msgstr "Beschreibung"
-
-msgid "Kategorija"
-msgstr "Kategorie"
-
-msgid "Cena"
-msgstr "Preis"
-
-msgid "Stāvoklis"
-msgstr "Zustand"
-
-msgid "Jauns"
-msgstr "Neu"
-
-msgid "Lietots"
-msgstr "Gebraucht"
-
-msgid "Bojāts"
-msgstr "Beschädigt"
-
-msgid "Bildes"
-msgstr "Fotos"
-
-msgid "Publicēt!"
-msgstr "Veröffentlichen!"
-
-msgid "Atrašanās vieta"
-msgstr "Standort"
-
-msgid "Sākumcena"
-msgstr "Startpreis"
-
-msgid "Pašreizējā cena"
-msgstr "Aktueller Preis"
-
-msgid "Solīt"
-msgstr "Bieten"
-
-msgid "Izsole beigusies"
-msgstr "Auktion beendet"
-
-msgid "Pērc tūlīt"
-msgstr "Sofort kaufen"
-
-msgid "Laiks atlicis"
-msgstr "Verbleibende Zeit"
-
-msgid "Uzvarētājs"
-msgstr "Gewinner"
-
-msgid "Solījumu vēsture"
-msgstr "Gebotshistorie"
-
-msgid "Profils"
-msgstr "Profil"
-
-msgid "Rediģēt profilu"
-msgstr "Profil bearbeiten"
-
-msgid "Mani sludinājumi"
-msgstr "Meine Anzeigen"
-
-msgid "Maks"
-msgstr "Geldbörse"
-
-msgid "Atlikums"
-msgstr "Guthaben"
-
-msgid "Papildināt maku"
-msgstr "Guthaben aufladen"
-
-msgid "Saglabāt"
-msgstr "Speichern"
-
-msgid "Atcelt"
-msgstr "Abbrechen"
-
-msgid "Dzēst"
-msgstr "Löschen"
-
-msgid "Labot"
-msgstr "Bearbeiten"
-
-msgid "Apstiprināt"
-msgstr "Bestätigen"
-
-msgid "Meklēt"
-msgstr "Suchen"
-
-msgid "Atpakaļ"
-msgstr "Zurück"
-
-msgid "Skatīt vairāk"
-msgstr "Mehr anzeigen"
-
-msgid "Sazināties"
-msgstr "Kontaktieren"
-
-msgid "Meklēšanas rezultāti"
-msgstr "Suchergebnisse"
-
-msgid "Nav rezultātu"
-msgstr "Keine Ergebnisse gefunden"
-
-msgid "Visas kategorijas"
-msgstr "Alle Kategorien"
-
-msgid "Eļļas un autokīmija"
-msgstr "Öle und Autochemie"
-
-msgid "Transports"
-msgstr "Transport"
-
-msgid "Nekustamais īpašums"
-msgstr "Immobilien"
-
-msgid "Tehnika"
-msgstr "Elektronik"
-
-msgid "Sadzīves preces"
-msgstr "Haushaltswaren"
-
-msgid "Apģērbs"
-msgstr "Kleidung"
-
-msgid "Sports"
-msgstr "Sport"
-
-msgid "Dārzniecība"
-msgstr "Gartenarbeit"
-
-msgid "Bērniem"
-msgstr "Für Kinder"
-
-msgid "Dzīvnieki"
-msgstr "Tiere"
-
-msgid "Lauksaimniecība"
-msgstr "Landwirtschaft"
-
-msgid "Darbs"
-msgstr "Arbeit"
-
-msgid "Celtniecība"
-msgstr "Bauwesen"
-
-msgid "Pakalpojumi"
-msgstr "Dienstleistungen"
-
-msgid "Kolekcionēšana"
-msgstr "Sammlerstücke"
-
-msgid "Bezmaksas izsoļu un sludinājumu platforma"
-msgstr "Kostenlose Auktions- und Anzeigenplattform"
-
-msgid "Skatīt izsoles"
-msgstr "Auktionen ansehen"
-
-msgid "Kategorijas"
-msgstr "Kategorien"
-
-msgid "Skatīt visu"
-msgstr "Alle anzeigen"
-
-msgid "Pēdējās skatītās"
-msgstr "Zuletzt angesehen"
-
-msgid "Pēc vienošanās"
-msgstr "Nach Vereinbarung"
-
-msgid "Aktīvās izsoles"
-msgstr "Aktive Auktionen"
-
-msgid "Pašlaik nav aktīvu izsolu"
-msgstr "Derzeit keine aktiven Auktionen"
-
-msgid "Esi pirmais, kas publicē izsoli!"
-msgstr "Seien Sie der Erste mit einer Auktion!"
-
-msgid "Publicēt izsoli"
-msgstr "Auktion erstellen"
-
-msgid "Sākums"
-msgstr "Startseite"
-
-msgid "Pārdevējs"
-msgstr "Verkäufer"
-
-msgid "Sazināties ar pārdevēju"
-msgstr "Verkäufer kontaktieren"
-
-msgid "Pieteikties, lai solītu"
-msgstr "Anmelden zum Bieten"
-
-msgid "Solīt!"
-msgstr "Bieten!"
-
-msgid "Vēl nav solījumu — esi pirmais!"
-msgstr "Noch keine Gebote — seien Sie der Erste!"
-
-msgid "Rezerves cena sasniegta"
-msgstr "Mindestpreis erreicht"
-
-msgid "Rezerves cena nav sasniegta"
-msgstr "Mindestpreis nicht erreicht"
-
-msgid "Šajā kategorijā vēl nav sludinājumu."
-msgstr "Noch keine Anzeigen in dieser Kategorie."
-
-msgid "Meklēšanas filtri"
-msgstr "Suchfilter"
-
-msgid "Notīrīt"
-msgstr "Zurücksetzen"
-
-msgid "Nepareizs lietotājvārds vai parole."
-msgstr "Falscher Benutzername oder Passwort."
-
-msgid "Jau ir konts?"
-msgstr "Bereits ein Konto?"
-
-msgid "Konta veids"
-msgstr "Kontotyp"
-
-msgid "Lūdzu aizpildiet visus laukus."
-msgstr "Bitte füllen Sie alle Felder aus."
-
-msgid "Reģistrācija veiksmīga!"
-msgstr "Registrierung erfolgreich!"
-
-msgid "Sludinājums publicēts."
-msgstr "Anzeige veröffentlicht."
-
-msgid "solījumi"
-msgstr "Gebote"
-
-msgid "Aktīva"
-msgstr "Aktiv"
-
-msgid "beidzas"
-msgstr "endet"
-
-msgid "Anti-snipe pagarināts"
-msgstr "Anti-Snipe verlängert"
-
-msgid "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min."
-msgstr "Anti-Snipe aktiv — ein Gebot in den letzten 60 Sek. verlängert die Auktion um 3 Min."
-
-msgid "Jūsu rezerves cena"
-msgstr "Ihr Mindestpreis"
-
-msgid "redzat tikai jūs"
-msgstr "nur Sie sehen dies"
-
-msgid "Manuāli"
-msgstr "Manuell"
-
-msgid "Automātiski"
-msgstr "Automatisch"
-
-msgid "Min. solījums"
-msgstr "Mindestgebot"
-
-msgid "Soļu tabula"
-msgstr "Gebotsschritte"
-
-msgid "Solis"
-msgstr "Schritt"
-
-msgid "Automātiskā solīšana aktīva"
-msgstr "Autogebot aktiv"
-
-msgid "Jūsu maksimums"
-msgstr "Ihr Maximum"
-
-msgid "Mans maksimums"
-msgstr "Mein Maximum"
-
-msgid "Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir slēpts no citiem."
-msgstr "Das System bietet automatisch mit dem Mindestbetrag für Sie. Ihr Maximum ist für andere verborgen."
-
-msgid "Atjaunināt automātisko solīšanu"
-msgstr "Autogebot aktualisieren"
-
-msgid "Uzstādīt automātisko solīšanu"
-msgstr "Autogebot festlegen"
-
-msgid "Nevarat solīt savā izsolē."
-msgstr "Sie können nicht in Ihrer eigenen Auktion bieten."
-
-msgid "Izsole ir noslēgusies."
-msgstr "Die Auktion ist beendet."
-
-msgid "Gads"
-msgstr "Jahr"
-
-msgid "Tilpums"
-msgstr "Volumen"
-
-msgid "Dzinēja tips"
-msgstr "Motortyp"
-
-msgid "Ātrumkārba"
-msgstr "Getriebe"
-
-msgid "Virsbūves tips"
-msgstr "Karosserietyp"
-
-msgid "Nobraukums"
-msgstr "Kilometerstand"
-
-msgid "Darījuma veids"
-msgstr "Angebotsart"
-
-msgid "Veids"
-msgstr "Typ"
-
-msgid "Ražotājs"
-msgstr "Hersteller"
-
-msgid "Sezona"
-msgstr "Saison"
-
-msgid "Platums"
-msgstr "Breite"
-
-msgid "Rādiuss"
-msgstr "Radius"
-
-msgid "Slodzes indekss"
-msgstr "Tragfähigkeitsindex"
-
-msgid "Ātr. ind."
-msgstr "Geschw.-idx."
-
-msgid "Visi"
-msgstr "Alle"
-
-msgid "Visas"
-msgstr "Alle"
-
+#: listings/models.py:30 templates/listings/category.html:305
+#: templates/listings/category.html:446
 msgid "Pārdod"
 msgstr "Verkauft"
 
+#: listings/models.py:31 templates/listings/category.html:306
+#: templates/listings/category.html:447
 msgid "Pērk"
 msgstr "Kauft"
 
+#: listings/models.py:32 templates/listings/category.html:307
+#: templates/listings/category.html:448
 msgid "Maina"
 msgstr "Tauscht"
 
-msgid "Sludinājumi"
-msgstr "Anzeigen"
-
-msgid "Sludinājums"
-msgstr "Anzeige"
-
-msgid "Lapā"
-msgstr "Pro Seite"
-
-msgid "kopā"
-msgstr "gesamt"
-
-msgid "Automašīnas"
-msgstr "Autos"
-
-msgid "Motocikli, motorolleri"
-msgstr "Motorräder, Roller"
-
-msgid "Kravas auto, autobusi"
-msgstr "LKW, Busse"
-
-msgid "Lauksaimniecības tehnika"
-msgstr "Landmaschinen"
-
-msgid "Ūdens transports"
-msgstr "Wasserfahrzeuge"
-
-msgid "Rezerves daļas"
-msgstr "Ersatzteile"
-
-msgid "Riepas, diski"
-msgstr "Reifen, Felgen"
-
-msgid "Auto piederumi"
-msgstr "Autozubehör"
-
-msgid "Auto serviss"
-msgstr "Kfz-Service"
-
-msgid "Noma"
-msgstr "Verleih"
-
-msgid "Dzīvokļi - pārdod"
-msgstr "Wohnungen - Kauf"
-
-msgid "Dzīvokļi - īrē"
-msgstr "Wohnungen - Miete"
-
-msgid "Mājas - pārdod"
-msgstr "Häuser - Kauf"
-
-msgid "Mājas - īrē"
-msgstr "Häuser - Miete"
-
-msgid "Vasarnīcas, dārziņi"
-msgstr "Ferienhäuser, Gärten"
-
-msgid "Zeme"
-msgstr "Grundstücke"
-
-msgid "Telpas biznesam"
-msgstr "Gewerberäume"
-
-msgid "Noliktavas, ražotnes"
-msgstr "Lagerhallen, Fabriken"
-
-msgid "Garāžas, stāvvietas"
-msgstr "Garagen, Parkplätze"
-
-msgid "Citi īpašumi"
-msgstr "Andere Immobilien"
-
-msgid "Zeme un lauku īpašumi"
-msgstr "Ländliche Grundstücke"
-
-msgid "Datori, planšetes"
-msgstr "Computer, Tablets"
-
-msgid "Telefoni"
-msgstr "Telefone"
-
-msgid "TV, audio, video"
-msgstr "TV, Audio, Video"
-
-msgid "Sadzīves tehnika"
-msgstr "Haushaltsgeräte"
-
-msgid "Foto, optika"
-msgstr "Foto, Optik"
-
-msgid "Spēļu konsoles"
-msgstr "Spielkonsolen"
-
-msgid "Biroja tehnika"
-msgstr "Bürotechnik"
-
-msgid "Tīkla iekārtas"
-msgstr "Netzwerkgeräte"
-
-msgid "Programmatūra"
-msgstr "Software"
-
-msgid "Mēbeles"
-msgstr "Möbel"
-
-msgid "Virtuves preces"
-msgstr "Küchenartikel"
-
-msgid "Apgaismojums"
-msgstr "Beleuchtung"
-
-msgid "Mājas tekstils"
-msgstr "Heimtextilien"
-
-msgid "Vannas istaba"
-msgstr "Badezimmer"
-
-msgid "Dekorācijas"
-msgstr "Dekorationen"
-
-msgid "Remonta materiāli"
-msgstr "Renovierungsmaterialien"
-
-msgid "Instrumenti"
-msgstr "Werkzeuge"
-
-msgid "Trauki, servīzes"
-msgstr "Geschirr, Service"
-
-msgid "Citas preces mājai"
-msgstr "Anderes für zu Hause"
-
-msgid "Sieviešu apģērbs"
-msgstr "Damenbekleidung"
-
-msgid "Vīriešu apģērbs"
-msgstr "Herrenbekleidung"
-
-msgid "Bērnu apģērbs"
-msgstr "Kinderbekleidung"
-
-msgid "Apavi - sieviešu"
-msgstr "Schuhe - Damen"
-
-msgid "Apavi - vīriešu"
-msgstr "Schuhe - Herren"
-
-msgid "Apavi - bērnu"
-msgstr "Schuhe - Kinder"
-
-msgid "Somas, mugursomas"
-msgstr "Taschen, Rucksäcke"
-
-msgid "Rotaslietas, pulksteņi"
-msgstr "Schmuck, Uhren"
-
-msgid "Sporta apģērbs"
-msgstr "Sportbekleidung"
-
-msgid "Cepures, šalles, cimdi"
-msgstr "Mützen, Schals, Handschuhe"
-
-msgid "Cits apģērbs"
-msgstr "Andere Kleidung"
-
-msgid "Apakšveļa"
-msgstr "Unterwäsche"
-
-msgid "Velosipēdi"
-msgstr "Fahrräder"
-
-msgid "Ziemas sports"
-msgstr "Wintersport"
-
-msgid "Ūdens sports"
-msgstr "Wassersport"
-
-msgid "Fitnesa inventārs"
-msgstr "Fitnessgeräte"
-
-msgid "Medības"
-msgstr "Jagd"
-
-msgid "Makšķerēšana"
-msgstr "Angeln"
-
-msgid "Tūrisms, kempings"
-msgstr "Tourismus, Camping"
-
-msgid "Futbols, bumbu spēles"
-msgstr "Fußball, Ballspiele"
-
-msgid "Teniss, badmintons"
-msgstr "Tennis, Badminton"
-
-msgid "Cits sports"
-msgstr "Andere Sportarten"
-
-msgid "Dārza instrumenti"
-msgstr "Gartengeräte"
-
-msgid "Augi, stādi, sēklas"
-msgstr "Pflanzen, Setzlinge, Samen"
-
-msgid "Dārza mēbeles"
-msgstr "Gartenmöbel"
-
-msgid "Siltumnīcas"
-msgstr "Gewächshäuser"
-
-msgid "Laistīšanas sistēmas"
-msgstr "Bewässerungssysteme"
-
-msgid "Dārza mājiņas"
-msgstr "Gartenhäuschen"
-
-msgid "Mēslojums, augu kopšana"
-msgstr "Dünger, Pflanzenpflege"
-
-msgid "Dārza tehnika"
-msgstr "Gartenmaschinen"
-
-msgid "Rotaļlietas"
-msgstr "Spielzeug"
-
-msgid "Ratiņi, autokrēsli"
-msgstr "Kinderwagen, Autositze"
-
-msgid "Bērnu mēbeles"
-msgstr "Kindermöbel"
-
-msgid "Bērnu apģērbs (0-2 g.)"
-msgstr "Kinderkleidung (0-2 J.)"
-
-msgid "Bērnu apģērbs (3-7 g.)"
-msgstr "Kinderkleidung (3-7 J.)"
-
-msgid "Bērnu apģērbs (8+ g.)"
-msgstr "Kinderkleidung (8+ J.)"
-
-msgid "Skolas piederumi"
-msgstr "Schulbedarf"
-
-msgid "Grāmatas, mūzika"
-msgstr "Bücher, Musik"
-
-msgid "Sporta preces bērniem"
-msgstr "Sportartikel für Kinder"
-
-msgid "Barošana, aprūpe"
-msgstr "Ernährung, Pflege"
-
-msgid "Suņi"
-msgstr "Hunde"
-
-msgid "Kaķi"
-msgstr "Katzen"
-
-msgid "Putni"
-msgstr "Vögel"
-
-msgid "Zivis, akvāriji"
-msgstr "Fische, Aquarien"
-
-msgid "Grauzēji, truši"
-msgstr "Nagetiere, Kaninchen"
-
-msgid "Rāpuļi, eksotiskie"
-msgstr "Reptilien, Exotische"
-
-msgid "Barība"
-msgstr "Tierfutter"
-
-msgid "Piederumi, aksesuāri"
-msgstr "Zubehör"
-
-msgid "Veterinārija"
-msgstr "Tierarzt"
-
-msgid "Zoopreču veikali"
-msgstr "Zoohandlungen"
-
-msgid "Traktori"
-msgstr "Traktoren"
-
-msgid "Kombaini"
-msgstr "Mähdrescher"
-
-msgid "Augsnes apstrāde"
-msgstr "Bodenbearbeitung"
-
-msgid "Lauksaimniecības piekabes"
-msgstr "Landwirtsch. Anhänger"
-
-msgid "Augu aizsardzība un mēslošana"
-msgstr "Pflanzenschutz und Düngung"
-
-msgid "Lopkopība"
-msgstr "Tierhaltung"
-
-msgid "Meža tehnika"
-msgstr "Forstmaschinen"
-
-msgid "Apūdeņošana"
-msgstr "Bewässerung"
-
-msgid "Graudu un produktu apstrāde"
-msgstr "Getreide- und Produktverarbeitung"
-
-msgid "Lauksaimniecības piederumi"
-msgstr "Landwirtsch. Zubehör"
-
-msgid "Lauksaimniecības pakalpojumi"
-msgstr "Landwirtsch. Dienstleistungen"
-
-msgid "Pilna laika darbs"
-msgstr "Vollzeitarbeit"
-
-msgid "Nepilna laika darbs"
-msgstr "Teilzeitarbeit"
-
-msgid "Darbs ārzemēs"
-msgstr "Jobs im Ausland"
-
-msgid "Meklē darbu"
-msgstr "Suche Arbeit"
-
-msgid "Freelance, attālinātais"
-msgstr "Freelance, Fernarbeit"
-
-msgid "Prakses vietas"
-msgstr "Praktika"
-
-msgid "Uzņēmējdarbība"
-msgstr "Unternehmertum"
-
-msgid "Kursi, apmācība"
-msgstr "Kurse, Schulungen"
-
-msgid "Būvmateriāli"
-msgstr "Baumaterialien"
-
-msgid "Jumti un fasādes"
-msgstr "Dächer und Fassaden"
-
-msgid "Logi un durvis"
-msgstr "Fenster und Türen"
-
-msgid "Siltumizolācija un hidroizolācija"
-msgstr "Wärme- und Abdichtung"
-
-msgid "Betona darbi un mūrēšana"
-msgstr "Betonarbeiten und Mauerwerk"
-
-msgid "Koka konstrukcijas"
-msgstr "Holzkonstruktionen"
-
-msgid "Grīdas un sienas apdare"
-msgstr "Boden- und Wandverkleidung"
-
-msgid "Santehnika"
-msgstr "Sanitär"
-
-msgid "Apkure un ventilācija"
-msgstr "Heizung und Lüftung"
-
-msgid "Elektromateriāli"
-msgstr "Elektromaterialien"
-
-msgid "Celtniecības tehnika un instrumenti"
-msgstr "Baumaschinen und Werkzeuge"
-
-msgid "Atkritumi un demontāža"
-msgstr "Abbruch und Entsorgung"
-
-msgid "Celtniecības pakalpojumi"
-msgstr "Baudienstleistungen"
-
-msgid "Remontdarbi, būvniecība"
-msgstr "Reparaturen, Bauwesen"
-
-msgid "Santehnika, elektrika"
-msgstr "Sanitär, Elektrik"
-
-msgid "Tīrīšana"
-msgstr "Reinigung"
-
-msgid "Pārvākšanās"
-msgstr "Umzug"
-
-msgid "IT pakalpojumi"
-msgstr "IT-Dienste"
-
-msgid "Apmācība, tulkošana"
-msgstr "Schulung, Übersetzung"
-
-msgid "Skaistums, veselība"
-msgstr "Schönheit, Gesundheit"
-
-msgid "Foto, video, dizains"
-msgstr "Foto, Video, Design"
-
-msgid "Juridiskā palīdzība"
-msgstr "Rechtsberatung"
-
-msgid "Pārējie pakalpojumi"
-msgstr "Sonstige Dienstleistungen"
-
-msgid "Monētas, naudaszīmes"
-msgstr "Münzen, Banknoten"
-
-msgid "Pastmarkas, filokartija"
-msgstr "Briefmarken, Postkarten"
-
-msgid "Antīkās lietas"
-msgstr "Antiquitäten"
-
-msgid "Māksla, gleznas"
-msgstr "Kunst, Gemälde"
-
-msgid "Grāmatas, žurnāli"
-msgstr "Bücher, Zeitschriften"
-
-msgid "Mūzika, lentas, plates"
-msgstr "Musik, Kassetten, Schallplatten"
-
-msgid "Filmas, DVD"
-msgstr "Filme, DVD"
-
-msgid "Sporta suvenīri"
-msgstr "Sportmemorabilien"
-
-msgid "Rotaļlietas, figūriņas"
-msgstr "Spielzeug, Figuren"
-
-msgid "Militārā vēsture"
-msgstr "Militärgeschichte"
-
-msgid "Medaļas, ordeņi, nozīmītes"
-msgstr "Medaillen, Orden, Abzeichen"
-
-msgid "— Izvēlieties kategoriju —"
-msgstr "— Kategorie wählen —"
-
-msgid "— Izvēlieties apakškategoriju —"
-msgstr "— Unterkategorie wählen —"
-
-msgid "— Izvēlieties modeli —"
-msgstr "— Modell wählen —"
-
-msgid "— Izvēlieties —"
-msgstr "— Auswählen —"
-
-msgid "— Nav norādīts —"
-msgstr "— Nicht angegeben —"
-
-msgid "Izgatavošanas gads"
-msgstr "Baujahr"
-
-msgid "Sāciet rakstīt adresi..."
-msgstr "Adresse eingeben..."
-
-msgid "Lūdzu izvēlieties adresi no saraksta."
-msgstr "Bitte wählen Sie eine Adresse aus der Liste."
-
-msgid "Spied vai velc bildes šeit"
-msgstr "Fotos hier klicken oder ziehen"
-
-msgid "JPG, PNG, WEBP · max 8 bildes"
-msgstr "JPG, PNG, WEBP · max. 8 Fotos"
-
-msgid "Spied vai velc video šeit"
-msgstr "Video hier klicken oder ziehen"
-
-msgid "MP4, WEBM, MOV · max 1 video"
-msgstr "MP4, WEBM, MOV · max. 1 Video"
-
-msgid "Transportlīdzekļa dati"
-msgstr "Fahrzeugdaten"
-
-msgid "Obligāti lauki"
-msgstr "Pflichtfelder"
-
-msgid "Motora tips"
-msgstr "Motortyp"
-
-msgid "Motora tilpums (L)"
-msgstr "Motorvolumen (L)"
-
-msgid "Nobraukums (km)"
-msgstr "Kilometerstand (km)"
-
-msgid "Reģ. numurs"
-msgstr "Kfz-Kennzeichen"
-
-msgid "VIN kods"
-msgstr "VIN-Code"
-
-msgid "Ir tehniskā apskate"
-msgstr "Hat TÜV"
-
-msgid "Tehniskā apskate līdz"
-msgstr "TÜV gültig bis"
-
-msgid "Riepas parametri"
-msgstr "Reifenparameter"
-
-msgid "* — obligāti lauki"
-msgstr "* — Pflichtfelder"
-
-msgid "Rādiuss (collas)"
-msgstr "Radius (Zoll)"
-
-msgid "Platums (mm)"
-msgstr "Breite (mm)"
-
-msgid "Profils (%)"
-msgstr "Profil (%)"
-
-msgid "Ātruma indekss"
-msgstr "Geschwindigkeitsindex"
-
-msgid "Nekustamā īpašuma dati"
-msgstr "Immobilienangaben"
-
-msgid "Rajons"
-msgstr "Bezirk"
-
-msgid "Aprīkojums"
-msgstr "Ausstattung"
-
-msgid "Atzīmējiet visu pieejamo aprīkojumu"
-msgstr "Alle verfügbare Ausstattung markieren"
-
-msgid "Publicēt kā izsoli"
-msgstr "Als Auktion einstellen"
-
-msgid "Sākuma cena (€)"
-msgstr "Startpreis (€)"
-
-msgid "Solījuma solis tiek aprēķināts automātiski pēc cenas."
-msgstr "Der Gebotsschritt wird automatisch anhand des Preises berechnet."
-
-msgid "Izsole beidzas"
-msgstr "Auktion endet"
-
-msgid "Minimums: 1 stunda. Maksimums: 1 mēnesis."
-msgstr "Minimum: 1 Stunde. Maximum: 1 Monat."
-
-msgid "Pērc tūlīt cena (€)"
-msgstr "Sofortkauf-Preis (€)"
-
-msgid "— nav obligāta"
-msgstr "— optional"
-
-msgid "Pircējs var nopirkt uzreiz bez solīšanas."
-msgstr "Käufer kann sofort ohne Bieten kaufen."
-
-msgid "Rezerves cena (€)"
-msgstr "Mindestpreis (€)"
-
-msgid "Slēptā min. cena. Pircēji neredz summu, tikai statusu."
-msgstr "Versteckter Mindestpreis. Käufer sehen nur den Status, nicht den Betrag."
-
-msgid "Kontaktinformācija"
-msgstr "Kontaktinformationen"
-
-msgid "Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski redzams."
-msgstr "Telefon ist im Inserat nach Klick sichtbar. E-Mail ist nicht öffentlich sichtbar."
-
-msgid "Publicēšanas ilgums"
-msgstr "Veröffentlichungsdauer"
-
-msgid "Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt jebkurā laikā."
-msgstr "Nach Ablauf der Frist wird die Anzeige automatisch gelöscht. Die Frist kann jederzeit verlängert werden."
-
-msgid "Atlaižu kods"
-msgstr "Rabattcode"
-
-msgid "Pārbaudīt"
-msgstr "Prüfen"
-
-msgid "TOP vieta"
-msgstr "TOP-Platz"
-
-msgid "Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP vietu."
-msgstr "Ihre Anzeige erscheint oben in der Liste, bis jemand anderes für einen TOP-Platz bezahlt."
-
-msgid "Lūdzu izvēlieties kategoriju pirms publicēšanas."
-msgstr "Bitte wählen Sie vor der Veröffentlichung eine Kategorie aus."
-
-msgid "E-pasts"
-msgstr "E-Mail"
-
-msgid "vismaz 1, max 8"
-msgstr "mindestens 1, max. 8"
-
-msgid "nav obligāts, max 1"
-msgstr "optional, max. 1"
-
-msgid "Publicēt reklāmas baneri"
-msgstr "Werbebanner veröffentlichen"
-
-msgid "Par baneri"
-msgstr "Über das Banner"
-
-msgid "Baneris rādīsies visās lapas apakšlapās augšējā labajā stūrī"
-msgstr "Das Banner erscheint auf allen Seiten oben rechts."
-
-msgid "Rotācijas laiks:"
-msgstr "Rotationszeit:"
-
-msgid "sek. katram banerim"
-msgstr "Sek. pro Banner"
-
-msgid "Maksa:"
-msgstr "Gebühr:"
-
-msgid "novilkts no maka"
-msgstr "vom Wallet abgezogen"
-
-msgid "Bezmaksas"
-msgstr "Kostenlos"
-
-msgid "Ieteicamais izmērs:"
-msgstr "Empfohlene Größe:"
-
-msgid "Banera attēls"
-msgstr "Bannerbild"
-
-msgid "JPG, PNG, WEBP. Ieteicamais izmērs: 300×150 px."
-msgstr "JPG, PNG, WEBP. Empfohlene Größe: 300×150 px."
-
-msgid "Priekšskatījums:"
-msgstr "Vorschau:"
-
-msgid "Teksts"
-msgstr "Text"
-
-msgid "nav obligāts — rakstāmmašīnas efekts"
-msgstr "optional — Schreibmaschineneffekt"
-
-msgid "Teksts animēti parādīsies zem attēla."
-msgstr "Der Text wird animiert unter dem Bild erscheinen."
-
-msgid "Saite pēc klikšķa"
-msgstr "Link beim Klick"
-
-msgid "Publicēt baneri"
-msgstr "Banner veröffentlichen"
-
-msgid "Vēlaties publicēt reklāmas baneri?"
-msgstr "Möchten Sie einen Werbebanner veröffentlichen?"
-
-msgid "Baneris parādīsies visās lapas apakšlapās augšējā labajā stūrī."
-msgstr "Das Banner erscheint auf allen Seiten oben rechts."
-
-msgid "1 nedēļa"
-msgstr "1 Woche"
-
-msgid "2 nedēļas"
-msgstr "2 Wochen"
-
-msgid "3 nedēļas"
-msgstr "3 Wochen"
-
-msgid "4 nedēļas"
-msgstr "4 Wochen"
-
-# ── Lietošanas noteikumi ──
-msgid "Spēkā no 2025. gada 1. janvāra"
-msgstr "Gültig ab 1. Januar 2025"
-
-msgid "1. Vispārīgie noteikumi"
-msgstr "1. Allgemeine Bestimmungen"
-
-msgid "Lietojot eizsole.lv, jūs piekrītat šiem noteikumiem. Platforma nodrošina tirgus vietu sludinājumu publicēšanai un izsoļu rīkošanai. Platforma nav darījuma puse starp pircēju un pārdevēju."
-msgstr "Durch die Nutzung von eizsole.lv stimmen Sie diesen Bedingungen zu. Die Plattform bietet einen Marktplatz für die Veröffentlichung von Anzeigen und die Durchführung von Auktionen. Die Plattform ist keine Vertragspartei zwischen Käufern und Verkäufern."
-
-msgid "2. Reģistrācija"
-msgstr "2. Registrierung"
-
-msgid "Reģistrācijai nepieciešams derīgs e-pasts un tālrunis."
-msgstr "Für die Registrierung sind eine gültige E-Mail-Adresse und Telefonnummer erforderlich."
-
-msgid "Lietotājam jābūt vismaz 18 gadus vecam."
-msgstr "Der Nutzer muss mindestens 18 Jahre alt sein."
-
-msgid "Viens lietotājs var reģistrēt vienu kontu."
-msgstr "Ein Nutzer kann ein Konto registrieren."
-
-msgid "Lietotājs ir atbildīgs par konta drošību."
-msgstr "Der Nutzer ist für die Sicherheit seines Kontos verantwortlich."
-
-msgid "3. Sludinājumi un izsoles"
-msgstr "3. Anzeigen und Auktionen"
-
-msgid "Aizliegts publicēt nelikumīgas, bīstamas vai maldinošas preces."
-msgstr "Das Veröffentlichen von illegalen, gefährlichen oder irreführenden Waren ist verboten."
-
-msgid "Attēliem jāattēlo faktiskā prece."
-msgstr "Bilder müssen den tatsächlichen Artikel zeigen."
-
-msgid "Izsoles solījums ir saistošs — uzvarētājam jāsamaksā."
-msgstr "Ein Auktionsgebot ist bindend — der Gewinner muss zahlen."
-
-msgid "Platforma patur tiesības dzēst jebkuru sludinājumu bez brīdinājuma."
-msgstr "Die Plattform behält sich das Recht vor, jede Anzeige ohne Vorankündigung zu löschen."
-
-msgid "4. Maksājumi"
-msgstr "4. Zahlungen"
-
-msgid "Maksa par sludinājumu publicēšanu un TOP funkcijām ir norādīta platformā. Visa nauda tiek iekasēta caur drošu maksājumu sistēmu. Atmaksa iespējama tikai tehnisku kļūdu gadījumā."
-msgstr "Die Gebühren für die Veröffentlichung von Anzeigen und TOP-Funktionen sind auf der Plattform angegeben. Alle Zahlungen werden über ein sicheres Zahlungssystem abgewickelt. Rückerstattungen sind nur bei technischen Fehlern möglich."
-
-msgid "5. Atbildības ierobežojumi"
-msgstr "5. Haftungsbeschränkung"
-
-msgid "Platforma neuzņemas atbildību par darījumiem starp lietotājiem, preces kvalitāti, piegādes laiku vai citiem darījuma aspektiem. Lietotāji paši ir atbildīgi par darījuma drošību."
-msgstr "Die Plattform übernimmt keine Haftung für Transaktionen zwischen Nutzern, die Produktqualität, Lieferzeiten oder andere Aspekte der Transaktion. Nutzer sind persönlich für die Transaktionssicherheit verantwortlich."
-
-msgid "6. Pārkāpumi"
-msgstr "6. Verstöße"
-
-msgid "Noteikumu pārkāpuma gadījumā konts var tikt apturēts vai dzēsts. Nopietnu pārkāpumu gadījumā informācija var tikt nodota tiesībsargājošajām iestādēm."
-msgstr "Bei einem Verstoß kann das Konto gesperrt oder gelöscht werden. Bei schwerwiegenden Verstößen können die Informationen an die zuständigen Behörden weitergeleitet werden."
-
-msgid "7. Kontakti"
-msgstr "7. Kontakt"
-
-msgid "Jautājumu gadījumā:"
-msgstr "Bei Fragen:"
-
-# ── Mobīlā lietotne ──
-msgid "Instalēt kā"
-msgstr "Installieren als"
-
-msgid "Mobīlā lietotne"
-msgstr "Mobile App"
-
-msgid "eizsole.lv var instalēt kā lietotni — bez App Store, bez maksas."
-msgstr "eizsole.lv kann als App installiert werden — ohne App Store, kostenlos."
-
-msgid "Chrome pārlūks"
-msgstr "Chrome-Browser"
-
-msgid "Atver <strong>eizsole.lv</strong> Chrome pārlūkā"
-msgstr "Öffne <strong>eizsole.lv</strong> in Chrome"
-
-msgid "Piespiež ⋮ (trīs punkti) ekrāna augšā"
-msgstr "Tippe auf ⋮ (drei Punkte) oben auf dem Bildschirm"
-
-msgid "Izvēlies <strong>\"Pievienot sākuma ekrānam\"</strong>"
-msgstr "Wähle <strong>\"Zum Startbildschirm hinzufügen\"</strong>"
-
-msgid "Piespiez <strong>\"Instalēt\"</strong> — gatavs!"
-msgstr "Tippe auf <strong>\"Installieren\"</strong> — fertig!"
-
-msgid "Safari pārlūks"
-msgstr "Safari-Browser"
-
-msgid "Atver <strong>eizsole.lv</strong> Safari pārlūkā"
-msgstr "Öffne <strong>eizsole.lv</strong> in Safari"
-
-msgid "Piespiež (dalīšanās poga ekrāna apakšā)"
-msgstr "Tippe auf die Teilen-Schaltfläche unten auf dem Bildschirm"
-
-msgid "Piespiez <strong>\"Pievienot\"</strong> — gatavs!"
-msgstr "Tippe auf <strong>\"Hinzufügen\"</strong> — fertig!"
-
-msgid "Bezmaksas · Nav App Store nepieciešams · Darbojas offline"
-msgstr "Kostenlos · Kein App Store nötig · Funktioniert offline"
-
-msgid "Esmu izlasījis un piekrītu"
-msgstr "Ich habe die"
-
-msgid "lietošanas noteikumiem"
-msgstr "Nutzungsbedingungen gelesen und stimme zu"
-
-msgid "Jums jāpiekrīt lietošanas noteikumiem."
-msgstr "Sie müssen den Nutzungsbedingungen zustimmen."
-
-msgid "Cits"
-msgstr "Sonstiges"
-
-msgid "Izklaide"
-msgstr "Unterhaltung"
-
-msgid "Nopietnas attiecības"
-msgstr "Ernsthafte Beziehung"
-
-msgid "Ceļošana"
-msgstr "Reisen"
-
-msgid "Jūsu ziņojums..."
-msgstr "Ihre Nachricht..."
-
-msgid "Jūsu ziņojums pārdevējam..."
-msgstr "Ihre Nachricht an den Verkäufer..."
-
-msgid "Nosūtīt"
-msgstr "Senden"
-
-msgid "Sports un hobijs"
-msgstr "Sport und Hobby"
-
-msgid "Tikšanās pēc vienošanās"
-msgstr "Treffen nach Vereinbarung"
-
-msgid "Cena pēc vienošanās"
-msgstr "Preis nach Vereinbarung"
-
-msgid "Iepazīšanās"
-msgstr "Bekanntschaften"
-
-msgid "Iepazīsies vīrietis ar sievieti"
-msgstr "Mann sucht Frau"
-
-msgid "Iepazīsies sieviete ar vīrieti"
-msgstr "Frau sucht Mann"
-
-msgid "Iepazīsies sieviete ar sievieti"
-msgstr "Frau sucht Frau"
-
-msgid "Iepazīsies vīrietis ar vīrieti"
-msgstr "Mann sucht Mann"
-
+#: listings/models.py:33
 msgid "Atdod"
 msgstr "Verschenkt"
 
+#: listings/models.py:34
 msgid "Piedāvā"
 msgstr "Bietet an"
 
+#: templates/accounts/login.html:3 templates/accounts/login.html:15
+#: templates/accounts/register.html:225 templates/admin/base_site.html:229
+#: templates/base.html:494 templates/base.html:701
+msgid "Pieteikties"
+msgstr "Anmelden"
+
+#: templates/accounts/login.html:31
+msgid "Nepareizs lietotājvārds vai parole."
+msgstr "Falscher Benutzername oder Passwort."
+
+#: templates/accounts/login.html:44
+msgid "Lietotājvārds"
+msgstr "Benutzername"
+
+#: templates/accounts/login.html:47
+msgid "Lietotājvārds vai e-pasts"
+msgstr "Benutzername oder E-Mail"
+
+#: templates/accounts/login.html:52 templates/accounts/login.html:57
+msgid "Parole"
+msgstr "Passwort"
+
+#: templates/accounts/login.html:53
+msgid "Aizmirsi paroli?"
+msgstr "Passwort vergessen?"
+
+#: templates/accounts/login.html:58 templates/accounts/register.html:193
+msgid "Rādīt/slēpt paroli"
+msgstr ""
+
+#: templates/accounts/login.html:64
+msgid "Pieteikties sistēmā"
+msgstr "Anmelden"
+
+#: templates/accounts/login.html:86
+msgid "Nav konta?"
+msgstr "Kein Konto?"
+
+#: templates/accounts/login.html:86 templates/accounts/register.html:3
+#: templates/accounts/register.html:20 templates/accounts/register.html:219
+#: templates/admin/base_site.html:232 templates/base.html:497
+#: templates/base.html:702
+msgid "Reģistrēties"
+msgstr "Registrieren"
+
+#: templates/accounts/profile.html:3 templates/admin/base_site.html:175
+#: templates/base.html:439
+msgid "Mans profils"
+msgstr "Mein Profil"
+
+#: templates/accounts/register.html:41
+msgid "Konta veids"
+msgstr "Kontotyp"
+
+#: templates/accounts/register.html:46
+msgid "Privātpersona"
+msgstr "Privatperson"
+
+#: templates/accounts/register.html:52
+msgid "Uzņēmums"
+msgstr "Unternehmen"
+
+#: templates/accounts/register.html:62
+msgid "Vārds"
+msgstr "Vorname"
+
+#: templates/accounts/register.html:66
+msgid "Uzvārds"
+msgstr "Nachname"
+
+#: templates/accounts/register.html:107 templates/listings/category.html:438
+#: templates/listings/create.html:410
+msgid "Valsts"
+msgstr "Land"
+
+#: templates/accounts/register.html:144 templates/listings/create.html:418
+msgid "Pilsēta"
+msgstr "Stadt"
+
+#: templates/accounts/register.html:152 templates/listings/create.html:613
+msgid "Tālrunis"
+msgstr "Telefon"
+
+#: templates/accounts/register.html:154
+#| msgid "Valsts"
+msgid "Valsts kods"
+msgstr "Land"
+
+#: templates/accounts/register.html:180
+msgid "E-pasta adrese"
+msgstr "E-Mail-Adresse"
+
+#: templates/accounts/register.html:214
+msgid "Esmu izlasījis un piekrītu"
+msgstr "Ich habe die"
+
+#: templates/accounts/register.html:214
+msgid "lietošanas noteikumiem"
+msgstr "Nutzungsbedingungen gelesen und stimme zu"
+
+#: templates/accounts/register.html:225
+msgid "Jau ir konts?"
+msgstr "Bereits ein Konto?"
+
+#: templates/admin/base_site.html:139 templates/base.html:403
+msgid "Meklēt sludinājumus..."
+msgstr "Anzeigen suchen..."
+
+#: templates/admin/base_site.html:145 templates/base.html:409
+msgid "Sludinājumi"
+msgstr "Anzeigen"
+
+#: templates/admin/base_site.html:150 templates/auctions/detail.html:170
+#: templates/base.html:414 templates/base.html:694
+#: templates/listings/category.html:456
+msgid "Izsoles"
+msgstr "Auktionen"
+
+#: templates/admin/base_site.html:157 templates/base.html:421
+#: templates/base.html:695 templates/listings/create.html:697
+msgid "Publicēt"
+msgstr "Anzeige aufgeben"
+
+#: templates/admin/base_site.html:161 templates/base.html:425
+msgid "Paziņojumi"
+msgstr "Benachrichtigungen"
+
+#: templates/admin/base_site.html:180 templates/base.html:444
+msgid "Moderācija"
+msgstr "Moderation"
+
+#: templates/admin/base_site.html:183 templates/base.html:447
+msgid "Admin panelis"
+msgstr "Admin-Panel"
+
+#: templates/admin/base_site.html:191 templates/base.html:455
+msgid "Iziet"
+msgstr "Abmelden"
+
+#: templates/admin/base_site.html:199 templates/base.html:464
+msgid "Valoda"
+msgstr "Sprache"
+
+#: templates/auctions/detail.html:169 templates/listings/category.html:94
+#: templates/listings/detail.html:189
+msgid "Sākums"
+msgstr "Startseite"
+
+#: templates/auctions/detail.html:213
+msgid "Solījumu vēsture"
+msgstr "Gebotshistorie"
+
+#: templates/auctions/detail.html:235
+msgid "Vēl nav solījumu — esi pirmais!"
+msgstr "Noch keine Gebote — seien Sie der Erste!"
+
+#: templates/auctions/detail.html:248 templates/listings/create.html:487
+msgid "Holandiešu izsole"
+msgstr "Holländische Auktion"
+
+#: templates/auctions/detail.html:251 templates/auctions/detail.html:267
+#: templates/auctions/dutch_buy_confirm.html:16
+#: templates/auctions/list.html:151
+msgid "Pašreizējā cena"
+msgstr "Aktueller Preis"
+
+#: templates/auctions/detail.html:256 templates/auctions/detail.html:270
+msgid "Sākumcena"
+msgstr "Startpreis"
+
+#: templates/auctions/detail.html:257
+msgid "Kritums"
+msgstr "Senkung"
+
+#: templates/auctions/detail.html:257
+#, python-format
+msgid "ik %(n)s min"
+msgstr "alle %(n)s Min"
+
+#: templates/auctions/detail.html:262
+msgid "Cena samazināsies pēc"
+msgstr "Preis sinkt in"
+
+#: templates/auctions/detail.html:270
+msgid "solījumi"
+msgstr "Gebote"
+
+#: templates/auctions/detail.html:277
+msgid "Rezerves cena sasniegta"
+msgstr "Mindestpreis erreicht"
+
+#: templates/auctions/detail.html:281
+msgid "Rezerves cena nav sasniegta"
+msgstr "Mindestpreis nicht erreicht"
+
+#: templates/auctions/detail.html:287
+msgid "Jūsu rezerves cena"
+msgstr "Ihr Mindestpreis"
+
+#: templates/auctions/detail.html:288
+msgid "redzat tikai jūs"
+msgstr "nur Sie sehen dies"
+
+#: templates/auctions/detail.html:300
+msgid "Aktīva"
+msgstr "Aktiv"
+
+#: templates/auctions/detail.html:302
+msgid "beidzas"
+msgstr "endet"
+
+#: templates/auctions/detail.html:309
+msgid "Anti-snipe pagarināts"
+msgstr "Anti-Snipe verlängert"
+
+#: templates/auctions/detail.html:314
+msgid "Anti-snipe aktīvs — pēdējo 60 sek. solījums pagarina izsoli par 3 min."
+msgstr ""
+"Anti-Snipe aktiv — ein Gebot in den letzten 60 Sek. verlängert die Auktion "
+"um 3 Min."
+
+#: templates/auctions/detail.html:318
+msgid "Izsole beigusies"
+msgstr "Auktion beendet"
+
+#: templates/auctions/detail.html:322 templates/auctions/detail.html:498
+msgid "Uzvarētājs"
+msgstr "Gewinner"
+
+#: templates/auctions/detail.html:358 templates/auctions/detail.html:363
+msgid "Pērc tūlīt"
+msgstr "Sofort kaufen"
+
+#: templates/auctions/detail.html:376
+#: templates/auctions/dutch_buy_confirm.html:35
+msgid "Pieņemt cenu"
+msgstr "Preis akzeptieren"
+
+#: templates/auctions/detail.html:379
+msgid "Pirmais pircējs iegūst preci par pašreizējo cenu."
+msgstr "Erster Käufer erhält den Artikel zum aktuellen Preis."
+
+#: templates/auctions/detail.html:387
+msgid "Manuāli"
+msgstr "Manuell"
+
+#: templates/auctions/detail.html:392
+msgid "Automātiski"
+msgstr "Automatisch"
+
+#: templates/auctions/detail.html:410
+msgid "Min. solījums"
+msgstr "Mindestgebot"
+
+#: templates/auctions/detail.html:413
+msgid "Soļu tabula"
+msgstr "Gebotsschritte"
+
+#: templates/auctions/detail.html:417
+msgid "Solīt!"
+msgstr "Bieten!"
+
+#: templates/auctions/detail.html:424 templates/listings/category.html:240
+#: templates/listings/category.html:333 templates/listings/category.html:421
+#: templates/listings/create.html:600
+msgid "Cena"
+msgstr "Preis"
+
+#: templates/auctions/detail.html:424
+msgid "Solis"
+msgstr "Schritt"
+
+#: templates/auctions/detail.html:448
+msgid "Automātiskā solīšana aktīva"
+msgstr "Autogebot aktiv"
+
+#: templates/auctions/detail.html:451
+msgid "Jūsu maksimums"
+msgstr "Ihr Wallet-Guthaben"
+
+#: templates/auctions/detail.html:457
+msgid "Atcelt"
+msgstr "Abbrechen"
+
+#: templates/auctions/detail.html:467
+msgid "Mans maksimums"
+msgstr "Mein Maximum"
+
+#: templates/auctions/detail.html:476
+msgid ""
+"Sistēma automātiski solīs jūsu vietā ar minimālo soli. Jūsu maksimums ir "
+"slēpts no citiem."
+msgstr ""
+"Das System bietet automatisch mit dem Mindestbetrag für Sie. Ihr Maximum ist "
+"für andere verborgen."
+
+#: templates/auctions/detail.html:479
+msgid "Atjaunināt automātisko solīšanu"
+msgstr "Autogebot aktualisieren"
+
+#: templates/auctions/detail.html:479
+msgid "Uzstādīt automātisko solīšanu"
+msgstr "Autogebot festlegen"
+
+#: templates/auctions/detail.html:487
+msgid "Pieteikties, lai solītu"
+msgstr "Anmelden zum Bieten"
+
+#: templates/auctions/detail.html:491
+msgid "Nevarat solīt savā izsolē."
+msgstr "Sie können nicht in Ihrer eigenen Auktion bieten."
+
+#: templates/auctions/detail.html:496
+msgid "Izsole ir noslēgusies."
+msgstr "Die Auktion ist beendet."
+
+#: templates/auctions/detail.html:606
+msgid "Pārdevējs"
+msgstr "Verkäufer"
+
+#: templates/auctions/detail.html:617 templates/auctions/detail.html:631
+#: templates/listings/detail.html:728 templates/listings/detail.html:742
+msgid "Sazināties ar pārdevēju"
+msgstr "Verkäufer kontaktieren"
+
+#: templates/auctions/dutch_buy_confirm.html:3
+#, python-format
+msgid "Holandiešu izsole — %(title)s"
+msgstr "Holländische Auktion — %(title)s"
+
+#: templates/auctions/dutch_buy_confirm.html:9
+msgid "Holandiešu izsole — apstiprinājums"
+msgstr "Holländische Auktion — Bestätigung"
+
+#: templates/auctions/dutch_buy_confirm.html:13
+#, python-format
+msgid "Cena samazinās ik pa %(n)s min. Pirmais pircējs uzvar."
+msgstr "Preis sinkt alle %(n)s Min. Erster Käufer gewinnt."
+
+#: templates/auctions/dutch_buy_confirm.html:20
+msgid "Nākamā cenas samazināšana pēc"
+msgstr "Nächste Preissenkung in"
+
+#: templates/auctions/dutch_buy_confirm.html:28
+#| msgid "Jūsu maksimums"
+msgid "Jūsu maka atlikums"
+msgstr "Ihr Wallet-Guthaben"
+
+#: templates/auctions/dutch_buy_confirm.html:40
+msgid "Papildināt maku"
+msgstr "Guthaben aufladen"
+
+#: templates/auctions/dutch_buy_confirm.html:44
+#| msgid "Atpakaļ"
+msgid "Atpakaļ uz izsoli"
+msgstr "Zurück"
+
+#: templates/auctions/list.html:3 templates/auctions/list.html:68
+msgid "Aktīvās izsoles"
+msgstr "Aktive Auktionen"
+
+#: templates/auctions/list.html:90 templates/listings/category.html:198
+#: templates/listings/category.html:208 templates/listings/category.html:279
+#: templates/listings/category.html:289 templates/listings/category.html:350
+msgid "Visas"
+msgstr "Alle"
+
+#: templates/auctions/list.html:161
+msgid "Solīt"
+msgstr "Bieten"
+
+#: templates/auctions/list.html:177
+msgid "Pašlaik nav aktīvu izsolu"
+msgstr "Derzeit keine aktiven Auktionen"
+
+#: templates/auctions/list.html:178
+msgid "Esi pirmais, kas publicē izsoli!"
+msgstr "Seien Sie der Erste mit einer Auktion!"
+
+#: templates/auctions/list.html:179
+msgid "Publicēt izsoli"
+msgstr "Auktion erstellen"
+
+#: templates/base.html:387
+msgid "Pāriet uz saturu"
+msgstr ""
+
+#: templates/base.html:401 templates/listings/category.html:222
+#: templates/listings/category.html:313 templates/listings/category.html:402
+#: templates/listings/category.html:462
+msgid "Meklēt"
+msgstr "Suchen"
+
+#: templates/base.html:402
+#, fuzzy
+#| msgid "Meklēt sludinājumus..."
+msgid "Meklēt sludinājumus"
+msgstr "Anzeigen suchen..."
+
+#: templates/base.html:688
+msgid "Bezmaksas izsoļu un sludinājumu platforma. Pērc, pārdod un solī droši."
+msgstr ""
+"Kostenlose Auktions- und Anzeigenplattform. Kaufen, verkaufen und bieten Sie "
+"sicher."
+
+#: templates/base.html:691
+msgid "Platforma"
+msgstr "Plattform"
+
+#: templates/base.html:693
+msgid "Sākumlapa"
+msgstr "Startseite"
+
+#: templates/base.html:699
+msgid "Konts"
+msgstr "Konto"
+
+#: templates/base.html:706
+msgid "Kontakti"
+msgstr "Kontakte"
+
+#: templates/base.html:709
+msgid "Reģ. Nr."
+msgstr "Reg.-Nr."
+
+# ── Mobīlā lietotne ──
+#: templates/base.html:723
+msgid "Instalēt kā"
+msgstr "Installieren als"
+
+#: templates/base.html:724 templates/base.html:749
+msgid "Mobīlā lietotne"
+msgstr "Mobile App"
+
+#: templates/base.html:733
+msgid "Privātuma politika"
+msgstr "Datenschutzrichtlinie"
+
+#: templates/base.html:734 templates/listings/terms.html:3
+#: templates/listings/terms.html:8
+msgid "Lietošanas noteikumi"
+msgstr "Nutzungsbedingungen"
+
+#: templates/base.html:735
+#, fuzzy
+#| msgid "Sludinājumi"
+msgid "Jautājumi"
+msgstr "Anzeigen"
+
+#: templates/base.html:736
+msgid "Blogs"
+msgstr ""
+
+#: templates/base.html:755
+msgid "eizsole.lv var instalēt kā lietotni — bez App Store, bez maksas."
+msgstr ""
+"eizsole.lv kann als App installiert werden — ohne App Store, kostenlos."
+
+#: templates/base.html:766
+msgid "Chrome pārlūks"
+msgstr "Chrome-Browser"
+
+#: templates/base.html:770
+msgid "Atver <strong>eizsole.lv</strong> Chrome pārlūkā"
+msgstr "Öffne <strong>eizsole.lv</strong> in Chrome"
+
+#: templates/base.html:771
+msgid "Piespiež ⋮ (trīs punkti) ekrāna augšā"
+msgstr "Tippe auf ⋮ (drei Punkte) oben auf dem Bildschirm"
+
+#: templates/base.html:772 templates/base.html:791
+msgid "Izvēlies <strong>\"Pievienot sākuma ekrānam\"</strong>"
+msgstr "Wähle <strong>\"Zum Startbildschirm hinzufügen\"</strong>"
+
+#: templates/base.html:773
+msgid "Piespiez <strong>\"Instalēt\"</strong> — gatavs!"
+msgstr "Tippe auf <strong>\"Installieren\"</strong> — fertig!"
+
+#: templates/base.html:785
+msgid "Safari pārlūks"
+msgstr "Safari-Browser"
+
+#: templates/base.html:789
+msgid "Atver <strong>eizsole.lv</strong> Safari pārlūkā"
+msgstr "Öffne <strong>eizsole.lv</strong> in Safari"
+
+#: templates/base.html:790
+msgid "Piespiež (dalīšanās poga ekrāna apakšā)"
+msgstr "Tippe auf die Teilen-Schaltfläche unten auf dem Bildschirm"
+
+#: templates/base.html:792
+msgid "Piespiez <strong>\"Pievienot\"</strong> — gatavs!"
+msgstr "Tippe auf <strong>\"Hinzufügen\"</strong> — fertig!"
+
+#: templates/base.html:799
+msgid "Bezmaksas · Nav App Store nepieciešams · Darbojas offline"
+msgstr "Kostenlos · Kein App Store nötig · Funktioniert offline"
+
+#: templates/base.html:809
+msgid ""
+"Mēs izmantojam sīkdatnes, lai nodrošinātu labāku lietotāja pieredzi. "
+"Turpinot lietot vietni, jūs piekrītat"
+msgstr ""
+"Wir verwenden Cookies für eine bessere Nutzererfahrung. Durch die weitere "
+"Nutzung stimmen Sie der"
+
+#: templates/base.html:809
+msgid "privātuma politikai"
+msgstr "Datenschutzrichtlinie"
+
+#: templates/base.html:810
+msgid "Piekrītu"
+msgstr "Akzeptieren"
+
+#: templates/listings/banner_create.html:3
+#: templates/listings/banner_create.html:10
+msgid "Publicēt reklāmas baneri"
+msgstr "Werbebanner veröffentlichen"
+
+#: templates/listings/banner_create.html:15
+msgid "Par baneri"
+msgstr "Über das Banner"
+
+#: templates/listings/banner_create.html:17
+msgid "Baneris rādīsies visās lapas apakšlapās augšējā labajā stūrī"
+msgstr "Das Banner erscheint auf allen Seiten oben rechts."
+
+#: templates/listings/banner_create.html:18
+msgid "Rotācijas laiks:"
+msgstr "Rotationszeit:"
+
+#: templates/listings/banner_create.html:18
+msgid "sek. katram banerim"
+msgstr "Sek. pro Banner"
+
+#: templates/listings/banner_create.html:20
+#: templates/listings/banner_create.html:22
+msgid "Maksa:"
+msgstr "Gebühr:"
+
+#: templates/listings/banner_create.html:20
+msgid "novilkts no maka"
+msgstr "vom Wallet abgezogen"
+
+#: templates/listings/banner_create.html:22 templates/listings/home.html:212
+msgid "Bezmaksas"
+msgstr "Kostenlos"
+
+#: templates/listings/banner_create.html:24
+msgid "Ieteicamais izmērs:"
+msgstr "Empfohlene Größe:"
+
+#: templates/listings/banner_create.html:32
+msgid "Banera attēls"
+msgstr "Bannerbild"
+
+#: templates/listings/banner_create.html:35
+msgid "JPG, PNG, WEBP. Ieteicamais izmērs: 300×150 px."
+msgstr "JPG, PNG, WEBP. Empfohlene Größe: 300×150 px."
+
+#: templates/listings/banner_create.html:39
+msgid "Priekšskatījums:"
+msgstr "Vorschau:"
+
+#: templates/listings/banner_create.html:49
+msgid "Teksts"
+msgstr "Text"
+
+#: templates/listings/banner_create.html:49
+msgid "nav obligāts — rakstāmmašīnas efekts"
+msgstr "optional — Schreibmaschineneffekt"
+
+#: templates/listings/banner_create.html:53
+msgid "Teksts animēti parādīsies zem attēla."
+msgstr "Der Text wird animiert unter dem Bild erscheinen."
+
+#: templates/listings/banner_create.html:57
+msgid "Saite pēc klikšķa"
+msgstr "Link beim Klick"
+
+#: templates/listings/banner_create.html:57 templates/listings/create.html:520
+#: templates/listings/create.html:533 templates/listings/create.html:653
+msgid "— nav obligāta"
+msgstr "— optional"
+
+#: templates/listings/banner_create.html:63 templates/listings/create.html:690
+msgid "Publicēt baneri"
+msgstr "Banner veröffentlichen"
+
+#: templates/listings/category.html:190 templates/listings/category.html:234
+#: templates/listings/category.html:327 templates/listings/category.html:416
+msgid "Meklēšanas filtri"
+msgstr "Suchfilter"
+
+#: templates/listings/category.html:196 templates/listings/category.html:452
+msgid "Veids"
+msgstr "Typ"
+
+#: templates/listings/category.html:206 templates/listings/create.html:152
+msgid "Vecuma amplitūda"
+msgstr ""
+
+#: templates/listings/category.html:215 templates/listings/create.html:189
+#, fuzzy
+#| msgid "Dzīvnieki"
+msgid "Dzīvesvieta"
+msgstr "Tiere"
+
+#: templates/listings/category.html:224 templates/listings/category.html:316
+#: templates/listings/category.html:405 templates/listings/category.html:465
+msgid "Notīrīt"
+msgstr "Zurücksetzen"
+
+#: templates/listings/category.html:249
+msgid "Gads"
+msgstr "Jahr"
+
+#: templates/listings/category.html:258
+msgid "Tilpums"
+msgstr "Volumen"
+
+#: templates/listings/category.html:267
+msgid "Dzinēja tips"
+msgstr "Motortyp"
+
+#: templates/listings/category.html:269 templates/listings/category.html:304
+#: templates/listings/category.html:393 templates/listings/category.html:431
+#: templates/listings/category.html:445 templates/listings/category.html:454
+#: templates/listings/home.html:137
+msgid "Visi"
+msgstr "Alle"
+
+#: templates/listings/category.html:277 templates/listings/create.html:291
+msgid "Ātrumkārba"
+msgstr "Getriebe"
+
+#: templates/listings/category.html:287 templates/listings/create.html:300
+msgid "Virsbūves tips"
+msgstr "Karosserietyp"
+
+#: templates/listings/category.html:297
+msgid "Nobraukums"
+msgstr "Kilometerstand"
+
+#: templates/listings/category.html:302 templates/listings/category.html:443
+#: templates/listings/create.html:401 templates/listings/create.html:589
+msgid "Darījuma veids"
+msgstr "Angebotsart"
+
+#: templates/listings/category.html:342 templates/listings/create.html:374
+msgid "Ražotājs"
+msgstr "Hersteller"
+
+#: templates/listings/category.html:348 templates/listings/create.html:365
+msgid "Sezona"
+msgstr "Saison"
+
+#: templates/listings/category.html:358
+msgid "Platums"
+msgstr "Breite"
+
+#: templates/listings/category.html:364
+msgid "Profils"
+msgstr "Profil"
+
+#: templates/listings/category.html:370
+msgid "Rādiuss"
+msgstr "Radius"
+
+#: templates/listings/category.html:376 templates/listings/create.html:379
+msgid "Slodzes indekss"
+msgstr "Tragfähigkeitsindex"
+
+#: templates/listings/category.html:385
+msgid "Ātr. ind."
+msgstr "Geschw.-idx."
+
+#: templates/listings/category.html:391 templates/listings/category.html:429
+#: templates/listings/create.html:168
+msgid "Stāvoklis"
+msgstr "Zustand"
+
+#: templates/listings/category.html:455
+msgid "Sludinājums"
+msgstr "Anzeige"
+
+#: templates/listings/category.html:568
+msgid "Šajā kategorijā vēl nav sludinājumu."
+msgstr "Noch keine Anzeigen in dieser Kategorie."
+
+#: templates/listings/category.html:615
+msgid "Lapā"
+msgstr "Pro Seite"
+
+#: templates/listings/category.html:623
+msgid "kopā"
+msgstr "gesamt"
+
+#: templates/listings/create.html:3 templates/listings/create.html:89
+msgid "Publicēt sludinājumu"
+msgstr "Anzeige aufgeben"
+
+#: templates/listings/create.html:95
+msgid "Virsraksts"
+msgstr "Titel"
+
+#: templates/listings/create.html:101
+msgid "Kategorija"
+msgstr "Kategorie"
+
+#: templates/listings/create.html:103
+msgid "— Izvēlieties kategoriju —"
+msgstr "— Kategorie wählen —"
+
+#: templates/listings/create.html:109 templates/listings/create.html:112
+msgid "— Izvēlieties apakškategoriju —"
+msgstr "— Unterkategorie wählen —"
+
+#: templates/listings/create.html:115
+msgid "— Izvēlieties modeli —"
+msgstr "— Modell wählen —"
+
+#: templates/listings/create.html:123
+msgid "Apraksts"
+msgstr "Beschreibung"
+
+#: templates/listings/create.html:131
+#, fuzzy
+#| msgid "Iepazīšanās"
+msgid "Iepazīšanās parametri"
+msgstr "Bekanntschaften"
+
+#: templates/listings/create.html:154 templates/listings/create.html:178
+msgid "— Nav norādīts —"
+msgstr "— Nicht angegeben —"
+
+#: templates/listings/create.html:155 templates/listings/create.html:156
+#: templates/listings/create.html:157
+msgid "gadi"
+msgstr ""
+
+#: templates/listings/create.html:158
+msgid "No 60 gadiem"
+msgstr ""
+
+#: templates/listings/create.html:170
+msgid "Lietots"
+msgstr "Gebraucht"
+
+#: templates/listings/create.html:171
+msgid "Jauns"
+msgstr "Neu"
+
+#: templates/listings/create.html:172
+msgid "Bojāts"
+msgstr "Beschädigt"
+
+#: templates/listings/create.html:176
+msgid "Izgatavošanas gads"
+msgstr "Baujahr"
+
+#: templates/listings/create.html:193
+msgid "Sāciet rakstīt adresi..."
+msgstr "Adresse eingeben..."
+
+#: templates/listings/create.html:203
+msgid "Lūdzu izvēlieties adresi no saraksta."
+msgstr "Bitte wählen Sie eine Adresse aus der Liste."
+
+#: templates/listings/create.html:209
+msgid "Bildes"
+msgstr "Fotos"
+
+#: templates/listings/create.html:209
+msgid "vismaz 1, max 8"
+msgstr "mindestens 1, max. 8"
+
+#: templates/listings/create.html:215
+msgid "Fotografēt ar kameru"
+msgstr ""
+
+#: templates/listings/create.html:225
+msgid "nav obligāts, max 1"
+msgstr "optional, max. 1"
+
+#: templates/listings/create.html:228
+msgid "Spied vai velc video šeit"
+msgstr "Video hier klicken oder ziehen"
+
+#: templates/listings/create.html:229
+msgid "MP4, WEBM, MOV · max 1 video"
+msgstr "MP4, WEBM, MOV · max. 1 Video"
+
+#: templates/listings/create.html:271
+msgid "Transportlīdzekļa dati"
+msgstr "Fahrzeugdaten"
+
+#: templates/listings/create.html:272
+msgid "Obligāti lauki"
+msgstr "Pflichtfelder"
+
+#: templates/listings/create.html:277
+msgid "Motora tips"
+msgstr "Motortyp"
+
+#: templates/listings/create.html:279 templates/listings/create.html:293
+#: templates/listings/create.html:302 templates/listings/create.html:367
+#: templates/listings/create.html:403
+msgid "— Izvēlieties —"
+msgstr "— Auswählen —"
+
+#: templates/listings/create.html:286
+msgid "Motora tilpums (L)"
+msgstr "Motorvolumen (L)"
+
+#: templates/listings/create.html:309
+msgid "Nobraukums (km)"
+msgstr "Kilometerstand (km)"
+
+#: templates/listings/create.html:314
+msgid "Reģ. numurs"
+msgstr "Kfz-Kennzeichen"
+
+#: templates/listings/create.html:319
+msgid "VIN kods"
+msgstr "VIN-Code"
+
+#: templates/listings/create.html:328
+msgid "Ir tehniskā apskate"
+msgstr "Hat TÜV"
+
+#: templates/listings/create.html:332
+msgid "Tehniskā apskate līdz"
+msgstr "TÜV gültig bis"
+
+#: templates/listings/create.html:344
+msgid "Riepas parametri"
+msgstr "Reifenparameter"
+
+#: templates/listings/create.html:345 templates/listings/create.html:396
+msgid "* — obligāti lauki"
+msgstr "* — Pflichtfelder"
+
+#: templates/listings/create.html:350
+msgid "Rādiuss (collas)"
+msgstr "Radius (Zoll)"
+
+#: templates/listings/create.html:355
+msgid "Platums (mm)"
+msgstr "Breite (mm)"
+
+#: templates/listings/create.html:360
+#, fuzzy, python-format
+#| msgid "Profils (%)"
+msgid "Profils (%%)"
+msgstr "Profil (%)"
+
+#: templates/listings/create.html:384
+msgid "Ātruma indekss"
+msgstr "Geschwindigkeitsindex"
+
+#: templates/listings/create.html:395
+msgid "Nekustamā īpašuma dati"
+msgstr "Immobilienangaben"
+
+#: templates/listings/create.html:414
+msgid "Rajons"
+msgstr "Bezirk"
+
+#: templates/listings/create.html:428
+msgid "Aprīkojums"
+msgstr "Ausstattung"
+
+#: templates/listings/create.html:429
+msgid "Atzīmējiet visu pieejamo aprīkojumu"
+msgstr "Alle verfügbare Ausstattung markieren"
+
+#: templates/listings/create.html:459
+msgid "Publicēt kā izsoli"
+msgstr "Als Auktion einstellen"
+
+#: templates/listings/create.html:465
+msgid "Izvēlieties izsoles veidu:"
+msgstr "Auktionsart wählen:"
+
+#: templates/listings/create.html:472
+#, fuzzy
+msgid "Angļu izsole"
+msgstr "Englische Auktion"
+
+#: templates/listings/create.html:475
+msgid "Cena sākas zema un aug"
+msgstr "Preis beginnt niedrig und steigt"
+
+#: templates/listings/create.html:476
+msgid "Solītāji konkurē savā starpā"
+msgstr "Bieter konkurrieren untereinander"
+
+#: templates/listings/create.html:477
+msgid "Uzvar augstākais solījums"
+msgstr "Höchstes Gebot gewinnt"
+
+#: templates/listings/create.html:478
+msgid "Klasiskais izsoles veids"
+msgstr "Klassisches Auktionsformat"
+
+#: templates/listings/create.html:490
+msgid "Cena sākas augsta un krītas"
+msgstr "Preis beginnt hoch und sinkt"
+
+#: templates/listings/create.html:491
+msgid "Pirmais <strong>\"Pieņemt cenu\"</strong> uzvar"
+msgstr "Tippe auf <strong>\"Hinzufügen\"</strong> — fertig!"
+
+#: templates/listings/create.html:492
+msgid "Nav solīšanas — pirkt vai gaidīt"
+msgstr "Kein Bieten — kaufen oder warten"
+
+#: templates/listings/create.html:493
+msgid "Ideāli ātrai pārdošanai"
+msgstr "Ideal für schnellen Verkauf"
+
+#: templates/listings/create.html:505 templates/listings/create.html:549
+msgid "Sākuma cena (€)"
+msgstr "Startpreis (€)"
+
+#: templates/listings/create.html:507
+msgid "Solījuma solis tiek aprēķināts automātiski pēc cenas."
+msgstr "Der Gebotsschritt wird automatisch anhand des Preises berechnet."
+
+#: templates/listings/create.html:510 templates/listings/create.html:576
+msgid "Izsole beidzas"
+msgstr "Auktion endet"
+
+#: templates/listings/create.html:512 templates/listings/create.html:578
+msgid "Minimums: 1 stunda. Maksimums: 1 mēnesis."
+msgstr "Minimum: 1 Stunde. Maximum: 1 Monat."
+
+#: templates/listings/create.html:519
+msgid "Pērc tūlīt cena (€)"
+msgstr "Sofortkauf-Preis (€)"
+
+#: templates/listings/create.html:525
+msgid "Pircējs var nopirkt uzreiz bez solīšanas."
+msgstr "Käufer kann sofort ohne Bieten kaufen."
+
+#: templates/listings/create.html:532
+msgid "Rezerves cena (€)"
+msgstr "Mindestpreis (€)"
+
+#: templates/listings/create.html:538
+msgid "Slēptā min. cena. Pircēji neredz summu, tikai statusu."
+msgstr ""
+"Versteckter Mindestpreis. Käufer sehen nur den Status, nicht den Betrag."
+
+#: templates/listings/create.html:551
+msgid "Augstākā cena — izsole sākas šeit."
+msgstr "Höchstpreis — Auktion beginnt hier."
+
+#: templates/listings/create.html:554
+#, fuzzy
+msgid "Minimālā cena (€)"
+msgstr "Mindestpreis (€)"
+
+#: templates/listings/create.html:556
+msgid "Zemākā cena — tālāk nekrītas."
+msgstr "Niedrigster Preis — sinkt nicht weiter."
+
+#: templates/listings/create.html:559
+msgid "Cenas kritums (€)"
+msgstr "Preissenkung (€)"
+
+#: templates/listings/create.html:561
+msgid "Par cik samazinās cena katru intervālu."
+msgstr "Um wie viel sinkt der Preis je Intervall."
+
+#: templates/listings/create.html:564
+msgid "Intervāls (minūtes)"
+msgstr "Intervall (Minuten)"
+
+#: templates/listings/create.html:566
+msgid "Ik 30 minūtes"
+msgstr "Alle 30 Minuten"
+
+#: templates/listings/create.html:567
+msgid "Ik 1 stundu"
+msgstr "Jede Stunde"
+
+#: templates/listings/create.html:568
+msgid "Ik 2 stundas"
+msgstr "Alle 2 Stunden"
+
+#: templates/listings/create.html:569
+msgid "Ik 6 stundas"
+msgstr "Alle 6 Stunden"
+
+#: templates/listings/create.html:570
+msgid "Ik 12 stundas"
+msgstr "Alle 12 Stunden"
+
+#: templates/listings/create.html:571
+msgid "Ik 24 stundas"
+msgstr "Alle 24 Stunden"
+
+#: templates/listings/create.html:573
+msgid "Cik bieži cena samazinās."
+msgstr "Wie oft der Preis sinkt."
+
+#: templates/listings/create.html:582
+#, fuzzy
+msgid "Cenu priekšskatījums"
+msgstr "Preisvorschau"
+
+#: templates/listings/create.html:609
+msgid "Kontaktinformācija"
+msgstr "Kontaktinformationen"
+
+#: templates/listings/create.html:621
+msgid "E-pasts"
+msgstr "E-Mail"
+
+#: templates/listings/create.html:628
+msgid ""
+"Tālrunis redzams sludinājumā pēc pogas nospiešanas. E-pasts nav publiski "
+"redzams."
+msgstr ""
+"Telefon ist im Inserat nach Klick sichtbar. E-Mail ist nicht öffentlich "
+"sichtbar."
+
+#: templates/listings/create.html:635
+msgid "Publicēšanas ilgums"
+msgstr "Veröffentlichungsdauer"
+
+#: templates/listings/create.html:644
+msgid ""
+"Pēc termiņa sludinājums tiks automātiski dzēsts. Termiņu var pagarināt "
+"jebkurā laikā."
+msgstr ""
+"Nach Ablauf der Frist wird die Anzeige automatisch gelöscht. Die Frist kann "
+"jederzeit verlängert werden."
+
+#: templates/listings/create.html:652
+msgid "Atlaižu kods"
+msgstr "Rabattcode"
+
+#: templates/listings/create.html:660
+msgid "Pārbaudīt"
+msgstr "Prüfen"
+
+#: templates/listings/create.html:673
+msgid "TOP vieta"
+msgstr "TOP-Platz"
+
+#: templates/listings/create.html:675
+msgid ""
+"Jūsu sludinājums rādīsies saraksta augšgalā, līdz kāds cits samaksā par TOP "
+"vietu."
+msgstr ""
+"Ihre Anzeige erscheint oben in der Liste, bis jemand anderes für einen TOP-"
+"Platz bezahlt."
+
+#: templates/listings/create.html:686
+msgid "Vēlaties publicēt reklāmas baneri?"
+msgstr "Möchten Sie einen Werbebanner veröffentlichen?"
+
+#: templates/listings/create.html:687
+msgid "Baneris parādīsies visās lapas apakšlapās augšējā labajā stūrī."
+msgstr "Das Banner erscheint auf allen Seiten oben rechts."
+
+#: templates/listings/create.html:700
+msgid "Lūdzu izvēlieties kategoriju pirms publicēšanas."
+msgstr "Bitte wählen Sie vor der Veröffentlichung eine Kategorie aus."
+
+#: templates/listings/detail.html:714
+msgid "Tikšanās pēc vienošanās"
+msgstr "Treffen nach Vereinbarung"
+
+#: templates/listings/detail.html:716
+msgid "Cena pēc vienošanās"
+msgstr "Preis nach Vereinbarung"
+
+#: templates/listings/detail.html:728 templates/listings/detail.html:742
+msgid "Sazināties"
+msgstr "Kontaktieren"
+
+#: templates/listings/detail.html:734
+msgid "Jūsu ziņojums..."
+msgstr "Ihre Nachricht..."
+
+#: templates/listings/detail.html:734
+msgid "Jūsu ziņojums pārdevējam..."
+msgstr "Ihre Nachricht an den Verkäufer..."
+
+#: templates/listings/detail.html:736
+msgid "Nosūtīt"
+msgstr "Senden"
+
+#: templates/listings/home.html:133
+msgid "Kategorijas"
+msgstr "Kategorien"
+
+#: templates/listings/home.html:175
+msgid "Skatīt visu"
+msgstr "Alle anzeigen"
+
+#: templates/listings/home.html:192
 msgid "Jaunākie sludinājumi"
 msgstr "Neueste Anzeigen"
 
+#: templates/listings/home.html:213 templates/listings/home.html:244
+msgid "Pēc vienošanās"
+msgstr "Nach Vereinbarung"
+
+#: templates/listings/home.html:222
 msgid "Skatīt visus"
 msgstr "Alle anzeigen"
 
-msgid "Iepazīties"
-msgstr "Dating"
+#: templates/listings/home.html:225
+#, fuzzy
+#| msgid "Mani sludinājumi"
+msgid "Nav sludinājumu."
+msgstr "Meine Anzeigen"
+
+#: templates/listings/home.html:231
+msgid "Pēdējās skatītās"
+msgstr "Zuletzt angesehen"
+
+# ── Lietošanas noteikumi ──
+#: templates/listings/terms.html:9
+msgid "Spēkā no 2025. gada 1. janvāra"
+msgstr "Gültig ab 1. Januar 2025"
+
+#: templates/listings/terms.html:11
+msgid "1. Vispārīgie noteikumi"
+msgstr "1. Allgemeine Bestimmungen"
+
+#: templates/listings/terms.html:12
+msgid ""
+"Lietojot eizsole.lv, jūs piekrītat šiem noteikumiem. Platforma nodrošina "
+"tirgus vietu sludinājumu publicēšanai un izsoļu rīkošanai. Platforma nav "
+"darījuma puse starp pircēju un pārdevēju."
+msgstr ""
+"Durch die Nutzung von eizsole.lv stimmen Sie diesen Bedingungen zu. Die "
+"Plattform bietet einen Marktplatz für die Veröffentlichung von Anzeigen und "
+"die Durchführung von Auktionen. Die Plattform ist keine Vertragspartei "
+"zwischen Käufern und Verkäufern."
+
+#: templates/listings/terms.html:14
+msgid "2. Reģistrācija"
+msgstr "2. Registrierung"
+
+#: templates/listings/terms.html:16
+msgid "Reģistrācijai nepieciešams derīgs e-pasts un tālrunis."
+msgstr ""
+"Für die Registrierung sind eine gültige E-Mail-Adresse und Telefonnummer "
+"erforderlich."
+
+#: templates/listings/terms.html:17
+msgid "Lietotājam jābūt vismaz 18 gadus vecam."
+msgstr "Der Nutzer muss mindestens 18 Jahre alt sein."
+
+#: templates/listings/terms.html:18
+msgid "Viens lietotājs var reģistrēt vienu kontu."
+msgstr "Ein Nutzer kann ein Konto registrieren."
+
+#: templates/listings/terms.html:19
+msgid "Lietotājs ir atbildīgs par konta drošību."
+msgstr "Der Nutzer ist für die Sicherheit seines Kontos verantwortlich."
+
+#: templates/listings/terms.html:22
+msgid "3. Sludinājumi un izsoles"
+msgstr "3. Anzeigen und Auktionen"
+
+#: templates/listings/terms.html:24
+msgid "Aizliegts publicēt nelikumīgas, bīstamas vai maldinošas preces."
+msgstr ""
+"Das Veröffentlichen von illegalen, gefährlichen oder irreführenden Waren ist "
+"verboten."
+
+#: templates/listings/terms.html:25
+msgid "Attēliem jāattēlo faktiskā prece."
+msgstr "Bilder müssen den tatsächlichen Artikel zeigen."
+
+#: templates/listings/terms.html:26
+msgid "Izsoles solījums ir saistošs — uzvarētājam jāsamaksā."
+msgstr "Ein Auktionsgebot ist bindend — der Gewinner muss zahlen."
+
+#: templates/listings/terms.html:27
+msgid "Platforma patur tiesības dzēst jebkuru sludinājumu bez brīdinājuma."
+msgstr ""
+"Die Plattform behält sich das Recht vor, jede Anzeige ohne Vorankündigung zu "
+"löschen."
+
+#: templates/listings/terms.html:30
+msgid "4. Maksājumi"
+msgstr "4. Zahlungen"
+
+#: templates/listings/terms.html:31
+msgid ""
+"Maksa par sludinājumu publicēšanu un TOP funkcijām ir norādīta platformā. "
+"Visa nauda tiek iekasēta caur drošu maksājumu sistēmu. Atmaksa iespējama "
+"tikai tehnisku kļūdu gadījumā."
+msgstr ""
+"Die Gebühren für die Veröffentlichung von Anzeigen und TOP-Funktionen sind "
+"auf der Plattform angegeben. Alle Zahlungen werden über ein sicheres "
+"Zahlungssystem abgewickelt. Rückerstattungen sind nur bei technischen "
+"Fehlern möglich."
+
+#: templates/listings/terms.html:33
+msgid "5. Atbildības ierobežojumi"
+msgstr "5. Haftungsbeschränkung"
+
+#: templates/listings/terms.html:34
+msgid ""
+"Platforma neuzņemas atbildību par darījumiem starp lietotājiem, preces "
+"kvalitāti, piegādes laiku vai citiem darījuma aspektiem. Lietotāji paši ir "
+"atbildīgi par darījuma drošību."
+msgstr ""
+"Die Plattform übernimmt keine Haftung für Transaktionen zwischen Nutzern, "
+"die Produktqualität, Lieferzeiten oder andere Aspekte der Transaktion. "
+"Nutzer sind persönlich für die Transaktionssicherheit verantwortlich."
+
+#: templates/listings/terms.html:36
+msgid "6. Pārkāpumi"
+msgstr "6. Verstöße"
+
+#: templates/listings/terms.html:37
+msgid ""
+"Noteikumu pārkāpuma gadījumā konts var tikt apturēts vai dzēsts. Nopietnu "
+"pārkāpumu gadījumā informācija var tikt nodota tiesībsargājošajām iestādēm."
+msgstr ""
+"Bei einem Verstoß kann das Konto gesperrt oder gelöscht werden. Bei "
+"schwerwiegenden Verstößen können die Informationen an die zuständigen "
+"Behörden weitergeleitet werden."
+
+#: templates/listings/terms.html:39
+msgid "7. Kontakti"
+msgstr "7. Kontakt"
+
+#: templates/listings/terms.html:40
+msgid "Jautājumu gadījumā:"
+msgstr "Bei Fragen:"
+
+#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:33
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:35
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:36
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:37
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:153
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:773
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.12/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:309
+#: venv/lib/python3.12/site-packages/django/core/validators.py:318
+#: venv/lib/python3.12/site-packages/django/core/validators.py:332
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:320
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:514
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:364
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:403
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1633
+#: venv/lib/python3.12/site-packages/django/forms/models.py:932
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1635
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/constraints.py:20
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1161
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1164
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1214
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1216
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1325
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1426
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1430
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1565
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1434
+msgid "Date (without time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1574
+msgid "Date (with time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1701
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
+msgid "Duration"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:974
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:977
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1271
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1328
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1330
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1378
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to
+#. the label
+#: venv/lib/python3.12/site-packages/django/forms/boundfield.py:188
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:91
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:313
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:484
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1241
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:507
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1242
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:534
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:568
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:569
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:638
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:639
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:640
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:642
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:647
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:715
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:862
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:949
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1621
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:951
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1070
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1619
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1071
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1313
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1343
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:925
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:930
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:937
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:946
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1383
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1474
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1623
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
+msgid "Clear"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:529
+msgid "Currently"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:530
+msgid "Change"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:869
+msgid "Unknown"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:870
+msgid "Yes"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:871
+#, fuzzy
+#| msgid "Noma"
+msgid "No"
+msgstr "Verleih"
+
+#: venv/lib/python3.12/site-packages/django/tasks/base.py:34
+msgctxt "Task"
+msgid "Ready"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/tasks/base.py:36
+msgctxt "Task"
+msgid "Running"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/tasks/base.py:38
+msgctxt "Task"
+msgid "Failed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/tasks/base.py:40
+msgctxt "Task"
+msgid "Successful"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:878
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:908
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:925
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:927
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:929
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:931
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:933
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:935
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:282
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.12/site-packages/django/utils/text.py:301
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:353
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:68
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
 
