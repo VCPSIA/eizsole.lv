@@ -460,70 +460,109 @@
                 </label>
             </div>
 
-            {% if site_settings.cent_auction_enabled %}
-            <div id="cent-auction-wrap" style="display:none">
+            <!-- Izsoļu veidu izvēle — vienota karte ar ķeksīšiem -->
+            <div id="auction_type_selector" style="display:none">
+                <p class="text-muted small mb-2"><i class="bi bi-info-circle me-1" style="color:#2196c9"></i>{% trans "Izvēlieties izsoles veidu:" %}</p>
 
-                <!-- Centu izsoles izvēles karte -->
-                <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="d-none">
-                <div id="cent-card" onclick="document.getElementById('is_cent_auction').click()"
-                     style="border:2px solid #e9ecef;border-radius:12px;padding:1rem;cursor:pointer;transition:all .18s;margin-bottom:.75rem;user-select:none">
-                    <div class="d-flex align-items-center gap-2">
-                        <div id="cent-check-icon" style="width:22px;height:22px;border:2px solid #ced4da;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s">
-                        </div>
-                        <div>
-                            <div class="fw-semibold">
-                                <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
-                                Centu izsole ar drošības starpniecību
+                <!-- Slēptie radio pogas — vērtību nosūtīšanai -->
+                <input type="radio" name="auction_type" id="type_english" value="english" class="d-none" checked>
+                <input type="radio" name="auction_type" id="type_dutch"   value="dutch"   class="d-none">
+                {% if site_settings.cent_auction_enabled %}
+                <input type="radio" name="auction_type" id="type_cent"    value="cent"    class="d-none">
+                <input type="hidden" name="is_cent_auction" id="is_cent_hidden" value="">
+                {% endif %}
+
+                <div class="d-flex flex-column gap-2 mb-3" id="auction-type-cards">
+
+                    <!-- Angļu izsole -->
+                    <div class="auction-type-card" data-type="english"
+                         style="border:2px solid #2196c9;border-radius:12px;padding:.85rem 1rem;cursor:pointer;transition:all .18s;background:#e8f5fd;user-select:none">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="auc-check" style="width:22px;height:22px;border:2px solid #2196c9;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#2196c9;margin-top:2px">
+                                <i class="bi bi-check-lg" style="color:white;font-size:.75rem"></i>
                             </div>
-                            <div class="text-muted small">
-                                Platforma ietur naudu; pārdevējs saņem to pēc piegādes apstiprināšanas no pircēja puses.
-                                Komisija {{ site_settings.cent_auction_commission_pct }}% (ar PVN) no izsolītās summas.
+                            <div>
+                                <div class="fw-semibold mb-1">📈 {% trans "Angļu izsole" %}</div>
+                                <div class="text-muted small" style="line-height:1.5">{% trans "Cena sākas zema un aug" %} · {% trans "Uzvar augstākais solījums" %}</div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Holandiešu izsole -->
+                    <div class="auction-type-card" data-type="dutch"
+                         style="border:2px solid #e9ecef;border-radius:12px;padding:.85rem 1rem;cursor:pointer;transition:all .18s;user-select:none">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="auc-check" style="width:22px;height:22px;border:2px solid #ced4da;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px">
+                            </div>
+                            <div>
+                                <div class="fw-semibold mb-1">📉 {% trans "Holandiešu izsole" %}</div>
+                                <div class="text-muted small" style="line-height:1.5">{% trans "Cena sākas augsta un krītas" %} · {% trans "Pirmais Pieņemt cenu uzvar" %}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if site_settings.cent_auction_enabled %}
+                    <!-- Centu izsole -->
+                    <div class="auction-type-card" data-type="cent"
+                         style="border:2px solid #e9ecef;border-radius:12px;padding:.85rem 1rem;cursor:pointer;transition:all .18s;user-select:none">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="auc-check" style="width:22px;height:22px;border:2px solid #ced4da;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px">
+                            </div>
+                            <div>
+                                <div class="fw-semibold mb-1">
+                                    <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
+                                    Centu izsole ar drošības starpniecību
+                                </div>
+                                <div class="text-muted small" style="line-height:1.5">
+                                    Platforma ietur naudu; pārdevējs saņem to pēc piegādes apstiprināšanas no pircēja puses.
+                                    Komisija {{ site_settings.cent_auction_commission_pct }}% (ar PVN).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
 
+                <!-- Centu izsoles papildlauki -->
+                {% if site_settings.cent_auction_enabled %}
                 <div id="cent-details" style="display:none">
-                    <div class="ms-4 mb-3">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold small">Preces nodošanas veids <span style="color:#f97316">*</span></label>
-                        <div class="row g-2">
-                            <div class="col-12">
-                                <input type="radio" class="btn-check" name="delivery_method" id="del_office" value="office" required>
-                                <label for="del_office" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
-                                    <i class="bi bi-building me-1" style="color:#2196c9"></i>
-                                    <strong>Administratora birojā</strong>
-                                    <span class="text-muted"> — pārdevējs nogādā preci birojā; administrators pārbauda un nodod pircājam.</span>
-                                </label>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="delivery-card" data-val="office"
+                                 style="border:1.5px solid #b3d9f0;border-radius:8px;padding:.65rem .9rem;cursor:pointer;transition:all .15s;font-size:.82rem;user-select:none">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="del-check" style="width:18px;height:18px;border:2px solid #ced4da;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center"></div>
+                                    <div><i class="bi bi-building me-1" style="color:#2196c9"></i><strong>Administratora birojā</strong> <span class="text-muted">— pārdevējs nogādā preci birojā; administrators pārbauda un nodod pircājam.</span></div>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <input type="radio" class="btn-check" name="delivery_method" id="del_agreed" value="agreed">
-                                <label for="del_agreed" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
-                                    <i class="bi bi-geo-alt me-1" style="color:#2196c9"></i>
-                                    <strong>Norunātā vietā</strong>
-                                    <span class="text-muted"> — visi trīs vienojas par vietu; administrators klātienē apliecina darījumu.</span>
-                                </label>
+                            <div class="delivery-card" data-val="agreed"
+                                 style="border:1.5px solid #b3d9f0;border-radius:8px;padding:.65rem .9rem;cursor:pointer;transition:all .15s;font-size:.82rem;user-select:none">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="del-check" style="width:18px;height:18px;border:2px solid #ced4da;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center"></div>
+                                    <div><i class="bi bi-geo-alt me-1" style="color:#2196c9"></i><strong>Norunātā vietā</strong> <span class="text-muted">— visi trīs vienojas par vietu; administrators klātienē apliecina darījumu.</span></div>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <input type="radio" class="btn-check" name="delivery_method" id="del_courier" value="courier">
-                                <label for="del_courier" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
-                                    <i class="bi bi-truck me-1" style="color:#f97316"></i>
-                                    <strong>Kurjers caur administratoru</strong>
-                                    <span class="text-muted"> — pārdevējs nosūta administratoram; pēc pārbaudes administrators sūta pircājam.</span>
-                                    <span class="badge ms-1" style="background:#fff7ed;color:#f97316;font-size:.68rem;border-radius:20px">Kurjera izmaksas — pārdevējs</span>
-                                </label>
+                            <div class="delivery-card" data-val="courier"
+                                 style="border:1.5px solid #b3d9f0;border-radius:8px;padding:.65rem .9rem;cursor:pointer;transition:all .15s;font-size:.82rem;user-select:none">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="del-check" style="width:18px;height:18px;border:2px solid #ced4da;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center"></div>
+                                    <div><i class="bi bi-truck me-1" style="color:#f97316"></i><strong>Kurjers caur administratoru</strong> <span class="text-muted">— pārdevējs nosūta administratoram; pēc pārbaudes administrators sūta pircājam.</span> <span class="badge ms-1" style="background:#fff7ed;color:#f97316;font-size:.66rem;border-radius:20px">Kurjera izmaksas — pārdevējs</span></div>
+                                </div>
                             </div>
                         </div>
+                        <input type="hidden" name="delivery_method" id="delivery_method_val" value="">
                     </div>
 
-                    <div class="ms-4 mb-2 p-2 rounded" style="background:#fef9c3;border:1px solid #fde68a;font-size:.78rem;color:#854d0e">
+                    <div class="mb-2 p-2 rounded" style="background:#fef9c3;border:1px solid #fde68a;font-size:.78rem;color:#854d0e">
                         <i class="bi bi-exclamation-triangle me-1"></i>
                         <strong>Visi piegādes, kurjera un citi nodošanas izdevumi, tai skaitā apdrošināšana (ja tas ir nepieciešams), ir pārdevēja atbildība.</strong>
                     </div>
 
                     {% if not user_accepted_cent_rules %}
-                    <div class="ms-4 mb-2">
+                    <div class="mb-2">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cent_rules_agree" name="cent_rules_agree" required>
+                            <input type="checkbox" class="form-check-input" id="cent_rules_agree" name="cent_rules_agree">
                             <label class="form-check-label small fw-semibold" for="cent_rules_agree">
                                 Esmu izlasījis(-usi) un piekrītu
                                 <a href="{% url 'cent_auction_rules' %}?next={{ request.path }}" target="_blank" style="color:#2196c9">centu izsoles noteikumiem</a>,
@@ -532,49 +571,12 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="ms-4 mb-2" style="font-size:.78rem;color:#16a34a">
+                    <div class="mb-2" style="font-size:.78rem;color:#16a34a">
                         <i class="bi bi-check-circle-fill me-1"></i>Centu izsoles noteikumi jau apstiprināti.
                     </div>
                     {% endif %}
                 </div>
-            </div>
-            {% endif %}
-
-            <!-- Izsoļu veidu skaidrojums + izvēle -->
-            <div id="auction_type_selector" style="display:none">
-                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#2196c9"></i>{% trans "Izvēlieties izsoles veidu:" %}</p>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <input type="radio" class="btn-check" name="auction_type" id="type_english" value="english" checked>
-                        <label for="type_english" class="d-block p-3 rounded cursor-pointer h-100" style="border:2px solid #b3d9f0;border-radius:12px!important;cursor:pointer;transition:all .18s" id="card_english">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span style="font-size:1.5rem">📈</span>
-                                <strong style="color:#2196c9">{% trans "Angļu izsole" %}</strong>
-                            </div>
-                            <ul class="small text-muted ps-3 mb-0" style="line-height:1.7">
-                                <li>{% trans "Cena sākas zema un aug" %}</li>
-                                <li>{% trans "Solītāji konkurē savā starpā" %}</li>
-                                <li>{% trans "Uzvar augstākais solījums" %}</li>
-                                <li>{% trans "Klasiskais izsoles veids" %}</li>
-                            </ul>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" class="btn-check" name="auction_type" id="type_dutch" value="dutch">
-                        <label for="type_dutch" class="d-block p-3 rounded cursor-pointer h-100" style="border:2px solid #b3d9f0;border-radius:12px!important;cursor:pointer;transition:all .18s" id="card_dutch">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span style="font-size:1.5rem">📉</span>
-                                <strong style="color:#f97316">{% trans "Holandiešu izsole" %}</strong>
-                            </div>
-                            <ul class="small text-muted ps-3 mb-0" style="line-height:1.7">
-                                <li>{% trans "Cena sākas augsta un krītas" %}</li>
-                                <li>{% blocktrans %}Pirmais <strong>"Pieņemt cenu"</strong> uzvar{% endblocktrans %}</li>
-                                <li>{% trans "Nav solīšanas — pirkt vai gaidīt" %}</li>
-                                <li>{% trans "Ideāli ātrai pārdošanai" %}</li>
-                            </ul>
-                        </label>
-                    </div>
-                </div>
+                {% endif %}
             </div>
 
             <div id="auction_fields" style="display:none">
@@ -866,37 +868,35 @@ function toggleAuction(cb) {
             const el = document.getElementById(id);
             if (el) { el.min = fmt(min); el.max = fmt(max); }
         });
+    } else {
+        // Atiestate izsoļu veida izvēli
+        selectAucType('english');
     }
     updateAuctionType();
 }
 
 function updateAuctionType() {
-    const isDutch = document.getElementById('type_dutch')?.checked;
+    const isAuc = document.getElementById('is_auction').checked;
+    const isDutch = currentAucType === 'dutch';
+    const isCent  = currentAucType === 'cent';
     const englishFields = document.getElementById('english_fields');
-    const dutchFields = document.getElementById('dutch_fields');
+    const dutchFields   = document.getElementById('dutch_fields');
     if (!englishFields) return;
 
-    englishFields.style.display = isDutch ? 'none' : 'block';
-    dutchFields.style.display = isDutch ? 'block' : 'none';
+    // Angļu/Holandiešu lauki — Centu arī izmanto angļu laikus
+    englishFields.style.display = (isDutch || isCent) ? 'none' : 'block';
+    dutchFields.style.display   = isDutch ? 'block' : 'none';
 
-    // Angļu required
     const endsAt = document.getElementById('ends_at');
     const startingPrice = document.querySelector('input[name="starting_price"]');
-    if (endsAt) endsAt.required = !isDutch && document.getElementById('is_auction').checked;
-    if (startingPrice) startingPrice.required = !isDutch && document.getElementById('is_auction').checked;
+    if (endsAt) endsAt.required = !isDutch && !isCent && isAuc;
+    if (startingPrice) startingPrice.required = !isDutch && !isCent && isAuc;
 
-    // Holandiešu required
     const dutchReq = ['dutch_starting_price','dutch_min_price','dutch_price_step','dutch_ends_at'];
     dutchReq.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.required = isDutch && document.getElementById('is_auction').checked;
+        if (el) el.required = isDutch && isAuc;
     });
-
-    // Kartiņu izskats
-    document.getElementById('card_english').style.borderColor = isDutch ? '#b3d9f0' : '#2196c9';
-    document.getElementById('card_english').style.background = isDutch ? '' : '#e8f5fd';
-    document.getElementById('card_dutch').style.borderColor = isDutch ? '#f97316' : '#b3d9f0';
-    document.getElementById('card_dutch').style.background = isDutch ? '#fff7ed' : '';
 }
 
 function updateDutchPreview() {
@@ -920,14 +920,19 @@ function updateDutchPreview() {
 
 // Pievienojam dutch_starting_price -> starting_price sinhronizāciju pie iesniegšanas
 document.getElementById('listing-form').addEventListener('submit', function() {
-    const isDutch = document.getElementById('type_dutch')?.checked;
-    if (isDutch) {
+    if (currentAucType === 'dutch') {
         const sp = document.getElementById('dutch_starting_price')?.value;
         const ea = document.getElementById('dutch_ends_at')?.value;
         const spInput = document.querySelector('input[name="starting_price"]');
         const eaInput = document.getElementById('ends_at');
         if (spInput && sp) spInput.value = sp;
         if (eaInput && ea) eaInput.value = ea;
+    }
+    // Centu izsole → auction_type='english' + is_cent_auction
+    if (currentAucType === 'cent') {
+        document.getElementById('type_english').checked = true;
+        var centH = document.getElementById('is_cent_hidden');
+        if (centH) { centH.name = 'is_cent_auction'; centH.value = '1'; }
     }
 });
 
@@ -1231,49 +1236,67 @@ if (hasInspCb) hasInspCb.addEventListener('change', function() { toggleInspectio
 document.getElementById('video-drop-zone').addEventListener('click', () => document.getElementById('video-input').click());
 document.getElementById('video-input').addEventListener('change', function() { handleVideo(this.files[0]); });
 
-// Centu izsoles checkbox + detaļu rādīšana
-var centWrap = document.getElementById('cent-auction-wrap');
-var centDetails = document.getElementById('cent-details');
-var centCb = document.getElementById('is_cent_auction');
-var centCard = document.getElementById('cent-card');
-var centIcon = document.getElementById('cent-check-icon');
+// ── Izsoļu veidu karte ──
+var currentAucType = 'english';
 
-function updateCentCard() {
-    if (!centCard) return;
-    if (centCb.checked) {
-        centCard.style.borderColor = '#f97316';
-        centCard.style.background = '#fff7ed';
-        centIcon.style.background = '#f97316';
-        centIcon.style.borderColor = '#f97316';
-        centIcon.innerHTML = '<i class="bi bi-check-lg" style="color:white;font-size:.75rem"></i>';
-        if (centDetails) centDetails.style.display = 'block';
-    } else {
-        centCard.style.borderColor = '#e9ecef';
-        centCard.style.background = '';
-        centIcon.style.background = '';
-        centIcon.style.borderColor = '#ced4da';
-        centIcon.innerHTML = '';
-        if (centDetails) centDetails.style.display = 'none';
-    }
+function selectAucType(type) {
+    currentAucType = type;
+    // Slēpto radio
+    var radio = document.getElementById('type_' + type);
+    if (radio) radio.checked = true;
+    // Centu hidden
+    var centH = document.getElementById('is_cent_hidden');
+    if (centH) centH.value = (type === 'cent') ? '1' : '';
+
+    // Karšu stils
+    document.querySelectorAll('.auction-type-card').forEach(function(card) {
+        var t = card.dataset.type;
+        var check = card.querySelector('.auc-check');
+        var isSelected = (t === type);
+        var color = (t === 'cent') ? '#f97316' : '#2196c9';
+        if (isSelected) {
+            card.style.borderColor = color;
+            card.style.background = (t === 'cent') ? '#fff7ed' : '#e8f5fd';
+            check.style.background = color;
+            check.style.borderColor = color;
+            check.innerHTML = '<i class="bi bi-check-lg" style="color:white;font-size:.75rem"></i>';
+        } else {
+            card.style.borderColor = '#e9ecef';
+            card.style.background = '';
+            check.style.background = '';
+            check.style.borderColor = '#ced4da';
+            check.innerHTML = '';
+        }
+    });
+
+    // Centu detaļas
+    var centDetails = document.getElementById('cent-details');
+    if (centDetails) centDetails.style.display = (type === 'cent') ? 'block' : 'none';
+
+    // Angļu/Holandiešu lauki
+    updateAuctionType();
 }
 
-if (centWrap && centCb) {
-    document.getElementById('is_auction').addEventListener('change', function() {
-        centWrap.style.display = this.checked ? 'block' : 'none';
-        if (!this.checked) { centCb.checked = false; updateCentCard(); }
-    });
-    centCb.addEventListener('change', updateCentCard);
-    // Piegādes veida radio pogu vizuālais stils
-    document.querySelectorAll('input[name="delivery_method"]').forEach(function(r) {
-        r.addEventListener('change', function() {
-            document.querySelectorAll('label[for^="del_"]').forEach(function(l) {
-                l.style.borderColor = '#b3d9f0'; l.style.background = '';
-            });
-            var lbl = document.querySelector('label[for="' + r.id + '"]');
-            if (lbl) { lbl.style.borderColor = '#2196c9'; lbl.style.background = '#e8f5fd'; }
+document.querySelectorAll('.auction-type-card').forEach(function(card) {
+    card.addEventListener('click', function() { selectAucType(this.dataset.type); });
+});
+
+// Piegādes karšu stils
+document.querySelectorAll('.delivery-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+        var val = this.dataset.val;
+        document.getElementById('delivery_method_val').value = val;
+        document.querySelectorAll('.delivery-card').forEach(function(c) {
+            var ch = c.querySelector('.del-check');
+            var sel = c.dataset.val === val;
+            c.style.borderColor = sel ? '#2196c9' : '#b3d9f0';
+            c.style.background = sel ? '#e8f5fd' : '';
+            ch.style.background = sel ? '#2196c9' : '';
+            ch.style.borderColor = sel ? '#2196c9' : '#ced4da';
+            ch.innerHTML = sel ? '<i class="bi bi-check-lg" style="color:white;font-size:.6rem"></i>' : '';
         });
     });
-}
+});
 
 // Holandiešu izsoles tipu izvēle
 document.querySelectorAll('input[name="auction_type"]').forEach(r => {
