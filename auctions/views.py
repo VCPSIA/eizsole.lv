@@ -182,6 +182,11 @@ def auction_detail(request, pk):
         elif auction.is_finished and auction.winner:
             _, _, cent_commission_total = _calc_commission(auction.current_price, settings)
 
+    user_accepted_cent_rules = False
+    if request.user.is_authenticated and auction.is_cent_auction:
+        user_accepted_cent_rules = CentAuctionRulesAcceptance.objects.filter(
+            user=request.user).exists()
+
     return render(request, 'auctions/detail.html', {
         'auction': auction,
         'bids': bids,
@@ -192,6 +197,7 @@ def auction_detail(request, pk):
         'site_settings': settings,
         'escrow': escrow,
         'cent_commission_total': cent_commission_total,
+        'user_accepted_cent_rules': user_accepted_cent_rules,
     })
 
 
@@ -213,10 +219,15 @@ def place_bid(request, pk):
     if err:
         return err
 
-    # Centu izsoles balances pārbaude
+    # Centu izsoles pārbaudes
     if auction.is_cent_auction:
+        from .models import CentAuctionRulesAcceptance
         from listings.models import SiteSettings
         settings = SiteSettings.get()
+        # Noteikumu piekrišana
+        if not CentAuctionRulesAcceptance.objects.filter(user=request.user).exists():
+            return redirect(f'/izsoles/noteikumi/?next=/izsoles/{pk}/solit/')
+        # Minimālais atlikums
         wallet, _ = Wallet.objects.get_or_create(user=request.user)
         if wallet.balance < settings.cent_auction_min_balance:
             messages.error(request,
@@ -441,6 +452,36 @@ def auction_edit(request, pk):
         return redirect('auction_detail', pk=pk)
 
     return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+
+@login_required
+def cent_auction_rules(request, next_url=None):
+    """Centu izsoles noteikumu lapa — pircējs un pārdevējs apstiprina pirms dalības."""
+    from .models import CentAuctionRulesAcceptance
+    from listings.models import SiteSettings
+    settings = SiteSettings.get()
+    next_url = request.GET.get('next') or request.POST.get('next') or '/'
+    already = CentAuctionRulesAcceptance.objects.filter(user=request.user).exists()
+    return render(request, 'auctions/cent_auction_rules.html', {
+        'already_accepted': already,
+        'next_url': next_url,
+        'min_balance': settings.cent_auction_min_balance,
+    })
+
+
+@login_required
+def accept_cent_rules(request):
+    """Saglabā lietotāja piekrišanu centu izsoles noteikumiem."""
+    from .models import CentAuctionRulesAcceptance
+    if request.method == 'POST' and request.POST.get('agree_rules'):
+        ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))[:45]
+        CentAuctionRulesAcceptance.objects.get_or_create(
+            user=request.user,
+            defaults={'ip_address': ip}
+        )
+        messages.success(request, 'Noteikumi apstiprināti. Varat turpināt.')
+    next_url = request.POST.get('next', '/')
+    return redirect(next_url)
 
 
 @login_required

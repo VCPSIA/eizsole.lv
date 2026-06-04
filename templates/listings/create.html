@@ -461,16 +461,73 @@
             </div>
 
             {% if site_settings.cent_auction_enabled %}
-            <div class="form-check mb-3 ms-1" id="cent-auction-wrap" style="display:none">
-                <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="form-check-input">
-                <label for="is_cent_auction" class="form-check-label">
-                    <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
-                    <strong>Centu izsole</strong>
-                    <span class="text-muted fw-normal small">
-                        — dalībai nepieciešami min. €{{ site_settings.cent_auction_min_balance }} makā.
-                        Komisija {{ site_settings.cent_auction_commission_pct }}% + PVN {{ site_settings.cent_auction_vat_pct }}% no izsolītās summas (atskaitās no pārdevēja).
-                    </span>
-                </label>
+            <div id="cent-auction-wrap" style="display:none">
+                <div class="form-check mb-2 ms-1">
+                    <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="form-check-input">
+                    <label for="is_cent_auction" class="form-check-label">
+                        <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
+                        <strong>Centu izsole ar drošības starpniecību</strong>
+                        <span class="text-muted fw-normal small">
+                            — platforma notur naudu; pārdevējs saņem pēc piegādes apstiprināšanas.
+                            Komisija {{ site_settings.cent_auction_commission_pct }}% (ar PVN) no izsolītās summas.
+                        </span>
+                    </label>
+                </div>
+
+                <div id="cent-details" style="display:none">
+                    <div class="ms-4 mb-3">
+                        <label class="form-label fw-semibold small">Preces nodošanas veids <span style="color:#f97316">*</span></label>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <input type="radio" class="btn-check" name="delivery_method" id="del_office" value="office" required>
+                                <label for="del_office" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
+                                    <i class="bi bi-building me-1" style="color:#2196c9"></i>
+                                    <strong>Administratora birojā</strong>
+                                    <span class="text-muted"> — pārdevējs nogādā preci birojā; administrators pārbauda un nodod pircājam.</span>
+                                </label>
+                            </div>
+                            <div class="col-12">
+                                <input type="radio" class="btn-check" name="delivery_method" id="del_agreed" value="agreed">
+                                <label for="del_agreed" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
+                                    <i class="bi bi-geo-alt me-1" style="color:#2196c9"></i>
+                                    <strong>Norunātā vietā</strong>
+                                    <span class="text-muted"> — visi trīs vienojas par vietu; administrators klātienē apliecina darījumu.</span>
+                                </label>
+                            </div>
+                            <div class="col-12">
+                                <input type="radio" class="btn-check" name="delivery_method" id="del_courier" value="courier">
+                                <label for="del_courier" class="d-block p-2 rounded" style="border:1.5px solid #b3d9f0;cursor:pointer;font-size:.82rem;transition:all .15s">
+                                    <i class="bi bi-truck me-1" style="color:#f97316"></i>
+                                    <strong>Kurjers caur administratoru</strong>
+                                    <span class="text-muted"> — pārdevējs nosūta administratoram; pēc pārbaudes administrators sūta pircājam.</span>
+                                    <span class="badge ms-1" style="background:#fff7ed;color:#f97316;font-size:.68rem;border-radius:20px">Kurjera izmaksas — pārdevējs</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ms-4 mb-2 p-2 rounded" style="background:#fef9c3;border:1px solid #fde68a;font-size:.78rem;color:#854d0e">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        <strong>Visi piegādes, kurjera un citi nodošanas izdevumi ir pārdevēja atbildībā.</strong>
+                    </div>
+
+                    {% if not user_accepted_cent_rules %}
+                    <div class="ms-4 mb-2">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="cent_rules_agree" name="cent_rules_agree" required>
+                            <label class="form-check-label small fw-semibold" for="cent_rules_agree">
+                                Esmu izlasījis(-usi) un piekrītu
+                                <a href="{% url 'cent_auction_rules' %}?next={{ request.path }}" target="_blank" style="color:#2196c9">centu izsoles noteikumiem</a>,
+                                tostarp drošības starpniecības kārtībai un piegādes izmaksu segšanas pienākumam.
+                            </label>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="ms-4 mb-2" style="font-size:.78rem;color:#16a34a">
+                        <i class="bi bi-check-circle-fill me-1"></i>Centu izsoles noteikumi jau apstiprināti.
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
 
@@ -1165,12 +1222,27 @@ if (hasInspCb) hasInspCb.addEventListener('change', function() { toggleInspectio
 document.getElementById('video-drop-zone').addEventListener('click', () => document.getElementById('video-input').click());
 document.getElementById('video-input').addEventListener('change', function() { handleVideo(this.files[0]); });
 
-// Centu izsoles checkbox rādīšana
+// Centu izsoles checkbox + detaļu rādīšana
 var centWrap = document.getElementById('cent-auction-wrap');
-if (centWrap) {
+var centDetails = document.getElementById('cent-details');
+var centCb = document.getElementById('is_cent_auction');
+if (centWrap && centCb) {
     document.getElementById('is_auction').addEventListener('change', function() {
         centWrap.style.display = this.checked ? 'block' : 'none';
-        if (!this.checked) document.getElementById('is_cent_auction').checked = false;
+        if (!this.checked) { centCb.checked = false; if (centDetails) centDetails.style.display = 'none'; }
+    });
+    centCb.addEventListener('change', function() {
+        if (centDetails) centDetails.style.display = this.checked ? 'block' : 'none';
+    });
+    // Piegādes veida radio pogu vizuālais stils
+    document.querySelectorAll('input[name="delivery_method"]').forEach(function(r) {
+        r.addEventListener('change', function() {
+            document.querySelectorAll('label[for^="del_"]').forEach(function(l) {
+                l.style.borderColor = '#b3d9f0'; l.style.background = '';
+            });
+            var lbl = document.querySelector('label[for="' + r.id + '"]');
+            if (lbl) { lbl.style.borderColor = '#2196c9'; lbl.style.background = '#e8f5fd'; }
+        });
     });
 }
 

@@ -13,4 +13,6 @@ urlpatterns = [
     path('<int:pk>/holandiesu-pirkt/', views.dutch_buy, name='dutch_buy'),
     path('<int:pk>/nosuita/', views.confirm_shipped, name='confirm_shipped'),
     path('<int:pk>/sanems/', views.confirm_received, name='confirm_received'),
+    path('noteikumi/', views.cent_auction_rules, name='cent_auction_rules'),
+    path('noteikumi/apstiprinu/', views.accept_cent_rules, name='accept_cent_rules'),
 ]

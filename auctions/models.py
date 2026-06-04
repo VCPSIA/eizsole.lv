@@ -31,6 +31,12 @@ class Auction(models.Model):
 
     # Centu izsole
     is_cent_auction = models.BooleanField(default=False)
+    DELIVERY_CHOICES = [
+        ('office',   'Administratora birojā'),
+        ('agreed',   'Norunātā vietā'),
+        ('courier',  'Kurjers → administrators → pircējs'),
+    ]
+    delivery_method = models.CharField(max_length=10, choices=DELIVERY_CHOICES, blank=True, default='')
 
     def __str__(self):
         return f"Izsole: {self.listing.title}"
@@ -105,6 +111,20 @@ class CentAuctionEscrow(models.Model):
 
     def __str__(self):
         return f'Escrow #{self.pk} — {self.auction.listing.title[:50]} ({self.get_status_display()})'
+
+
+class CentAuctionRulesAcceptance(models.Model):
+    """Reģistrē lietotāja noteikumu piekrišanu centu izsolēm."""
+    user        = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cent_auction_rules')
+    accepted_at = models.DateTimeField(auto_now_add=True)
+    ip_address  = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Centu izsoles noteikumu piekrišana'
+        verbose_name_plural = 'Centu izsoles noteikumu piekrišanas'
+
+    def __str__(self):
+        return f'{self.user.username} — pieņēma {self.accepted_at:%d.%m.%Y %H:%M}'
 
 
 class Bid(models.Model):

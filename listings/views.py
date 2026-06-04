@@ -545,6 +545,11 @@ def listing_create(request):
                 're_deal_choices': RealEstateDetails.DEAL_CHOICES,
                 'deal_type_choices': Listing.DEAL_TYPE_CHOICES,
                 'site_settings': SiteSettings.get(),
+                'user_accepted_cent_rules': (
+                    __import__('auctions.models', fromlist=['CentAuctionRulesAcceptance'])
+                    .CentAuctionRulesAcceptance.objects.filter(user=request.user).exists()
+                    if request.user.is_authenticated else False
+                ),
                 'profile_country': request.user.profile.country if hasattr(request.user, 'profile') else '',
                 'profile_city': request.user.profile.city if hasattr(request.user, 'profile') else '',
                 'google_maps_api_key': getattr(__import__('django.conf', fromlist=['settings']).settings, 'GOOGLE_MAPS_API_KEY', ''),
@@ -827,6 +832,15 @@ def listing_create(request):
                 ends_at_dt = timezone.now() + timedelta(days=7)
             auction_type = request.POST.get('auction_type', 'english')
             is_cent = 'is_cent_auction' in request.POST
+
+            # Centu izsoles noteikumu piekrišana no formas
+            if is_cent and 'cent_rules_agree' in request.POST:
+                from auctions.models import CentAuctionRulesAcceptance
+                ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))[:45]
+                CentAuctionRulesAcceptance.objects.get_or_create(
+                    user=request.user,
+                    defaults={'ip_address': ip}
+                )
             dutch_step, _ = _validate_price(request.POST.get('dutch_price_step', ''))
             dutch_min, _  = _validate_price(request.POST.get('dutch_min_price', ''))
             try:
@@ -839,6 +853,7 @@ def listing_create(request):
                 listing=listing,
                 auction_type=auction_type,
                 is_cent_auction=is_cent,
+                delivery_method=request.POST.get('delivery_method', '') if is_cent else '',
                 starting_price=sp_val,
                 current_price=sp_val,
                 min_bid_increment=request.POST.get('min_bid_increment', 1),

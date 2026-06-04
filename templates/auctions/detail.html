@@ -371,6 +371,18 @@
                 <div class="fw-semibold mb-2" style="color:#2196c9;font-size:.88rem">
                     <i class="bi bi-shield-lock me-1"></i>Drošības starpnieks (Escrow)
                 </div>
+                {% if auction.delivery_method %}
+                <div class="mb-2 small text-muted">
+                    <i class="bi bi-{% if auction.delivery_method == 'office' %}building{% elif auction.delivery_method == 'agreed' %}geo-alt{% else %}truck{% endif %} me-1"></i>
+                    <strong>Piegāde:</strong>
+                    {% if auction.delivery_method == 'office' %}Administratora birojā
+                    {% elif auction.delivery_method == 'agreed' %}Norunātā vietā
+                    {% else %}Kurjers caur administratoru{% endif %}
+                    {% if auction.delivery_method == 'courier' %}
+                    <span class="badge ms-1" style="background:#fff7ed;color:#f97316;font-size:.68rem;border-radius:20px">Kurjera izmaksas — pārdevējs</span>
+                    {% endif %}
+                </div>
+                {% endif %}
                 {% if escrow.status == 'held' %}
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px">⏳ Nauda noturēta</span>
@@ -427,6 +439,13 @@
 
             {% if auction.is_active %}
                 {% if user.is_authenticated and user != auction.listing.seller %}
+                {% if auction.is_cent_auction and not user_accepted_cent_rules %}
+                <div class="p-3 rounded mb-3" style="background:#fef9c3;border:1px solid #fde68a;font-size:.83rem">
+                    <i class="bi bi-exclamation-triangle me-1" style="color:#f97316"></i>
+                    Pirms solīšanas nepieciešams apstiprināt
+                    <a href="{% url 'cent_auction_rules' %}?next=/izsoles/{{ auction.pk }}/solit/" style="color:#2196c9;font-weight:600">centu izsoles noteikumus</a>.
+                </div>
+                {% endif %}
                 {% if auction.auction_type == 'dutch' %}
                 <!-- Holandiešu izsole: tikai pirkšanas poga -->
                 <a href="{% url 'dutch_buy' auction.pk %}" class="btn btn-lg w-100 fw-bold mb-2"

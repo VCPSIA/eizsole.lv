@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 from django.contrib import messages
-from .models import Auction, Bid, CentAuctionEscrow
+from .models import Auction, Bid, CentAuctionEscrow, CentAuctionRulesAcceptance
 
 
 class BidInline(admin.TabularInline):
@@ -81,3 +81,11 @@ class CentAuctionEscrowAdmin(admin.ModelAdmin):
     def action_dispute(self, request, queryset):
         updated = queryset.filter(status__in=['held', 'shipped']).update(status='disputed')
         self.message_user(request, f'{updated} escrow atzīmēts kā strīds.', messages.WARNING)
+
+
+@admin.register(CentAuctionRulesAcceptance)
+class CentAuctionRulesAcceptanceAdmin(admin.ModelAdmin):
+    list_display  = ['user', 'accepted_at', 'ip_address']
+    search_fields = ['user__username', 'user__email']
+    readonly_fields = ['user', 'accepted_at', 'ip_address']
+    ordering = ['-accepted_at']
