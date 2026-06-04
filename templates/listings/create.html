@@ -554,6 +554,46 @@
                         <input type="hidden" name="delivery_method" id="delivery_method_val" value="">
                     </div>
 
+                    <!-- Centu izsoles parametri -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Sākuma cena (€) <span style="color:#f97316">*</span></label>
+                            <input type="number" name="cent_starting_price" id="cent_starting_price"
+                                   class="form-control" step="0.01" min="0.01" placeholder="0.01">
+                            <div class="form-text">Minimālā sākuma cena, no kuras sākas solīšana.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Likmes solis (centi) <span style="color:#f97316">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">¢</span>
+                                <select name="cent_bid_step" id="cent_bid_step" class="form-select">
+                                    <option value="0.01">1 cents</option>
+                                    <option value="0.02">2 centi</option>
+                                    <option value="0.05" selected>5 centi</option>
+                                    <option value="0.10">10 centi</option>
+                                </select>
+                            </div>
+                            <div class="form-text">Minimālais solīšanas pieaugums.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Minimālā summa (€) <span style="color:#f97316">*</span></label>
+                            <input type="number" name="cent_reserve_price" id="cent_reserve_price"
+                                   class="form-control" step="0.01" min="0.01" placeholder="10.00">
+                            <div class="form-text">Prece tiek atdota, ja šī summa sasniegta. Aukcions turpinās arī zem šīs summas.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Ātrās izbeigšanas cena (€)</label>
+                            <input type="number" name="cent_buy_now_price" id="cent_buy_now_price"
+                                   class="form-control" step="0.01" min="0.01" placeholder="50.00">
+                            <div class="form-text">Aukcions beidzas pirms termiņa, ja šī summa sasniegta. Nav obligāts.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Izsole beidzas <span style="color:#f97316">*</span></label>
+                            <input type="datetime-local" name="cent_ends_at" id="cent_ends_at" class="form-control">
+                            <div class="form-text">Maksimums: 1 mēnesis no šodienas.</div>
+                        </div>
+                    </div>
+
                     <div class="mb-2 p-2 rounded" style="background:#fef9c3;border:1px solid #fde68a;font-size:.78rem;color:#854d0e">
                         <i class="bi bi-exclamation-triangle me-1"></i>
                         <strong>Visi piegādes, kurjera un citi nodošanas izdevumi, tai skaitā apdrošināšana (ja tas ir nepieciešams), ir pārdevēja atbildība.</strong>
@@ -864,7 +904,7 @@ function toggleAuction(cb) {
         const min = new Date(now.getTime() + 60 * 60 * 1000);
         const max = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         const fmt = d => d.toISOString().slice(0, 16);
-        ['ends_at','dutch_ends_at'].forEach(id => {
+        ['ends_at','dutch_ends_at','cent_ends_at'].forEach(id => {
             const el = document.getElementById(id);
             if (el) { el.min = fmt(min); el.max = fmt(max); }
         });
@@ -928,11 +968,18 @@ document.getElementById('listing-form').addEventListener('submit', function() {
         if (spInput && sp) spInput.value = sp;
         if (eaInput && ea) eaInput.value = ea;
     }
-    // Centu izsole → auction_type='english' + is_cent_auction
+    // Centu izsole → auction_type='english' + is_cent_auction + sinhronizē laukus
     if (currentAucType === 'cent') {
         document.getElementById('type_english').checked = true;
         var centH = document.getElementById('is_cent_hidden');
         if (centH) { centH.name = 'is_cent_auction'; centH.value = '1'; }
+        // Sinhronizē cent laukus uz galvenajiem
+        var sp = document.querySelector('input[name="starting_price"]');
+        var ea = document.getElementById('ends_at');
+        var csp = document.getElementById('cent_starting_price');
+        var cea = document.getElementById('cent_ends_at');
+        if (sp && csp && csp.value) sp.value = csp.value;
+        if (ea && cea && cea.value) ea.value = cea.value;
     }
 });
 

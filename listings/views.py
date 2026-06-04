@@ -849,6 +849,34 @@ def listing_create(request):
                     dutch_interval = 60
             except (ValueError, TypeError):
                 dutch_interval = 60
+            # Centu izsoles specifiskie lauki
+            if is_cent:
+                from decimal import Decimal as _D
+                cent_sp, _       = _validate_price(request.POST.get('cent_starting_price', ''))
+                cent_reserve, _  = _validate_price(request.POST.get('cent_reserve_price', ''))
+                cent_buynow, _   = _validate_price(request.POST.get('cent_buy_now_price', ''))
+                try:
+                    cent_step = _D(request.POST.get('cent_bid_step', '0.05'))
+                    cent_step = max(_D('0.01'), min(_D('0.10'), cent_step))
+                except Exception:
+                    cent_step = _D('0.05')
+                if cent_sp:
+                    sp_val = cent_sp
+                cent_ends_raw = request.POST.get('cent_ends_at', '')
+                if cent_ends_raw:
+                    try:
+                        from django.utils.dateparse import parse_datetime as _pdt
+                        _ce = _pdt(cent_ends_raw)
+                        if _ce:
+                            if timezone.is_naive(_ce): _ce = timezone.make_aware(_ce)
+                            ends_at_dt = _ce
+                    except Exception:
+                        pass
+            else:
+                cent_reserve = _validate_price(request.POST.get('reserve_price', ''))[0]
+                cent_buynow  = _validate_price(request.POST.get('buy_now_price', ''))[0]
+                cent_step = None
+
             Auction.objects.create(
                 listing=listing,
                 auction_type=auction_type,
@@ -856,10 +884,10 @@ def listing_create(request):
                 delivery_method=request.POST.get('delivery_method', '') if is_cent else '',
                 starting_price=sp_val,
                 current_price=sp_val,
-                min_bid_increment=request.POST.get('min_bid_increment', 1),
+                min_bid_increment=cent_step if is_cent else request.POST.get('min_bid_increment', 1),
                 ends_at=ends_at_dt,
-                buy_now_price=_validate_price(request.POST.get('buy_now_price', ''))[0] if auction_type == 'english' else None,
-                reserve_price=_validate_price(request.POST.get('reserve_price', ''))[0] if auction_type == 'english' else None,
+                buy_now_price=cent_buynow if auction_type != 'dutch' else None,
+                reserve_price=cent_reserve if auction_type != 'dutch' else None,
                 dutch_price_step=dutch_step if auction_type == 'dutch' else None,
                 dutch_interval_minutes=dutch_interval if auction_type == 'dutch' else None,
                 dutch_min_price=dutch_min if auction_type == 'dutch' else None,
