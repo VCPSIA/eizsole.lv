@@ -33,11 +33,20 @@ def _validate_price(value_str, field_name='Cena'):
 
 
 def _calc_commission(amount, settings):
-    """Aprēķina komisiju un PVN centu izsolei."""
-    from decimal import Decimal
-    comm = (amount * settings.cent_auction_commission_pct / Decimal('100')).quantize(Decimal('0.01'))
-    vat  = (comm * settings.cent_auction_vat_pct / Decimal('100')).quantize(Decimal('0.01'))
-    return comm, vat, comm + vat
+    """Aprēķina komisiju centu izsolei.
+
+    Visas summas ir ar PVN. Komisija ir % no pārdotās summas (PVN iekļauts).
+    PVN tiek izvilkts no komisijas (nevis pievienots klāt).
+
+    Piemērs: €100 pārdots, komisija 10% = €10 (ar PVN).
+    PVN iekšā: €10 * 21/121 = €1.74. Neto komisija: €8.26.
+    """
+    Q = Decimal('0.01')
+    vat_rate = settings.cent_auction_vat_pct / Decimal('100')  # 0.21
+    comm_total = (amount * settings.cent_auction_commission_pct / Decimal('100')).quantize(Q)
+    vat = (comm_total * vat_rate / (1 + vat_rate)).quantize(Q)
+    comm_net = comm_total - vat
+    return comm_net, vat, comm_total
 
 
 def _finish_auction(auction):
@@ -482,19 +491,18 @@ def _release_escrow_to_seller(escrow):
     """Atbrīvo escrow naudu — pārskaita pārdevājam neto summu."""
     if escrow.status == 'released':
         return
-    from listings.models import SiteSettings
     auction = escrow.auction
     seller_wallet, _ = Wallet.objects.get_or_create(user=auction.listing.seller)
     ref = f'escrow_release_{escrow.pk}'
     if not WalletTransaction.objects.filter(reference=ref).exists():
+        # net_to_seller ir ar PVN iekļauts — make_deposit to pareizi reģistrē
         WalletTransaction.make_deposit(
             seller_wallet, escrow.net_to_seller,
             reference=ref,
         )
-        # Pārrakstām aprakstu pēc fakta
         from accounts.models import WalletTransaction as WT
         WT.objects.filter(reference=ref).update(
-            description=f'Centu izsole (escrow atbrīvots): {auction.listing.title[:70]}'
+            description=f'Centu izsole (escrow atbrīvots, ar PVN): {auction.listing.title[:65]}'
         )
     escrow.status = 'released'
     escrow.delivered_at = timezone.now()

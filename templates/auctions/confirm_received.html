@@ -18,10 +18,25 @@
         </div>
         {% endif %}
 
+        <div class="p-3 rounded mb-3" style="background:#f8f9fa;font-size:.82rem;border:1px solid #e9ecef">
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Jūsu samaksātā summa (ar PVN):</span>
+                <strong>€{{ escrow.amount }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Platformas komisija (ar PVN {{ escrow.vat_amount }}):</span>
+                <span class="text-danger">−€{{ escrow.commission|add:escrow.vat_amount }}</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold border-top pt-1 mt-1">
+                <span>Pārdevējs saņems (ar PVN):</span>
+                <span style="color:#2196c9">€{{ escrow.net_to_seller }}</span>
+            </div>
+        </div>
+
         <div class="p-3 rounded mb-4" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.88rem">
             <i class="bi bi-exclamation-triangle me-2" style="color:#f97316"></i>
             <strong>Apstipriniet tikai tad, kad esat saņēmis preci!</strong><br>
-            Pēc apstiprināšanas <strong>€{{ escrow.net_to_seller }}</strong> tiks automātiski pārskaitīti pārdevējam.
+            Pēc apstiprināšanas <strong>€{{ escrow.net_to_seller }}</strong> (ar PVN 21%) tiks automātiski pārskaitīti pārdevājam.
             Šo darbību nevar atcelt.
         </div>
 
