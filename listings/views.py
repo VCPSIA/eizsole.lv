@@ -826,6 +826,7 @@ def listing_create(request):
             except (ValueError, Exception):
                 ends_at_dt = timezone.now() + timedelta(days=7)
             auction_type = request.POST.get('auction_type', 'english')
+            is_cent = 'is_cent_auction' in request.POST
             dutch_step, _ = _validate_price(request.POST.get('dutch_price_step', ''))
             dutch_min, _  = _validate_price(request.POST.get('dutch_min_price', ''))
             try:
@@ -837,6 +838,7 @@ def listing_create(request):
             Auction.objects.create(
                 listing=listing,
                 auction_type=auction_type,
+                is_cent_auction=is_cent,
                 starting_price=sp_val,
                 current_price=sp_val,
                 min_bid_increment=request.POST.get('min_bid_increment', 1),

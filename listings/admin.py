@@ -96,6 +96,20 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'fields': ['banner_enabled', 'banner_fee', 'banner_rotation_seconds'],
             'description': 'Klients var samaksāt par reklāmas baneri, kas rotācijas kārtībā rādīsies visās lapas apakšlapās.',
         }),
+        ('Centu izsoles', {
+            'fields': [
+                'cent_auction_enabled',
+                'cent_auction_min_balance',
+                'cent_auction_min_bid_increment',
+                'cent_auction_commission_pct',
+                'cent_auction_vat_pct',
+            ],
+            'description': (
+                'Centu izsoles — izsoles ar ļoti zemām sākumcentām. '
+                'Dalībai nepieciešams min. maka atlikums. '
+                'Komisija (% + PVN) tiek atskaitīta no pārdevēja ieņēmumiem.'
+            ),
+        }),
     ]
 
     def has_add_permission(self, request):

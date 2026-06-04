@@ -31,8 +31,17 @@ def _validate_price(value_str, field_name='Cena'):
     return val, None
 
 
+def _calc_commission(amount, settings):
+    """Aprēķina komisiju un PVN centu izsolei."""
+    from decimal import Decimal
+    comm = (amount * settings.cent_auction_commission_pct / Decimal('100')).quantize(Decimal('0.01'))
+    vat  = (comm * settings.cent_auction_vat_pct / Decimal('100')).quantize(Decimal('0.01'))
+    return comm, vat, comm + vat
+
+
 def _finish_auction(auction):
     """Pabeidz izsoli: pieraksta uzvarētāju, iekasē no maka, sūta paziņojumus."""
+    from listings.models import SiteSettings
     top_bid = auction.bids.order_by('-amount').first()
 
     if top_bid and auction.reserve_met():
@@ -60,10 +69,29 @@ def _finish_auction(auction):
                        url='/accounts/maks/papildinat/')
 
         auction.winner = winner
-        notify(auction.listing.seller, 'bid',
-               f'Izsole "{auction.listing.title}" beigusies. '
-               f'Uzvarētājs: {winner.username} (€{amount}).',
-               url=f'/izsoles/{auction.pk}/')
+
+        # Centu izsoles komisija — atskaitās no pārdevēja
+        if auction.is_cent_auction:
+            settings = SiteSettings.get()
+            comm, vat, total = _calc_commission(amount, settings)
+            seller_wallet, _ = Wallet.objects.get_or_create(user=auction.listing.seller)
+            comm_ref = f'cent_comm_{auction.pk}'
+            if not WalletTransaction.objects.filter(reference=comm_ref).exists():
+                WalletTransaction.make_spend(
+                    seller_wallet, total,
+                    description=f'Komisija {settings.cent_auction_commission_pct}% + PVN {settings.cent_auction_vat_pct}%: {auction.listing.title[:60]}',
+                    reference=comm_ref,
+                )
+            notify(auction.listing.seller, 'bid',
+                   f'Centu izsole "{auction.listing.title}" beigusies. '
+                   f'Uzvarētājs: {winner.username} (€{amount}). '
+                   f'Komisija: €{comm} + PVN €{vat} = €{total} norakstīti no maka.',
+                   url=f'/izsoles/{auction.pk}/')
+        else:
+            notify(auction.listing.seller, 'bid',
+                   f'Izsole "{auction.listing.title}" beigusies. '
+                   f'Uzvarētājs: {winner.username} (€{amount}).',
+                   url=f'/izsoles/{auction.pk}/')
     else:
         notify(auction.listing.seller, 'bid',
                f'Izsole "{auction.listing.title}" beigusies bez uzvarētāja.',
@@ -126,6 +154,12 @@ def auction_detail(request, pk):
             auction=auction, bidder=request.user, is_active=True
         ).first()
 
+    from listings.models import SiteSettings
+    settings = SiteSettings.get()
+    cent_commission_total = None
+    if auction.is_cent_auction and auction.is_finished and auction.winner:
+        _, _, cent_commission_total = _calc_commission(auction.current_price, settings)
+
     return render(request, 'auctions/detail.html', {
         'auction': auction,
         'bids': bids,
@@ -133,6 +167,8 @@ def auction_detail(request, pk):
         'increment': get_increment(auction.current_price),
         'dutch_price': auction.dutch_current_price() if auction.auction_type == 'dutch' else None,
         'dutch_next_drop': auction.dutch_next_drop() if auction.auction_type == 'dutch' else None,
+        'site_settings': settings,
+        'cent_commission_total': cent_commission_total,
     })
 
 
@@ -154,15 +190,30 @@ def place_bid(request, pk):
     if err:
         return err
 
+    # Centu izsoles balances pārbaude
+    if auction.is_cent_auction:
+        from listings.models import SiteSettings
+        settings = SiteSettings.get()
+        wallet, _ = Wallet.objects.get_or_create(user=request.user)
+        if wallet.balance < settings.cent_auction_min_balance:
+            messages.error(request,
+                f'Centu izsolei nepieciešams vismaz €{settings.cent_auction_min_balance:.2f} maka atlikums. '
+                f'Jūsu atlikums: €{wallet.balance:.2f}.')
+            return redirect('auction_detail', pk=pk)
+
     amount, amt_err = _validate_price(request.POST.get('amount', ''), 'Solījuma summa')
     if amt_err or amount is None:
         messages.error(request, amt_err or 'Solījuma summa ir obligāta.')
         return redirect('auction_detail', pk=pk)
 
-    increment = get_increment(auction.current_price)
+    if auction.is_cent_auction:
+        from listings.models import SiteSettings
+        increment = SiteSettings.get().cent_auction_min_bid_increment
+    else:
+        increment = get_increment(auction.current_price)
     min_required = auction.current_price + increment
     if amount < min_required:
-        messages.error(request, f'Minimālais solījums ir €{min_required:.2f} (solis: €{increment:.0f})')
+        messages.error(request, f'Minimālais solījums ir €{min_required:.2f} (solis: €{increment:.2f})')
         return redirect('auction_detail', pk=pk)
 
     # Manuālais solījums

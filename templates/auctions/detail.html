@@ -241,6 +241,14 @@
     <!-- Labā puse -->
     <div class="col-lg-4">
         <div class="info-card">
+            {% if auction.is_cent_auction %}
+            <div class="mb-2">
+                <span class="badge fw-bold px-3 py-1" style="background:#f97316;border-radius:20px;font-size:.8rem">
+                    ¢ Centu izsole
+                </span>
+                <span class="text-muted ms-1" style="font-size:.75rem">Min. atlikums makā: €{{ site_settings.cent_auction_min_balance }}</span>
+            </div>
+            {% endif %}
             {% if auction.auction_type == 'dutch' %}
             <!-- Holandiešu izsole: krītoša cena -->
             <div class="mb-2 d-flex align-items-center gap-2">
@@ -346,6 +354,13 @@
                         </div>
                         {% endwith %}
                     </div>
+                    {% if auction.is_cent_auction %}
+                    <div class="mt-2 p-2 rounded" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.78rem">
+                        <i class="bi bi-percent me-1" style="color:#f97316"></i>
+                        Komisija {{ site_settings.cent_auction_commission_pct }}% + PVN {{ site_settings.cent_auction_vat_pct }}%
+                        no €{{ auction.current_price }} = <strong>€{{ cent_commission_total }}</strong> norakstīti no maka.
+                    </div>
+                    {% endif %}
                     {% endif %}
                 {% endif %}
                 {% endif %}

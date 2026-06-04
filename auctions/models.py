@@ -29,6 +29,9 @@ class Auction(models.Model):
     dutch_interval_minutes = models.PositiveSmallIntegerField(null=True, blank=True)
     dutch_min_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
+    # Centu izsole
+    is_cent_auction = models.BooleanField(default=False)
+
     def __str__(self):
         return f"Izsole: {self.listing.title}"
 

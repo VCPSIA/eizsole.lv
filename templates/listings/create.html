@@ -453,12 +453,26 @@
     <!-- Izsoles opcija -->
     <div class="card bg-light mb-3" id="auction-card">
         <div class="card-body">
-            <div class="form-check mb-3">
+            <div class="form-check mb-2">
                 <input type="checkbox" name="is_auction" id="is_auction" class="form-check-input">
                 <label for="is_auction" class="form-check-label fw-semibold">
                     <i class="bi bi-hammer" style="color:#2196c9"></i> {% trans "Publicēt kā izsoli" %}
                 </label>
             </div>
+
+            {% if site_settings.cent_auction_enabled %}
+            <div class="form-check mb-3 ms-1" id="cent-auction-wrap" style="display:none">
+                <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="form-check-input">
+                <label for="is_cent_auction" class="form-check-label">
+                    <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
+                    <strong>Centu izsole</strong>
+                    <span class="text-muted fw-normal small">
+                        — dalībai nepieciešami min. €{{ site_settings.cent_auction_min_balance }} makā.
+                        Komisija {{ site_settings.cent_auction_commission_pct }}% + PVN {{ site_settings.cent_auction_vat_pct }}% no izsolītās summas (atskaitās no pārdevēja).
+                    </span>
+                </label>
+            </div>
+            {% endif %}
 
             <!-- Izsoļu veidu skaidrojums + izvēle -->
             <div id="auction_type_selector" style="display:none">
@@ -1150,6 +1164,15 @@ const hasInspCb = document.getElementById('has_inspection');
 if (hasInspCb) hasInspCb.addEventListener('change', function() { toggleInspection(this); });
 document.getElementById('video-drop-zone').addEventListener('click', () => document.getElementById('video-input').click());
 document.getElementById('video-input').addEventListener('change', function() { handleVideo(this.files[0]); });
+
+// Centu izsoles checkbox rādīšana
+var centWrap = document.getElementById('cent-auction-wrap');
+if (centWrap) {
+    document.getElementById('is_auction').addEventListener('change', function() {
+        centWrap.style.display = this.checked ? 'block' : 'none';
+        if (!this.checked) document.getElementById('is_cent_auction').checked = false;
+    });
+}
 
 // Holandiešu izsoles tipu izvēle
 document.querySelectorAll('input[name="auction_type"]').forEach(r => {

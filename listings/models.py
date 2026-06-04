@@ -472,6 +472,13 @@ class SiteSettings(models.Model):
     banner_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='Banera maksa (€ ar PVN)')
     banner_rotation_seconds = models.PositiveIntegerField(default=5, verbose_name='Banera rotācijas laiks (sekundes)')
 
+    # Centu izsoles
+    cent_auction_enabled = models.BooleanField(default=False, verbose_name='Centu izsoles ieslēgtas')
+    cent_auction_min_balance = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.50'), verbose_name='Min. maka atlikums dalībai (€)')
+    cent_auction_min_bid_increment = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.01'), verbose_name='Min. solīšanas solis (€)')
+    cent_auction_commission_pct = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('10.00'), verbose_name='Komisija (%)')
+    cent_auction_vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('21.00'), verbose_name='PVN (%)')
+
     class Meta:
         verbose_name = 'Vietnes iestatījumi'
         verbose_name_plural = 'Vietnes iestatījumi'
