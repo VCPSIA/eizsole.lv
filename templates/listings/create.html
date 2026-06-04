@@ -462,16 +462,25 @@
 
             {% if site_settings.cent_auction_enabled %}
             <div id="cent-auction-wrap" style="display:none">
-                <div class="form-check mb-2 ms-1">
-                    <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="form-check-input">
-                    <label for="is_cent_auction" class="form-check-label">
-                        <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
-                        <strong>Centu izsole ar drošības starpniecību</strong>
-                        <span class="text-muted fw-normal small">
-                            — platforma ietur naudu; pārdevējs saņem to pēc piegādes apstiprināšanas no pircēja puses.
-                            Komisija {{ site_settings.cent_auction_commission_pct }}% (ar PVN) no izsolītās summas.
-                        </span>
-                    </label>
+
+                <!-- Centu izsoles izvēles karte -->
+                <input type="checkbox" name="is_cent_auction" id="is_cent_auction" class="d-none">
+                <div id="cent-card" onclick="document.getElementById('is_cent_auction').click()"
+                     style="border:2px solid #e9ecef;border-radius:12px;padding:1rem;cursor:pointer;transition:all .18s;margin-bottom:.75rem;user-select:none">
+                    <div class="d-flex align-items-center gap-2">
+                        <div id="cent-check-icon" style="width:22px;height:22px;border:2px solid #ced4da;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s">
+                        </div>
+                        <div>
+                            <div class="fw-semibold">
+                                <span class="badge me-1" style="background:#f97316;border-radius:20px;font-size:.72rem">¢</span>
+                                Centu izsole ar drošības starpniecību
+                            </div>
+                            <div class="text-muted small">
+                                Platforma ietur naudu; pārdevējs saņem to pēc piegādes apstiprināšanas no pircēja puses.
+                                Komisija {{ site_settings.cent_auction_commission_pct }}% (ar PVN) no izsolītās summas.
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="cent-details" style="display:none">
@@ -1226,14 +1235,34 @@ document.getElementById('video-input').addEventListener('change', function() { h
 var centWrap = document.getElementById('cent-auction-wrap');
 var centDetails = document.getElementById('cent-details');
 var centCb = document.getElementById('is_cent_auction');
+var centCard = document.getElementById('cent-card');
+var centIcon = document.getElementById('cent-check-icon');
+
+function updateCentCard() {
+    if (!centCard) return;
+    if (centCb.checked) {
+        centCard.style.borderColor = '#f97316';
+        centCard.style.background = '#fff7ed';
+        centIcon.style.background = '#f97316';
+        centIcon.style.borderColor = '#f97316';
+        centIcon.innerHTML = '<i class="bi bi-check-lg" style="color:white;font-size:.75rem"></i>';
+        if (centDetails) centDetails.style.display = 'block';
+    } else {
+        centCard.style.borderColor = '#e9ecef';
+        centCard.style.background = '';
+        centIcon.style.background = '';
+        centIcon.style.borderColor = '#ced4da';
+        centIcon.innerHTML = '';
+        if (centDetails) centDetails.style.display = 'none';
+    }
+}
+
 if (centWrap && centCb) {
     document.getElementById('is_auction').addEventListener('change', function() {
         centWrap.style.display = this.checked ? 'block' : 'none';
-        if (!this.checked) { centCb.checked = false; if (centDetails) centDetails.style.display = 'none'; }
+        if (!this.checked) { centCb.checked = false; updateCentCard(); }
     });
-    centCb.addEventListener('change', function() {
-        if (centDetails) centDetails.style.display = this.checked ? 'block' : 'none';
-    });
+    centCb.addEventListener('change', updateCentCard);
     // Piegādes veida radio pogu vizuālais stils
     document.querySelectorAll('input[name="delivery_method"]').forEach(function(r) {
         r.addEventListener('change', function() {
