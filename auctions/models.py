@@ -76,6 +76,37 @@ class Auction(models.Model):
         return top.bidder if top else None
 
 
+class CentAuctionEscrow(models.Model):
+    STATUS_CHOICES = [
+        ('held',      'Nauda noturēta platformā'),
+        ('shipped',   'Pārdevējs apstiprinājis nosūtīšanu'),
+        ('delivered', 'Pircējs apstiprinājis saņemšanu'),
+        ('released',  'Nauda pārskaitīta pārdevējam'),
+        ('refunded',  'Nauda atmaksāta pircējam'),
+        ('disputed',  'Strīds — admin izskata'),
+    ]
+
+    auction        = models.OneToOneField(Auction, on_delete=models.CASCADE, related_name='escrow')
+    amount         = models.DecimalField(max_digits=10, decimal_places=2)       # pilna summa no pircēja
+    commission     = models.DecimalField(max_digits=10, decimal_places=2)       # komisija bez PVN
+    vat_amount     = models.DecimalField(max_digits=10, decimal_places=2)       # PVN uz komisiju
+    net_to_seller  = models.DecimalField(max_digits=10, decimal_places=2)       # pārdevēja daļa
+    status         = models.CharField(max_length=12, choices=STATUS_CHOICES, default='held')
+    created_at     = models.DateTimeField(auto_now_add=True)
+    shipped_at     = models.DateTimeField(null=True, blank=True)
+    delivered_at   = models.DateTimeField(null=True, blank=True)
+    released_at    = models.DateTimeField(null=True, blank=True)
+    tracking_info  = models.CharField(max_length=300, blank=True, verbose_name='Izsekošanas Nr.')
+    note           = models.TextField(blank=True, verbose_name='Piezīme')
+
+    class Meta:
+        verbose_name = 'Centu izsoles depozīts'
+        verbose_name_plural = 'Centu izsoles depozīti'
+
+    def __str__(self):
+        return f'Escrow #{self.pk} — {self.auction.listing.title[:50]} ({self.get_status_display()})'
+
+
 class Bid(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='bids')
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')

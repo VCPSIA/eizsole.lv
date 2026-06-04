@@ -1,11 +1,12 @@
 from decimal import Decimal, InvalidOperation
 from datetime import timedelta
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from .models import Auction, Bid, ProxyBid
+from .models import Auction, Bid, ProxyBid, CentAuctionEscrow
 from .proxy import process_proxy_bids, apply_proxy_for_new_proxy
 from .anti_snipe import check_and_extend
 from .increments import get_increment
@@ -70,22 +71,29 @@ def _finish_auction(auction):
 
         auction.winner = winner
 
-        # Centu izsoles komisija — atskaitās no pārdevēja
         if auction.is_cent_auction:
+            # Nauda aiziet platformas depozītā — pārdevējs saņem tikai pēc piegādes apstiprināšanas
             settings = SiteSettings.get()
-            comm, vat, total = _calc_commission(amount, settings)
-            seller_wallet, _ = Wallet.objects.get_or_create(user=auction.listing.seller)
-            comm_ref = f'cent_comm_{auction.pk}'
-            if not WalletTransaction.objects.filter(reference=comm_ref).exists():
-                WalletTransaction.make_spend(
-                    seller_wallet, total,
-                    description=f'Komisija {settings.cent_auction_commission_pct}% + PVN {settings.cent_auction_vat_pct}%: {auction.listing.title[:60]}',
-                    reference=comm_ref,
+            comm, vat, total_comm = _calc_commission(amount, settings)
+            net = (amount - total_comm).quantize(Decimal('0.01'))
+            if not CentAuctionEscrow.objects.filter(auction=auction).exists():
+                CentAuctionEscrow.objects.create(
+                    auction=auction,
+                    amount=amount,
+                    commission=comm,
+                    vat_amount=vat,
+                    net_to_seller=net,
+                    status='held',
                 )
             notify(auction.listing.seller, 'bid',
-                   f'Centu izsole "{auction.listing.title}" beigusies. '
-                   f'Uzvarētājs: {winner.username} (€{amount}). '
-                   f'Komisija: €{comm} + PVN €{vat} = €{total} norakstīti no maka.',
+                   f'Centu izsole "{auction.listing.title}" beigusies! '
+                   f'Uzvarētājs: {winner.username}. Summa €{amount} noturēta platformā. '
+                   f'Nosūtiet preci un apstipriniet nosūtīšanu izsolē.',
+                   url=f'/izsoles/{auction.pk}/')
+            notify(winner, 'won',
+                   f'Apsveicam! Uzvarējāt centu izsolē "{auction.listing.title}" par €{amount}. '
+                   f'€{amount} noturēti platformā kā drošības starpniekam. '
+                   f'Pēc preces saņemšanas apstipriniet piegādi.',
                    url=f'/izsoles/{auction.pk}/')
         else:
             notify(auction.listing.seller, 'bid',
@@ -156,9 +164,14 @@ def auction_detail(request, pk):
 
     from listings.models import SiteSettings
     settings = SiteSettings.get()
+    escrow = None
     cent_commission_total = None
-    if auction.is_cent_auction and auction.is_finished and auction.winner:
-        _, _, cent_commission_total = _calc_commission(auction.current_price, settings)
+    if auction.is_cent_auction:
+        escrow = CentAuctionEscrow.objects.filter(auction=auction).first()
+        if escrow:
+            cent_commission_total = escrow.commission + escrow.vat_amount
+        elif auction.is_finished and auction.winner:
+            _, _, cent_commission_total = _calc_commission(auction.current_price, settings)
 
     return render(request, 'auctions/detail.html', {
         'auction': auction,
@@ -168,6 +181,7 @@ def auction_detail(request, pk):
         'dutch_price': auction.dutch_current_price() if auction.auction_type == 'dutch' else None,
         'dutch_next_drop': auction.dutch_next_drop() if auction.auction_type == 'dutch' else None,
         'site_settings': settings,
+        'escrow': escrow,
         'cent_commission_total': cent_commission_total,
     })
 
@@ -418,6 +432,82 @@ def auction_edit(request, pk):
         return redirect('auction_detail', pk=pk)
 
     return render(request, 'auctions/edit.html', {'auction': auction, 'listing': listing, 'has_bids': has_bids})
+
+
+@login_required
+def confirm_shipped(request, pk):
+    """Pārdevējs apstiprina ka prece ir nosūtīta."""
+    auction = get_object_or_404(Auction, pk=pk, listing__seller=request.user)
+    escrow = get_object_or_404(CentAuctionEscrow, auction=auction)
+
+    if escrow.status != 'held':
+        messages.error(request, 'Šo darbību nevar veikt pašreizējā statusā.')
+        return redirect('auction_detail', pk=pk)
+
+    if request.method == 'POST':
+        escrow.status = 'shipped'
+        escrow.shipped_at = timezone.now()
+        escrow.tracking_info = request.POST.get('tracking_info', '').strip()[:300]
+        escrow.save()
+        notify(auction.winner, 'bid',
+               f'Pārdevējs apstiprinājis preces nosūtīšanu izsolē "{auction.listing.title}". '
+               f'Pēc saņemšanas lūdzu apstipriniet piegādi.',
+               url=f'/izsoles/{auction.pk}/')
+        messages.success(request, 'Nosūtīšana apstiprināta. Gaidām pircēja apstiprinājumu.')
+        return redirect('auction_detail', pk=pk)
+
+    return render(request, 'auctions/confirm_shipped.html', {'auction': auction, 'escrow': escrow})
+
+
+@login_required
+def confirm_received(request, pk):
+    """Pircējs apstiprina ka prece ir saņemta — nauda tiek atbrīvota pārdevējam."""
+    auction = get_object_or_404(Auction, pk=pk, winner=request.user)
+    escrow = get_object_or_404(CentAuctionEscrow, auction=auction)
+
+    if escrow.status not in ('held', 'shipped'):
+        messages.error(request, 'Šo darbību nevar veikt pašreizējā statusā.')
+        return redirect('auction_detail', pk=pk)
+
+    if request.method == 'POST':
+        _release_escrow_to_seller(escrow)
+        messages.success(request,
+            f'Piegāde apstiprināta! €{escrow.net_to_seller} pārskaitīti pārdevējam.')
+        return redirect('auction_detail', pk=pk)
+
+    return render(request, 'auctions/confirm_received.html', {'auction': auction, 'escrow': escrow})
+
+
+def _release_escrow_to_seller(escrow):
+    """Atbrīvo escrow naudu — pārskaita pārdevājam neto summu."""
+    if escrow.status == 'released':
+        return
+    from listings.models import SiteSettings
+    auction = escrow.auction
+    seller_wallet, _ = Wallet.objects.get_or_create(user=auction.listing.seller)
+    ref = f'escrow_release_{escrow.pk}'
+    if not WalletTransaction.objects.filter(reference=ref).exists():
+        WalletTransaction.make_deposit(
+            seller_wallet, escrow.net_to_seller,
+            reference=ref,
+        )
+        # Pārrakstām aprakstu pēc fakta
+        from accounts.models import WalletTransaction as WT
+        WT.objects.filter(reference=ref).update(
+            description=f'Centu izsole (escrow atbrīvots): {auction.listing.title[:70]}'
+        )
+    escrow.status = 'released'
+    escrow.delivered_at = timezone.now()
+    escrow.released_at = timezone.now()
+    escrow.save()
+    notify(auction.listing.seller, 'bid',
+           f'Pircējs apstiprinājis preces saņemšanu. '
+           f'€{escrow.net_to_seller} (no €{escrow.amount} − komisija €{escrow.commission} − PVN €{escrow.vat_amount}) '
+           f'pārskaitīti uz jūsu maku.',
+           url=f'/izsoles/{auction.pk}/')
+    notify(auction.winner, 'won',
+           f'Piegāde apstiprināta izsolē "{auction.listing.title}". Darījums pabeigts.',
+           url=f'/izsoles/{auction.pk}/')
 
 
 @login_required

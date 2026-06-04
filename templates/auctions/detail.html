@@ -354,17 +354,60 @@
                         </div>
                         {% endwith %}
                     </div>
-                    {% if auction.is_cent_auction %}
+                    {% endif %}
+                    {% if auction.is_cent_auction and escrow %}
                     <div class="mt-2 p-2 rounded" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.78rem">
                         <i class="bi bi-percent me-1" style="color:#f97316"></i>
                         Komisija {{ site_settings.cent_auction_commission_pct }}% + PVN {{ site_settings.cent_auction_vat_pct }}%
-                        no €{{ auction.current_price }} = <strong>€{{ cent_commission_total }}</strong> norakstīti no maka.
+                        = <strong>€{{ cent_commission_total }}</strong>. Jūs saņemsiet €{{ escrow.net_to_seller }}.
                     </div>
-                    {% endif %}
                     {% endif %}
                 {% endif %}
                 {% endif %}
             </div>
+
+            {% if auction.is_cent_auction and escrow %}
+            <div class="mb-3 p-3 rounded" style="border:1.5px solid #b3d9f0;border-radius:12px">
+                <div class="fw-semibold mb-2" style="color:#2196c9;font-size:.88rem">
+                    <i class="bi bi-shield-lock me-1"></i>Drošības starpnieks (Escrow)
+                </div>
+                {% if escrow.status == 'held' %}
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px">⏳ Nauda noturēta</span>
+                    <span class="text-muted small">€{{ escrow.amount }} platformā</span>
+                </div>
+                {% if user == auction.listing.seller %}
+                <a href="{% url 'confirm_shipped' auction.pk %}" class="btn btn-sm w-100 fw-semibold" style="background:#2196c9;color:white;border-radius:8px">
+                    <i class="bi bi-truck me-1"></i>Apstiprināt nosūtīšanu
+                </a>
+                {% elif user == auction.winner %}
+                <div class="text-muted small">Gaida pārdevēja nosūtīšanas apstiprinājumu.</div>
+                <a href="{% url 'confirm_received' auction.pk %}" class="btn btn-sm w-100 mt-2" style="background:#f97316;color:white;border-radius:8px">
+                    <i class="bi bi-check-circle me-1"></i>Esmu saņēmis preci
+                </a>
+                {% endif %}
+                {% elif escrow.status == 'shipped' %}
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge" style="background:#dbeafe;color:#1e40af;border-radius:20px">🚚 Nosūtīts</span>
+                    {% if escrow.tracking_info %}<span class="text-muted small">{{ escrow.tracking_info }}</span>{% endif %}
+                </div>
+                {% if user == auction.winner %}
+                <a href="{% url 'confirm_received' auction.pk %}" class="btn btn-sm w-100 fw-semibold" style="background:#f97316;color:white;border-radius:8px">
+                    <i class="bi bi-check-circle me-1"></i>Apstiprināt saņemšanu
+                </a>
+                {% else %}
+                <div class="text-muted small">Gaida pircēja saņemšanas apstiprinājumu.</div>
+                {% endif %}
+                {% elif escrow.status == 'released' %}
+                <span class="badge" style="background:#dcfce7;color:#166534;border-radius:20px">✅ Nauda pārskaitīta pārdevājam</span>
+                <div class="text-muted small mt-1">€{{ escrow.net_to_seller }} pārskaitīti {{ escrow.released_at|date:"d.m.Y H:i" }}</div>
+                {% elif escrow.status == 'refunded' %}
+                <span class="badge" style="background:#fee2e2;color:#991b1b;border-radius:20px">↩ Atmaksāts pircājam</span>
+                {% elif escrow.status == 'disputed' %}
+                <span class="badge" style="background:#fef9c3;color:#854d0e;border-radius:20px">⚠️ Strīds — admin izskata</span>
+                {% endif %}
+            </div>
+            {% endif %}
 
             {% if auction.buy_now_price %}
             <div class="mb-3 p-3 rounded" style="background:#f0fdf4;border:1.5px solid #bbf7d0">

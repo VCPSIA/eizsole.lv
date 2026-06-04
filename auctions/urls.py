@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:pk>/labot/', views.auction_edit, name='auction_edit'),
     path('<int:pk>/atjaunot/', views.restart_auction, name='restart_auction'),
     path('<int:pk>/holandiesu-pirkt/', views.dutch_buy, name='dutch_buy'),
+    path('<int:pk>/nosuita/', views.confirm_shipped, name='confirm_shipped'),
+    path('<int:pk>/sanems/', views.confirm_received, name='confirm_received'),
 ]

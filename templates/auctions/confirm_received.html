@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Apstiprināt saņemšanu — {{ auction.listing.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card shadow-sm" style="border-radius:16px;overflow:hidden">
+    <div class="card-header text-white fw-bold" style="background:#f97316;font-size:1.05rem">
+        <i class="bi bi-box-seam me-2"></i>Apstiprināt preces saņemšanu
+    </div>
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-1">{{ auction.listing.title }}</h5>
+        <p class="text-muted small mb-3">Pārdevējs: <strong>{{ auction.listing.seller.username }}</strong></p>
+
+        {% if escrow.tracking_info %}
+        <div class="p-2 rounded mb-3" style="background:#f8f9fa;border:1px solid #e9ecef;font-size:.85rem">
+            <i class="bi bi-truck me-1" style="color:#2196c9"></i>
+            Izsekošanas info: <strong>{{ escrow.tracking_info }}</strong>
+        </div>
+        {% endif %}
+
+        <div class="p-3 rounded mb-4" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.88rem">
+            <i class="bi bi-exclamation-triangle me-2" style="color:#f97316"></i>
+            <strong>Apstipriniet tikai tad, kad esat saņēmis preci!</strong><br>
+            Pēc apstiprināšanas <strong>€{{ escrow.net_to_seller }}</strong> tiks automātiski pārskaitīti pārdevējam.
+            Šo darbību nevar atcelt.
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-lg w-100 fw-bold" style="background:#f97316;color:white;border-radius:12px">
+                <i class="bi bi-check-circle me-2"></i>Esmu saņēmis preci — atbrīvot naudu
+            </button>
+        </form>
+        <a href="{% url 'auction_detail' auction.pk %}" class="btn btn-outline-secondary w-100 mt-2">Atpakaļ</a>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
