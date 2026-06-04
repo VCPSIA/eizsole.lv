@@ -1,4 +1,4 @@
-﻿# German translations for eizsole.lv
+# German translations for eizsole.lv
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
