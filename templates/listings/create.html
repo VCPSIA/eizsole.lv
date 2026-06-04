@@ -462,20 +462,20 @@
 
             <!-- Izsoļu veidu skaidrojums + izvēle -->
             <div id="auction_type_selector" style="display:none">
-                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#2196c9"></i>Izvēlieties izsoles veidu:</p>
+                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#2196c9"></i>{% trans "Izvēlieties izsoles veidu:" %}</p>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <input type="radio" class="btn-check" name="auction_type" id="type_english" value="english" checked>
                         <label for="type_english" class="d-block p-3 rounded cursor-pointer h-100" style="border:2px solid #b3d9f0;border-radius:12px!important;cursor:pointer;transition:all .18s" id="card_english">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span style="font-size:1.5rem">📈</span>
-                                <strong style="color:#2196c9">Angļu izsole</strong>
+                                <strong style="color:#2196c9">{% trans "Angļu izsole" %}</strong>
                             </div>
                             <ul class="small text-muted ps-3 mb-0" style="line-height:1.7">
-                                <li>Cena <strong>sākas zema</strong> un aug</li>
-                                <li>Solītāji konkurē savā starpā</li>
-                                <li>Uzvar <strong>augstākais solījums</strong></li>
-                                <li>Klasiskais izsoles veids</li>
+                                <li>{% trans "Cena sākas zema un aug" %}</li>
+                                <li>{% trans "Solītāji konkurē savā starpā" %}</li>
+                                <li>{% trans "Uzvar augstākais solījums" %}</li>
+                                <li>{% trans "Klasiskais izsoles veids" %}</li>
                             </ul>
                         </label>
                     </div>
@@ -484,13 +484,13 @@
                         <label for="type_dutch" class="d-block p-3 rounded cursor-pointer h-100" style="border:2px solid #b3d9f0;border-radius:12px!important;cursor:pointer;transition:all .18s" id="card_dutch">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span style="font-size:1.5rem">📉</span>
-                                <strong style="color:#f97316">Holandiešu izsole</strong>
+                                <strong style="color:#f97316">{% trans "Holandiešu izsole" %}</strong>
                             </div>
                             <ul class="small text-muted ps-3 mb-0" style="line-height:1.7">
-                                <li>Cena <strong>sākas augsta</strong> un krītas</li>
-                                <li>Pirmais <strong>"Pieņemt cenu"</strong> uzvar</li>
-                                <li>Nav solīšanas — <strong>pirkt vai gaidīt</strong></li>
-                                <li>Ideāli ātrai pārdošanai</li>
+                                <li>{% trans "Cena sākas augsta un krītas" %}</li>
+                                <li>{% blocktrans %}Pirmais <strong>"Pieņemt cenu"</strong> uzvar{% endblocktrans %}</li>
+                                <li>{% trans "Nav solīšanas — pirkt vai gaidīt" %}</li>
+                                <li>{% trans "Ideāli ātrai pārdošanai" %}</li>
                             </ul>
                         </label>
                     </div>
@@ -546,40 +546,40 @@
                 <div id="dutch_fields" style="display:none">
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Sākuma cena (€) *</label>
+                        <label class="form-label fw-semibold">{% trans "Sākuma cena (€)" %} *</label>
                         <input type="number" name="dutch_starting_price" id="dutch_starting_price" class="form-control" step="0.01" min="0.01" placeholder="500.00">
-                        <div class="form-text">Augstākā cena — izsole sākas šeit.</div>
+                        <div class="form-text">{% trans "Augstākā cena — izsole sākas šeit." %}</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Minimālā cena (€) *</label>
+                        <label class="form-label fw-semibold">{% trans "Minimālā cena (€)" %} *</label>
                         <input type="number" name="dutch_min_price" id="dutch_min_price" class="form-control" step="0.01" min="0.01" placeholder="100.00">
-                        <div class="form-text">Zemākā cena — tālāk nekrītas.</div>
+                        <div class="form-text">{% trans "Zemākā cena — tālāk nekrītas." %}</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Cenas kritums (€) *</label>
+                        <label class="form-label fw-semibold">{% trans "Cenas kritums (€)" %} *</label>
                         <input type="number" name="dutch_price_step" id="dutch_price_step" class="form-control" step="0.01" min="0.01" placeholder="10.00">
-                        <div class="form-text">Par cik samazinās cena katru intervālu.</div>
+                        <div class="form-text">{% trans "Par cik samazinās cena katru intervālu." %}</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Intervāls (minūtes) *</label>
+                        <label class="form-label fw-semibold">{% trans "Intervāls (minūtes)" %} *</label>
                         <select name="dutch_interval_minutes" id="dutch_interval_minutes" class="form-select">
-                            <option value="30">Ik 30 minūtes</option>
-                            <option value="60" selected>Ik 1 stundu</option>
-                            <option value="120">Ik 2 stundas</option>
-                            <option value="360">Ik 6 stundas</option>
-                            <option value="720">Ik 12 stundas</option>
-                            <option value="1440">Ik 24 stundas</option>
+                            <option value="30">{% trans "Ik 30 minūtes" %}</option>
+                            <option value="60" selected>{% trans "Ik 1 stundu" %}</option>
+                            <option value="120">{% trans "Ik 2 stundas" %}</option>
+                            <option value="360">{% trans "Ik 6 stundas" %}</option>
+                            <option value="720">{% trans "Ik 12 stundas" %}</option>
+                            <option value="1440">{% trans "Ik 24 stundas" %}</option>
                         </select>
-                        <div class="form-text">Cik bieži cena samazinās.</div>
+                        <div class="form-text">{% trans "Cik bieži cena samazinās." %}</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Izsole beidzas *</label>
+                        <label class="form-label fw-semibold">{% trans "Izsole beidzas" %} *</label>
                         <input type="datetime-local" name="dutch_ends_at" id="dutch_ends_at" class="form-control">
-                        <div class="form-text">Minimums: 1 stunda. Maksimums: 1 mēnesis.</div>
+                        <div class="form-text">{% trans "Minimums: 1 stunda. Maksimums: 1 mēnesis." %}</div>
                     </div>
                 </div>
                 <div id="dutch_preview" class="p-3 rounded mb-3" style="background:#fff7ed;border:1.5px solid #fed7aa;display:none">
-                    <div class="fw-semibold mb-1" style="color:#f97316"><i class="bi bi-calculator me-1"></i>Cenu priekšskatījums</div>
+                    <div class="fw-semibold mb-1" style="color:#f97316"><i class="bi bi-calculator me-1"></i>{% trans "Cenu priekšskatījums" %}</div>
                     <div id="dutch_preview_text" class="small text-muted"></div>
                 </div>
                 </div>{# /dutch_fields #}

@@ -245,21 +245,21 @@
             <!-- Holandiešu izsole: krītoša cena -->
             <div class="mb-2 d-flex align-items-center gap-2">
                 <span class="badge fw-bold px-3 py-1" style="background:#fff7ed;color:#f97316;border:1.5px solid #fed7aa;border-radius:20px;font-size:.8rem">
-                    📉 Holandiešu izsole
+                    📉 {% trans "Holandiešu izsole" %}
                 </span>
             </div>
-            <div class="text-muted mb-1" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Pašreizējā cena</div>
+            <div class="text-muted mb-1" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px">{% trans "Pašreizējā cena" %}</div>
             <div class="mb-1" style="font-size:2.4rem;font-weight:900;color:#f97316;line-height:1" id="dutch-price-display">
                 €<span id="dutch-price-value">{{ dutch_price }}</span>
             </div>
             <div class="text-muted mb-2" style="font-size:.82rem">
-                Sākumcena: €{{ auction.starting_price }} · Min: €{{ auction.dutch_min_price }}
-                · Kritums: €{{ auction.dutch_price_step }} ik {{ auction.dutch_interval_minutes }} min
+                {% trans "Sākumcena" %}: €{{ auction.starting_price }} · Min: €{{ auction.dutch_min_price }}
+                · {% trans "Kritums" %}: €{{ auction.dutch_price_step }} {% blocktrans with n=auction.dutch_interval_minutes %}ik {{ n }} min{% endblocktrans %}
             </div>
             {% if dutch_next_drop and auction.is_active %}
             <div class="p-2 rounded mb-3" style="background:#fff7ed;border:1px solid #fed7aa;font-size:.82rem">
                 <i class="bi bi-arrow-down-circle me-1" style="color:#f97316"></i>
-                Cena samazināsies pēc <strong id="dutch-next-drop-timer">--:--</strong>
+                {% trans "Cena samazināsies pēc" %} <strong id="dutch-next-drop-timer">--:--</strong>
             </div>
             {% endif %}
             {% else %}
@@ -373,10 +373,10 @@
                 <!-- Holandiešu izsole: tikai pirkšanas poga -->
                 <a href="{% url 'dutch_buy' auction.pk %}" class="btn btn-lg w-100 fw-bold mb-2"
                    style="background:#f97316;color:white;border-radius:12px;font-size:1.05rem">
-                    <i class="bi bi-bag-check me-2"></i>Pieņemt cenu €<span id="dutch-buy-price">{{ dutch_price }}</span>
+                    <i class="bi bi-bag-check me-2"></i>{% trans "Pieņemt cenu" %} €<span id="dutch-buy-price">{{ dutch_price }}</span>
                 </a>
                 <div class="text-muted text-center" style="font-size:.75rem">
-                    <i class="bi bi-info-circle me-1"></i>Pirmais pircējs iegūst preci par pašreizējo cenu.
+                    <i class="bi bi-info-circle me-1"></i>{% trans "Pirmais pircējs iegūst preci par pašreizējo cenu." %}
                 </div>
                 {% else %}
                 <!-- Angļu izsole: solīšanas tabs -->
