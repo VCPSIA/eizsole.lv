@@ -365,6 +365,10 @@ def buy_now(request, pk):
         messages.error(request, 'Šai izsolei nav pieejama "Pērc tūlīt" opcija.')
         return redirect('auction_detail', pk=pk)
 
+    if auction.is_cent_auction:
+        messages.error(request, 'Centu izsolē nevar pirkt tieši — cena jāsasniedz pakāpeniski solot.')
+        return redirect('auction_detail', pk=pk)
+
     if not auction.is_active():
         messages.error(request, 'Izsole ir beigusies.')
         return redirect('auction_detail', pk=pk)

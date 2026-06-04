@@ -422,6 +422,17 @@
             {% endif %}
 
             {% if auction.buy_now_price %}
+            {% if auction.is_cent_auction %}
+            {# Centu izsolē — tikai informācija; cena sasniedzama tikai solot pa centiem #}
+            <div class="mb-3 p-3 rounded" style="background:#f0fdf4;border:1.5px solid #bbf7d0">
+                <div class="text-muted" style="font-size:.72rem;font-weight:600;text-transform:uppercase;margin-bottom:.2rem">
+                    <i class="bi bi-flag-fill me-1 text-success"></i>Automātiskā beigu cena
+                </div>
+                <div class="fw-800 text-success" style="font-size:1.5rem;font-weight:800">€{{ auction.buy_now_price }}</div>
+                <div class="text-muted" style="font-size:.75rem">Aukcions beidzas automātiski, kad solīšana sasniedz šo cenu.</div>
+            </div>
+            {% else %}
+            {# Parasta izsole — Pērc tūlīt poga #}
             <div class="mb-3 p-3 rounded" style="background:#f0fdf4;border:1.5px solid #bbf7d0">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -435,6 +446,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
             {% endif %}
 
             {% if auction.is_active %}
