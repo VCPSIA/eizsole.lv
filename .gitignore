@@ -32,8 +32,7 @@ Thumbs.db
 # Static collected
 staticfiles/
 
-# Vite build output
-static/dist/
+# Vite build output (dist faili tiek commitoti, jo serverim nav Node.js)
 frontend/node_modules/
 
 # Testa skripti
