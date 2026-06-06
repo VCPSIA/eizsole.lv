@@ -476,7 +476,7 @@ class SiteSettings(models.Model):
     hero_text_lv = models.CharField(max_length=200, blank=True, default='Bezmaksas izsoļu un sludinājumu platforma', verbose_name='Hero teksts (LV)')
     hero_text_ru = models.CharField(max_length=200, blank=True, default='Бесплатная платформа аукционов и объявлений', verbose_name='Hero teksts (RU)')
     hero_text_en = models.CharField(max_length=200, blank=True, default='Free auctions and classifieds platform', verbose_name='Hero teksts (EN)')
-    hero_text_de = models.CharField(max_length=200, blank=True, default='Kostenlose Auktions- und Kleinanzeigenplattform', verbose_name='Hero teksts (DE)')
+    hero_text_de = models.CharField(max_length=200, blank=True, default='Gratis Auktionen und Kleinanzeigen', verbose_name='Hero teksts (DE)')
 
     # Centu izsoles
     cent_auction_enabled = models.BooleanField(default=False, verbose_name='Centu izsoles ieslēgtas')

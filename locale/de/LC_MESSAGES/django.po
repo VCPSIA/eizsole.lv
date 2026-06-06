@@ -1,4 +1,4 @@
-# German translations for eizsole.lv
+﻿# German translations for eizsole.lv
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
@@ -2632,4 +2632,5 @@ msgid "Iepazīšanās"
 msgstr "Partnersuche"
 
 msgid "Bezmaksas izsoļu un sludinājumu platforma"
-msgstr "Kostenlose Auktions- und Kleinanzeigenplattform"
+msgstr "Gratis Auktionen und Kleinanzeigen"
+
