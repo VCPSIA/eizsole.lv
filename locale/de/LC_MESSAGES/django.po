@@ -2521,3 +2521,115 @@ msgid "Connect, get help, or contribute"
 msgstr ""
 
 
+
+# Kategoriju tulkojumi
+msgid "Auto piederumi"
+msgstr "Auto-Zubehör & Ersatzteile"
+
+msgid "Auto serviss"
+msgstr "Autowerkstatt"
+
+msgid "Tehnika"
+msgstr "Technik & Elektronik"
+
+msgid "Sadzīves preces"
+msgstr "Haushaltswaren"
+
+msgid "Apģērbs"
+msgstr "Kleidung & Schuhe"
+
+msgid "Sports"
+msgstr "Sport & Freizeit"
+
+msgid "Dārzniecība"
+msgstr "Garten"
+
+msgid "Bērniem"
+msgstr "Für Kinder"
+
+msgid "Dzīvnieki"
+msgstr "Tiere"
+
+msgid "Lauksaimniecība"
+msgstr "Landwirtschaft"
+
+msgid "Darbs"
+msgstr "Arbeit"
+
+msgid "Celtniecība"
+msgstr "Bauwesen"
+
+msgid "Pakalpojumi"
+msgstr "Dienstleistungen"
+
+msgid "Kolekcionēšana"
+msgstr "Sammlerstücke"
+
+msgid "Citas markas"
+msgstr "Andere Marken"
+
+msgid "Motorolleri"
+msgstr "Roller"
+
+msgid "Kvadracikli (ATV)"
+msgstr "Quads (ATV)"
+
+msgid "Kravas auto līdz 3.5t"
+msgstr "LKW bis 3.5t"
+
+msgid "Kravas auto virs 3.5t"
+msgstr "LKW über 3.5t"
+
+msgid "Mikroautobusi (8+ vietas)"
+msgstr "Kleinbusse (8+ Sitze)"
+
+msgid "Autobusi"
+msgstr "Busse"
+
+msgid "Piekabes"
+msgstr "Anhänger"
+
+msgid "Puspiekabes"
+msgstr "Sattelauflieger"
+
+msgid "Autocisternas"
+msgstr "Tankwagen"
+
+msgid "Speciālā tehnika"
+msgstr "Spezialfahrzeuge"
+
+msgid "Traktori"
+msgstr "Traktoren"
+
+msgid "Kombaini"
+msgstr "Mähdrescher"
+
+msgid "Motorlaivas"
+msgstr "Motorboote"
+
+msgid "Jahtas, buru laivas"
+msgstr "Jachten & Segelboote"
+
+msgid "Gumijas laivas"
+msgstr "Schlauchboote"
+
+msgid "Laivu motori"
+msgstr "Bootsmotoren"
+
+msgid "Ūdens motocikli"
+msgstr "Jetskis"
+
+msgid "Kanoe, kajaki"
+msgstr "Kanus & Kajaks"
+
+msgid "Piederumi un rezerves daļas"
+msgstr "Teile & Zubehör"
+
+msgid "Nekustamais īpašums"
+msgstr "Immobilien"
+
+msgid "Iepazīšanās"
+msgstr "Partnersuche"
+
+msgid "Bezmaksas izsoļu un sludinājumu platforma"
+msgstr "Kostenlose Auktions- und Kleinanzeigenplattform"

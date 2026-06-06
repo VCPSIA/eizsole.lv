@@ -2507,3 +2507,115 @@ msgid "Connect, get help, or contribute"
 msgstr ""
 
 
+
+# Kategoriju tulkojumi
+msgid "Auto piederumi"
+msgstr "Auto parts & accessories"
+
+msgid "Auto serviss"
+msgstr "Car service"
+
+msgid "Tehnika"
+msgstr "Electronics & technology"
+
+msgid "Sadzīves preces"
+msgstr "Household goods"
+
+msgid "Apģērbs"
+msgstr "Clothing & footwear"
+
+msgid "Sports"
+msgstr "Sports & leisure"
+
+msgid "Dārzniecība"
+msgstr "Gardening"
+
+msgid "Bērniem"
+msgstr "For children"
+
+msgid "Dzīvnieki"
+msgstr "Animals"
+
+msgid "Lauksaimniecība"
+msgstr "Agriculture"
+
+msgid "Darbs"
+msgstr "Jobs"
+
+msgid "Celtniecība"
+msgstr "Construction"
+
+msgid "Pakalpojumi"
+msgstr "Services"
+
+msgid "Kolekcionēšana"
+msgstr "Collectibles"
+
+msgid "Citas markas"
+msgstr "Other brands"
+
+msgid "Motorolleri"
+msgstr "Scooters"
+
+msgid "Kvadracikli (ATV)"
+msgstr "ATVs"
+
+msgid "Kravas auto līdz 3.5t"
+msgstr "Trucks up to 3.5t"
+
+msgid "Kravas auto virs 3.5t"
+msgstr "Trucks over 3.5t"
+
+msgid "Mikroautobusi (8+ vietas)"
+msgstr "Minibuses (8+ seats)"
+
+msgid "Autobusi"
+msgstr "Buses"
+
+msgid "Piekabes"
+msgstr "Trailers"
+
+msgid "Puspiekabes"
+msgstr "Semi-trailers"
+
+msgid "Autocisternas"
+msgstr "Tank trucks"
+
+msgid "Speciālā tehnika"
+msgstr "Special equipment"
+
+msgid "Traktori"
+msgstr "Tractors"
+
+msgid "Kombaini"
+msgstr "Combine harvesters"
+
+msgid "Motorlaivas"
+msgstr "Motor boats"
+
+msgid "Jahtas, buru laivas"
+msgstr "Yachts & sailboats"
+
+msgid "Gumijas laivas"
+msgstr "Inflatable boats"
+
+msgid "Laivu motori"
+msgstr "Boat engines"
+
+msgid "Ūdens motocikli"
+msgstr "Jet skis"
+
+msgid "Kanoe, kajaki"
+msgstr "Canoes & kayaks"
+
+msgid "Piederumi un rezerves daļas"
+msgstr "Parts & accessories"
+
+msgid "Nekustamais īpašums"
+msgstr "Real estate"
+
+msgid "Iepazīšanās"
+msgstr "Dating"
+
+msgid "Bezmaksas izsoļu un sludinājumu platforma"
+msgstr "Free auctions and classifieds platform"

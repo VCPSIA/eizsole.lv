@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.translation import get_language
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import JsonResponse
@@ -252,6 +253,13 @@ def home(request):
         'recently_viewed': recently_viewed,
         'active_deal_type': deal_type_filter,
         'deal_type_choices': Listing.DEAL_TYPE_CHOICES,
+        'site_settings': (s := SiteSettings.get()),
+        'hero_text': {
+            'lv': s.hero_text_lv,
+            'ru': s.hero_text_ru,
+            'en': s.hero_text_en,
+            'de': s.hero_text_de,
+        }.get(get_language() or 'lv', s.hero_text_lv),
     })
 
 

@@ -472,6 +472,12 @@ class SiteSettings(models.Model):
     banner_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='Banera maksa (€ ar PVN)')
     banner_rotation_seconds = models.PositiveIntegerField(default=5, verbose_name='Banera rotācijas laiks (sekundes)')
 
+    # Hero banera teksts
+    hero_text_lv = models.CharField(max_length=200, blank=True, default='Bezmaksas izsoļu un sludinājumu platforma', verbose_name='Hero teksts (LV)')
+    hero_text_ru = models.CharField(max_length=200, blank=True, default='Бесплатная платформа аукционов и объявлений', verbose_name='Hero teksts (RU)')
+    hero_text_en = models.CharField(max_length=200, blank=True, default='Free auctions and classifieds platform', verbose_name='Hero teksts (EN)')
+    hero_text_de = models.CharField(max_length=200, blank=True, default='Kostenlose Auktions- und Kleinanzeigenplattform', verbose_name='Hero teksts (DE)')
+
     # Centu izsoles
     cent_auction_enabled = models.BooleanField(default=False, verbose_name='Centu izsoles ieslēgtas')
     cent_auction_min_balance = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.50'), verbose_name='Min. maka atlikums dalībai (€)')

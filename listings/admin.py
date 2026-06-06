@@ -92,6 +92,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'fields': ['featured_auction_enabled', 'featured_auction_fee'],
             'description': 'Klients var samaksāt, lai izsole rādītos saraksta augšgalā, līdz kāds cits samaksā par TOP vietu.',
         }),
+        ('Galvenās lapas hero baneris', {
+            'fields': ['hero_text_lv', 'hero_text_ru', 'hero_text_en', 'hero_text_de'],
+            'description': 'Teksts, kas rādīsies uz galvenās lapas hero banera attēla. Var atstāt tukšu, ja tekstu nevēlas.',
+        }),
         ('Reklāmas baneri', {
             'fields': ['banner_enabled', 'banner_fee', 'banner_rotation_seconds'],
             'description': 'Klients var samaksāt par reklāmas baneri, kas rotācijas kārtībā rādīsies visās lapas apakšlapās.',

@@ -2515,3 +2515,115 @@ msgid "Connect, get help, or contribute"
 msgstr ""
 
 
+
+# Kategoriju tulkojumi
+msgid "Auto piederumi"
+msgstr "Запчасти и аксессуары"
+
+msgid "Auto serviss"
+msgstr "Автосервис"
+
+msgid "Tehnika"
+msgstr "Техника и электроника"
+
+msgid "Sadzīves preces"
+msgstr "Товары для дома"
+
+msgid "Apģērbs"
+msgstr "Одежда и обувь"
+
+msgid "Sports"
+msgstr "Спорт и отдых"
+
+msgid "Dārzniecība"
+msgstr "Садоводство"
+
+msgid "Bērniem"
+msgstr "Детское"
+
+msgid "Dzīvnieki"
+msgstr "Животные"
+
+msgid "Lauksaimniecība"
+msgstr "Сельское хозяйство"
+
+msgid "Darbs"
+msgstr "Работа"
+
+msgid "Celtniecība"
+msgstr "Строительство"
+
+msgid "Pakalpojumi"
+msgstr "Услуги"
+
+msgid "Kolekcionēšana"
+msgstr "Коллекционирование"
+
+msgid "Citas markas"
+msgstr "Другие марки"
+
+msgid "Motorolleri"
+msgstr "Скутеры"
+
+msgid "Kvadracikli (ATV)"
+msgstr "Квадроциклы (ATV)"
+
+msgid "Kravas auto līdz 3.5t"
+msgstr "Грузовики до 3.5т"
+
+msgid "Kravas auto virs 3.5t"
+msgstr "Грузовики свыше 3.5т"
+
+msgid "Mikroautobusi (8+ vietas)"
+msgstr "Микроавтобусы (8+ мест)"
+
+msgid "Autobusi"
+msgstr "Автобусы"
+
+msgid "Piekabes"
+msgstr "Прицепы"
+
+msgid "Puspiekabes"
+msgstr "Полуприцепы"
+
+msgid "Autocisternas"
+msgstr "Автоцистерны"
+
+msgid "Speciālā tehnika"
+msgstr "Спецтехника"
+
+msgid "Traktori"
+msgstr "Тракторы"
+
+msgid "Kombaini"
+msgstr "Комбайны"
+
+msgid "Motorlaivas"
+msgstr "Моторные лодки"
+
+msgid "Jahtas, buru laivas"
+msgstr "Яхты и парусники"
+
+msgid "Gumijas laivas"
+msgstr "Надувные лодки"
+
+msgid "Laivu motori"
+msgstr "Лодочные моторы"
+
+msgid "Ūdens motocikli"
+msgstr "Водные мотоциклы"
+
+msgid "Kanoe, kajaki"
+msgstr "Каноэ и каяки"
+
+msgid "Piederumi un rezerves daļas"
+msgstr "Аксессуары и запчасти"
+
+msgid "Nekustamais īpašums"
+msgstr "Недвижимость"
+
+msgid "Iepazīšanās"
+msgstr "Знакомства"
+
+msgid "Bezmaksas izsoļu un sludinājumu platforma"
+msgstr "Бесплатная платформа аукционов и объявлений"
