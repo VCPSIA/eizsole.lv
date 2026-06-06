@@ -2626,4 +2626,4 @@ msgid "Iepazīšanās"
 msgstr "Знакомства"
 
 msgid "Bezmaksas izsoļu un sludinājumu platforma"
-msgstr "Бесплатная платформа аукционов и объявлений"
+msgstr "Бесплатные аукционы и объявления"
