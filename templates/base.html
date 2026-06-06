@@ -43,7 +43,7 @@
     </script>
     <script nonce="{{ csp_nonce }}">
     (function(){
-        var KEY='eizsole_sw_clean', VER='v3';
+        var KEY='eizsole_sw_clean', VER='v4';
         if(localStorage.getItem(KEY)!==VER && 'serviceWorker' in navigator){
             localStorage.setItem(KEY, VER);
             Promise.all([
