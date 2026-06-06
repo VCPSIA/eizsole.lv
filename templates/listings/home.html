@@ -31,14 +31,19 @@
 <style>
 .hero-text-overlay {
     position: absolute;
-    top: 28%;
+    top: 18%;
     left: 3%;
-    max-width: 42%;
+    max-width: 44%;
+    max-height: 40%;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     color: #fff;
-    font-size: clamp(1rem, 3vw, 1.9rem);
+    font-size: clamp(.85rem, 2.8vw, 1.85rem);
     font-weight: 800;
     line-height: 1.25;
-    text-shadow: 0 2px 8px rgba(0,0,0,.35);
+    text-shadow: 0 2px 8px rgba(0,0,0,.4);
     pointer-events: none;
 }
 </style>
