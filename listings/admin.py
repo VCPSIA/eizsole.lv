@@ -6,12 +6,29 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages as admin_messages
 from django.http import HttpResponse
-from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner
+from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner, DropshippingItem
 
 
 class ListingImageInline(admin.TabularInline):
     model = ListingImage
     extra = 1
+
+
+class DropshippingInline(admin.StackedInline):
+    model = DropshippingItem
+    extra = 0
+    can_delete = True
+    verbose_name = 'Dropshipping'
+    verbose_name_plural = 'Dropshipping'
+    fieldsets = [
+        ('Piegādātājs', {
+            'fields': ['is_active', 'supplier_name', 'supplier_url', 'supplier_price', 'supplier_contact'],
+        }),
+        ('Pasūtījuma izsekošana', {
+            'fields': ['order_status', 'supplier_order_id', 'buyer_address', 'notes'],
+            'classes': ['collapse'],
+        }),
+    ]
 
 
 _LV = str.maketrans({'ā':'a','č':'c','ē':'e','ģ':'g','ī':'i','ķ':'k','ļ':'l','ņ':'n','š':'s','ū':'u','ž':'z'})
@@ -42,7 +59,7 @@ class ListingAdmin(admin.ModelAdmin):
     list_display = ['title', 'seller', 'category', 'price', 'is_auction', 'is_active', 'report_count', 'created_at']
     list_filter = ['is_auction', 'is_active', 'category', 'condition']
     search_fields = ['title', 'description']
-    inlines = [ListingImageInline]
+    inlines = [ListingImageInline, DropshippingInline]
     actions = ['deactivate_listings', 'activate_listings']
 
     def get_queryset(self, request):
@@ -285,3 +302,43 @@ class DiscountCodeAdmin(admin.ModelAdmin):
             'opts': self.model._meta,
         }
         return render(request, 'admin/listings/discountcode/generate.html', context)
+
+
+@admin.register(DropshippingItem)
+class DropshippingAdmin(admin.ModelAdmin):
+    list_display = ['listing_title', 'supplier_name', 'supplier_price', 'listing_price', 'profit_display', 'order_status', 'is_active', 'updated_at']
+    list_filter  = ['order_status', 'is_active']
+    search_fields = ['listing__title', 'supplier_name', 'supplier_order_id']
+    list_editable = ['order_status']
+    readonly_fields = ['profit_display', 'created_at', 'updated_at']
+    fieldsets = [
+        ('Sludinājums', {
+            'fields': ['listing', 'is_active'],
+        }),
+        ('Piegādātājs', {
+            'fields': ['supplier_name', 'supplier_url', 'supplier_price', 'supplier_contact'],
+        }),
+        ('Pasūtījuma izsekošana', {
+            'fields': ['order_status', 'supplier_order_id', 'buyer_address', 'notes'],
+        }),
+        ('Info', {
+            'fields': ['profit_display', 'created_at', 'updated_at'],
+            'classes': ['collapse'],
+        }),
+    ]
+
+    def listing_title(self, obj):
+        return obj.listing.title[:60]
+    listing_title.short_description = 'Sludinājums'
+
+    def listing_price(self, obj):
+        return f'€{obj.listing.price}' if obj.listing.price else '—'
+    listing_price.short_description = 'Pārdošanas cena'
+
+    def profit_display(self, obj):
+        p = obj.profit
+        if p is None:
+            return '—'
+        color = 'green' if p > 0 else 'red'
+        return format_html('<strong style="color:{}">{} €</strong>', color, p)
+    profit_display.short_description = 'Peļņa'

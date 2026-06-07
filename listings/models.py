@@ -93,6 +93,41 @@ class Listing(models.Model):
         return self.images.first()
 
 
+class DropshippingItem(models.Model):
+    ORDER_STATUS = [
+        ('pending',   'Gaida pasūtīšanu'),
+        ('ordered',   'Pasūtīts no piegādātāja'),
+        ('shipped',   'Nosūtīts pircējam'),
+        ('delivered', 'Piegādāts'),
+        ('cancelled', 'Atcelts'),
+    ]
+    listing          = models.OneToOneField(Listing, on_delete=models.CASCADE, related_name='dropshipping', verbose_name='Sludinājums')
+    supplier_name    = models.CharField(max_length=200, verbose_name='Piegādātāja nosaukums')
+    supplier_url     = models.URLField(blank=True, verbose_name='Saite uz preci piegādātājā')
+    supplier_price   = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Piegādātāja cena (€)')
+    supplier_contact = models.CharField(max_length=300, blank=True, verbose_name='Piegādātāja kontakts (e-pasts/tel.)')
+    order_status     = models.CharField(max_length=20, choices=ORDER_STATUS, default='pending', verbose_name='Pasūtījuma statuss')
+    supplier_order_id = models.CharField(max_length=200, blank=True, verbose_name='Piegādātāja pasūtījuma Nr.')
+    buyer_address    = models.TextField(blank=True, verbose_name='Pircēja piegādes adrese')
+    notes            = models.TextField(blank=True, verbose_name='Iekšējās piezīmes')
+    is_active        = models.BooleanField(default=True, verbose_name='Aktīvs')
+    created_at       = models.DateTimeField(auto_now_add=True)
+    updated_at       = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Dropshipping prece'
+        verbose_name_plural = 'Dropshipping preces'
+
+    def __str__(self):
+        return f'Dropshipping: {self.listing.title}'
+
+    @property
+    def profit(self):
+        if self.listing.price and self.supplier_price:
+            return round(self.listing.price - self.supplier_price, 2)
+        return None
+
+
 class Equipment(models.Model):
     GROUP_CHOICES = [
         ('comfort', 'Komforts'),
