@@ -2661,3 +2661,9 @@ msgstr "Damenschuhe"
 
 msgid "Vīriešu apavi"
 msgstr "Herrenschuhe"
+
+msgid "Peldkostīmi, pludmales apģērbs"
+msgstr "Bademode und Strandkleidung"
+
+msgid "Vīriešu mode"
+msgstr "Herrenmode"

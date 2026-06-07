@@ -2654,3 +2654,9 @@ msgstr "Женская обувь"
 
 msgid "Vīriešu apavi"
 msgstr "Мужская обувь"
+
+msgid "Peldkostīmi, pludmales apģērbs"
+msgstr "Купальники и пляжная одежда"
+
+msgid "Vīriešu mode"
+msgstr "Мужская мода"
