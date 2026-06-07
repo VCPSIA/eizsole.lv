@@ -2636,3 +2636,6 @@ msgstr "Знакомства"
 
 msgid "Apbalvojumi"
 msgstr "Награды и трофеи"
+
+msgid "Velosipedi un skrejiriteni"
+msgstr "Велосипеды и самокаты"

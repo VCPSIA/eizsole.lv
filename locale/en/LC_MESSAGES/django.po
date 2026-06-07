@@ -2628,3 +2628,6 @@ msgstr "Dating"
 
 msgid "Apbalvojumi"
 msgstr "Awards & trophies"
+
+msgid "Velosipedi un skrejiriteni"
+msgstr "Bicycles and scooters"

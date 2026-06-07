@@ -2643,3 +2643,6 @@ msgstr "Partnersuche"
 
 msgid "Apbalvojumi"
 msgstr "Auszeichnungen"
+
+msgid "Velosipedi un skrejiriteni"
+msgstr "Fahrräder und Roller"
