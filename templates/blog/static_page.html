@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }} — eizsole.lv{% endblock %}
+{% block meta_description %}{{ title }} — eizsole.lv{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card p-4 p-md-5" style="border-radius:16px;border:1px solid #e9ecef">
+            <h1 class="fw-800 mb-4" style="font-weight:800;font-size:1.7rem">{{ title }}</h1>
+            <div class="static-page-content" style="line-height:1.8;color:#374151">
+                {{ content|safe }}
+            </div>
+            <div class="mt-4 pt-3 border-top text-muted" style="font-size:.78rem">
+                {% if page.updated_at %}Pēdējo reizi atjaunināts: {{ page.updated_at|date:"d.m.Y" }}{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.static-page-content h2 { font-size:1.2rem;font-weight:700;margin-top:1.8rem;margin-bottom:.6rem;color:#1f2937 }
+.static-page-content h3 { font-size:1rem;font-weight:700;margin-top:1.4rem;margin-bottom:.4rem;color:#374151 }
+.static-page-content p { margin-bottom:1rem }
+.static-page-content ul, .static-page-content ol { margin-bottom:1rem;padding-left:1.5rem }
+.static-page-content li { margin-bottom:.35rem }
+.static-page-content a { color:#e63946 }
+.static-page-content strong { font-weight:700 }
+</style>
+{% endblock %}
