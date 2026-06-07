@@ -2652,3 +2652,6 @@ msgstr "Damenunterwäsche"
 
 msgid "Vīriešu apakšveļa"
 msgstr "Herrenunterwäsche"
+
+msgid "Rokassomas, aksesuāri"
+msgstr "Handtaschen und Accessoires"

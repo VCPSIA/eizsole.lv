@@ -2645,3 +2645,6 @@ msgstr "Женское нижнее бельё"
 
 msgid "Vīriešu apakšveļa"
 msgstr "Мужское нижнее бельё"
+
+msgid "Rokassomas, aksesuāri"
+msgstr "Сумочки и аксессуары"

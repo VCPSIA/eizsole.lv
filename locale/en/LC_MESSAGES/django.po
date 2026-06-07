@@ -2637,3 +2637,6 @@ msgstr "Women's underwear"
 
 msgid "Vīriešu apakšveļa"
 msgstr "Men's underwear"
+
+msgid "Rokassomas, aksesuāri"
+msgstr "Handbags and accessories"
