@@ -471,13 +471,23 @@ class MatterhornConfigAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        custom = [path('sync-now/', self.admin_site.admin_view(self.sync_now_view), name='matterhorn_sync_now')]
+        custom = [
+            path('sync-now/',    self.admin_site.admin_view(self.sync_now_view),    name='matterhorn_sync_now'),
+            path('delete-all/',  self.admin_site.admin_view(self.delete_all_view),  name='matterhorn_delete_all'),
+        ]
         return custom + urls
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         extra_context = extra_context or {}
-        extra_context['sync_url'] = '../sync-now/'
+        extra_context['sync_url']       = '../sync-now/'
+        extra_context['delete_all_url'] = '../delete-all/'
         return super().changeform_view(request, object_id, form_url, extra_context)
+
+    def changelist_view(self, request, extra_context=None):
+        MatterhornConfig.get()
+        extra_context = extra_context or {}
+        extra_context['delete_all_url'] = 'delete-all/'
+        return super().changelist_view(request, extra_context)
 
     def sync_now_view(self, request):
         from listings.matterhorn_sync import run_sync
@@ -487,6 +497,18 @@ class MatterhornConfigAdmin(admin.ModelAdmin):
             self.message_user(request, f'Kļūda: {errors}', level='error')
         else:
             self.message_user(request, f'Matterhorn sync pabeigts: {created} jauni, {updated} atjaunināti, {errors} kļūdas.', level='success')
+        return redirect('../')
+
+    def delete_all_view(self, request):
+        mp_qs = MatterhornProduct.objects.all()
+        listing_ids = list(mp_qs.filter(listing__isnull=False).values_list('listing_id', flat=True))
+        mp_count = mp_qs.count()
+        mp_qs.delete()
+        from listings.models import Listing as L
+        L.objects.filter(pk__in=listing_ids).delete()
+        self.message_user(request,
+            f'Dzēsti {mp_count} Matterhorn produkti un {len(listing_ids)} sludinājumi.',
+            level='success')
         return redirect('../')
 
     def has_add_permission(self, request):
@@ -508,6 +530,16 @@ class MatterhornProductAdmin(admin.ModelAdmin):
     readonly_fields = ['matterhorn_id', 'last_updated', 'created_at', 'sizes_stock_display', 'ean_list', 'images_preview']
     list_editable = ['is_active']
     list_per_page = 50
+    actions = ['delete_with_listings']
+
+    @admin.action(description='🗑 Dzēst izvēlētos + to sludinājumus')
+    def delete_with_listings(self, request, queryset):
+        listing_ids = list(queryset.filter(listing__isnull=False).values_list('listing_id', flat=True))
+        n = queryset.count()
+        queryset.delete()
+        from listings.models import Listing as L
+        L.objects.filter(pk__in=listing_ids).delete()
+        self.message_user(request, f'Dzēsti {n} produkti un {len(listing_ids)} sludinājumi.')
     fieldsets = [
         ('Produkts', {'fields': ['matterhorn_id', 'name', 'brand', 'description', 'category_path', 'product_url', 'is_active']}),
         ('Cenas', {'fields': ['wholesale_price', 'retail_price', 'currency']}),
