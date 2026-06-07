@@ -478,6 +478,17 @@ class SiteSettings(models.Model):
     hero_text_en = models.CharField(max_length=200, blank=True, default='Free auctions and classifieds platform', verbose_name='Hero teksts (EN)')
     hero_text_de = models.CharField(max_length=200, blank=True, default='Gratis Auktionen und Kleinanzeigen', verbose_name='Hero teksts (DE)')
 
+    # Kontaktinformācija
+    contact_company = models.CharField(max_length=200, blank=True, default='SIA Olaintrans', verbose_name='Uzņēmuma nosaukums')
+    contact_reg_nr  = models.CharField(max_length=50, blank=True, default='LV40203230849', verbose_name='Reģistrācijas Nr.')
+    contact_email   = models.EmailField(blank=True, default='info@eizsole.lv', verbose_name='E-pasts')
+    contact_phone   = models.CharField(max_length=30, blank=True, verbose_name='Tālrunis')
+    contact_address = models.CharField(max_length=300, blank=True, verbose_name='Adrese')
+    contact_facebook  = models.URLField(blank=True, verbose_name='Facebook URL')
+    contact_instagram = models.URLField(blank=True, verbose_name='Instagram URL')
+    contact_twitter   = models.URLField(blank=True, verbose_name='X / Twitter URL')
+    contact_whatsapp  = models.CharField(max_length=20, blank=True, verbose_name='WhatsApp numurs (tikai cipari)')
+
     # Centu izsoles
     cent_auction_enabled = models.BooleanField(default=False, verbose_name='Centu izsoles ieslēgtas')
     cent_auction_min_balance = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.50'), verbose_name='Min. maka atlikums dalībai (€)')

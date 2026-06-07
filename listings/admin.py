@@ -76,6 +76,14 @@ class EquipmentAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = [
+        ('Kontaktinformācija', {
+            'fields': [
+                'contact_company', 'contact_reg_nr', 'contact_email',
+                'contact_phone', 'contact_address',
+                'contact_facebook', 'contact_instagram', 'contact_twitter', 'contact_whatsapp',
+            ],
+            'description': 'Rādās lapas kājenē. Sociālo tīklu URL — ielikt pilno adresi (https://...).',
+        }),
         ('Sludinājumu maksa', {
             'fields': ['listing_fee_enabled', 'listing_fee'],
             'description': 'Maksa, kas tiek novilkta no klienta maka, publicējot parasto sludinājumu.',

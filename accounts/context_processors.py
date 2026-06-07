@@ -24,6 +24,7 @@ def banners(request):
             'active_banners': rotating,
             'banner_rotation_seconds': rotation_secs,
             'sidebar_banners': sidebar,
+            'site_settings': settings,
         }
     except Exception:
-        return {'active_banners': [], 'banner_rotation_seconds': 5, 'sidebar_banners': []}
+        return {'active_banners': [], 'banner_rotation_seconds': 5, 'sidebar_banners': [], 'site_settings': None}
