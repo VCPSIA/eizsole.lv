@@ -2634,3 +2634,9 @@ msgstr "Partnersuche"
 msgid "Bezmaksas izsoļu un sludinājumu platforma"
 msgstr "Gratis Auktionen und Kleinanzeigen"
 
+
+msgid "Sports un hobijs"
+msgstr "Sport und Hobbys"
+
+msgid "Iepazīties"
+msgstr "Partnersuche"

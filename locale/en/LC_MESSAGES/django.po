@@ -2619,3 +2619,9 @@ msgstr "Dating"
 
 msgid "Bezmaksas izsoļu un sludinājumu platforma"
 msgstr "Free auctions and classifieds platform"
+
+msgid "Sports un hobijs"
+msgstr "Sports & hobbies"
+
+msgid "Iepazīties"
+msgstr "Dating"

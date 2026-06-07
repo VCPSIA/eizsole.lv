@@ -2627,3 +2627,9 @@ msgstr "Знакомства"
 
 msgid "Bezmaksas izsoļu un sludinājumu platforma"
 msgstr "Бесплатные аукционы и объявления"
+
+msgid "Sports un hobijs"
+msgstr "Спорт и хобби"
+
+msgid "Iepazīties"
+msgstr "Знакомства"
