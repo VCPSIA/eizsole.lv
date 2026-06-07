@@ -187,6 +187,13 @@ def auction_detail(request, pk):
         user_accepted_cent_rules = CentAuctionRulesAcceptance.objects.filter(
             user=request.user).exists()
 
+    from accounts.models import Rating
+    user_auction_rating = None
+    if request.user.is_authenticated and auction.is_finished and auction.winner == request.user:
+        user_auction_rating = Rating.objects.filter(
+            reviewer=request.user, auction=auction
+        ).first()
+
     return render(request, 'auctions/detail.html', {
         'auction': auction,
         'bids': bids,
@@ -198,6 +205,7 @@ def auction_detail(request, pk):
         'escrow': escrow,
         'cent_commission_total': cent_commission_total,
         'user_accepted_cent_rules': user_accepted_cent_rules,
+        'user_auction_rating': user_auction_rating,
     })
 
 

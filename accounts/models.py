@@ -181,6 +181,10 @@ class Rating(models.Model):
         'listings.Listing', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='ratings',
     )
+    auction = models.OneToOneField(
+        'auctions.Auction', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='rating',
+    )
     stars = models.PositiveSmallIntegerField(default=5)
     comment = models.TextField(blank=True, max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -77,28 +77,7 @@
         <!-- Vērtējumi -->
         <h5 class="fw-700 mt-5 mb-3" style="font-weight:700">Vērtējumi</h5>
 
-        {% if user.is_authenticated and user != seller %}
-        <div class="card p-4 mb-4" style="border-radius:12px">
-            <h6 class="fw-600 mb-3">{% if my_rating %}Tavs vērtējums{% else %}Atstāt vērtējumu{% endif %}</h6>
-            <form method="post" action="{% url 'rate_user' seller.username %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <div id="star-row">
-                        {% for i in "12345" %}
-                        <button type="button" class="star-btn {% if my_rating and forloop.counter <= my_rating.stars %}active{% endif %}" data-val="{{ forloop.counter }}">★</button>
-                        {% endfor %}
-                    </div>
-                    <input type="hidden" name="stars" id="stars-input" value="{% if my_rating %}{{ my_rating.stars }}{% else %}5{% endif %}">
-                </div>
-                <div class="mb-3">
-                    <textarea name="comment" class="form-control" rows="3" maxlength="500" placeholder="Komentārs (neobligāts)…">{% if my_rating %}{{ my_rating.comment }}{% endif %}</textarea>
-                </div>
-                <button type="submit" class="btn btn-danger btn-sm">
-                    <i class="bi bi-star me-1"></i>{% if my_rating %}Atjaunināt{% else %}Iesniegt{% endif %}
-                </button>
-            </form>
-        </div>
-        {% endif %}
+        <p class="text-muted mb-3" style="font-size:.82rem"><i class="bi bi-info-circle me-1"></i>Atsauksmes var atstāt tikai izsoles uzvarētāji — tieši no izsoles lapas pēc izsoles beigām.</p>
 
         {% if ratings %}
         <div class="d-flex flex-column gap-3">
@@ -115,7 +94,11 @@
                             <i class="bi bi-star{% if forloop.counter <= r.stars %}-fill text-warning{% else %} text-muted{% endif %}" style="font-size:.78rem"></i>
                             {% endfor %}
                             <span class="text-muted ms-1" style="font-size:.75rem">{{ r.created_at|date:"d.m.Y" }}</span>
-                            {% if r.listing %}
+                            {% if r.auction %}
+                            <a href="{% url 'auction_detail' r.auction.pk %}" class="ms-2 text-muted text-decoration-none" style="font-size:.72rem">
+                                <i class="bi bi-hammer me-1"></i>{{ r.auction.listing.title|truncatechars:30 }}
+                            </a>
+                            {% elif r.listing %}
                             <a href="{% url 'listing_detail' r.listing.pk %}" class="ms-2 text-muted text-decoration-none" style="font-size:.72rem">
                                 <i class="bi bi-bag me-1"></i>{{ r.listing.title|truncatechars:30 }}
                             </a>

@@ -355,47 +355,71 @@ def public_profile(request, username):
 @login_required
 def rate_user(request, username):
     from listings.models import Listing
+    from auctions.models import Auction
     reviewed = get_object_or_404(User, username=username)
     if request.user == reviewed:
         messages.error(request, 'Nevar vērtēt sevi.')
         return redirect('public_profile', username=username)
 
+    # Atbalsta gan listing, gan auction parametru
+    auction_pk = request.GET.get('auction') or request.POST.get('auction')
     listing_pk = request.GET.get('listing') or request.POST.get('listing')
+    auction = None
     listing = None
-    if listing_pk:
+
+    if auction_pk:
+        try:
+            auction = Auction.objects.get(pk=auction_pk)
+            # Tikai izsoles uzvarētājs var vērtēt pārdevēju
+            if not (auction.is_finished and auction.winner == request.user
+                    and auction.listing.seller == reviewed):
+                messages.error(request, 'Jums nav tiesību atstāt atsauksmi par šo izsoli.')
+                return redirect('auction_detail', pk=auction_pk)
+        except Auction.DoesNotExist:
+            auction = None
+
+    elif listing_pk:
         try:
             listing = Listing.objects.get(pk=listing_pk)
-            # Pārbauda vai šis lietotājs drīkst novērtēt par šo darījumu
             is_seller = listing.seller == reviewed and listing.buyer == request.user
-            is_buyer = listing.buyer == reviewed and listing.seller == request.user
-            # Izsoles gadījums
-            auction = getattr(listing, 'auction', None)
-            if auction:
-                is_seller = listing.seller == reviewed and auction.winner == request.user
-                is_buyer = auction.winner == reviewed and listing.seller == request.user
-            if not (is_seller or is_buyer):
+            lst_auction = getattr(listing, 'auction', None)
+            if lst_auction:
+                is_seller = listing.seller == reviewed and lst_auction.winner == request.user
+            if not is_seller:
                 listing = None
         except Listing.DoesNotExist:
             listing = None
 
     if request.method == 'GET':
-        already = Rating.objects.filter(reviewer=request.user, reviewed=reviewed, listing=listing).first()
+        if auction:
+            already = Rating.objects.filter(reviewer=request.user, reviewed=reviewed, auction=auction).first()
+        else:
+            already = Rating.objects.filter(reviewer=request.user, reviewed=reviewed, listing=listing).first()
         return render(request, 'accounts/rate_user.html', {
             'reviewed': reviewed,
             'listing': listing,
+            'auction': auction,
             'already': already,
         })
 
     if request.method == 'POST':
         stars = max(1, min(5, int(request.POST.get('stars', 5))))
         comment = request.POST.get('comment', '').strip()[:500]
-        Rating.objects.update_or_create(
-            reviewer=request.user, reviewed=reviewed, listing=listing,
-            defaults={'stars': stars, 'comment': comment},
-        )
-        messages.success(request, 'Atsauksme saglabāta!')
-        if listing:
-            return redirect('listing_detail', pk=listing.pk)
+        if auction:
+            Rating.objects.update_or_create(
+                reviewer=request.user, reviewed=reviewed, auction=auction,
+                defaults={'stars': stars, 'comment': comment, 'listing': None},
+            )
+            messages.success(request, 'Atsauksme saglabāta!')
+            return redirect('auction_detail', pk=auction.pk)
+        else:
+            Rating.objects.update_or_create(
+                reviewer=request.user, reviewed=reviewed, listing=listing,
+                defaults={'stars': stars, 'comment': comment},
+            )
+            messages.success(request, 'Atsauksme saglabāta!')
+            if listing:
+                return redirect('listing_detail', pk=listing.pk)
     return redirect('public_profile', username=username)
 
 
