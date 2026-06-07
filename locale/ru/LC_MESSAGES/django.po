@@ -2639,3 +2639,9 @@ msgstr "Награды и трофеи"
 
 msgid "Velosipedi un skrejiriteni"
 msgstr "Велосипеды и самокаты"
+
+msgid "Sieviešu apakšveļa"
+msgstr "Женское нижнее бельё"
+
+msgid "Vīriešu apakšveļa"
+msgstr "Мужское нижнее бельё"

@@ -2646,3 +2646,9 @@ msgstr "Auszeichnungen"
 
 msgid "Velosipedi un skrejiriteni"
 msgstr "Fahrräder und Roller"
+
+msgid "Sieviešu apakšveļa"
+msgstr "Damenunterwäsche"
+
+msgid "Vīriešu apakšveļa"
+msgstr "Herrenunterwäsche"

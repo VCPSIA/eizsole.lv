@@ -2631,3 +2631,9 @@ msgstr "Awards & trophies"
 
 msgid "Velosipedi un skrejiriteni"
 msgstr "Bicycles and scooters"
+
+msgid "Sieviešu apakšveļa"
+msgstr "Women's underwear"
+
+msgid "Vīriešu apakšveļa"
+msgstr "Men's underwear"
