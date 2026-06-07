@@ -53,6 +53,15 @@
         <textarea name="description" class="form-control" rows="5" required>{{ post.description|default:listing.description }}</textarea>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Atsauces saite <span class="text-muted fw-normal" style="font-size:.85rem">(nav obligāta)</span></label>
+        <div class="input-group">
+            <span class="input-group-text" style="background:#f8f9fa"><i class="bi bi-link-45deg text-muted"></i></span>
+            <input type="url" name="reference_url" class="form-control" placeholder="https://www.example.com/prece" value="{{ post.reference_url|default:listing.reference_url }}">
+        </div>
+        <div class="form-text">Piemēram, saite uz preci ražotāja mājaslapā vai interneta veikalā.</div>
+    </div>
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <label class="form-label fw-semibold">Stāvoklis</label>

@@ -525,6 +525,12 @@
                 </span>
                 {% endif %}
             </div>
+            {% if listing.reference_url %}
+            <div class="mb-2 mt-1" style="font-size:.85rem">
+                <i class="bi bi-link-45deg me-1" style="color:#2196c9"></i>
+                <a href="{{ listing.reference_url }}" target="_blank" rel="noopener noreferrer nofollow" style="color:#2196c9">{% trans "Atsauces saite uz preci" %}</a>
+            </div>
+            {% endif %}
             <hr class="my-3">
             <div style="line-height:1.75;color:#374151">{{ listing.description|linebreaks }}</div>
         </div>

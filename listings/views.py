@@ -784,6 +784,7 @@ def listing_create(request):
             age_range=request.POST.get('age_range', '') if _is_dating_category(cat_for_listing) else '',
             gender=request.POST.get('gender', '') if _is_dating_category(cat_for_listing) else '',
             seeking=request.POST.get('seeking', '') if _is_dating_category(cat_for_listing) else '',
+            reference_url=request.POST.get('reference_url', '').strip(),
         )
         equipment_ids = request.POST.getlist('equipment')
         if equipment_ids:
@@ -1080,6 +1081,7 @@ def listing_edit(request, pk):
         listing.country = request.POST.get('country', '').strip()
         listing.city = request.POST.get('city', '').strip()
         listing.contact_email = request.POST.get('contact_email', '').strip()
+        listing.reference_url = request.POST.get('reference_url', '').strip()
         if _is_dating_category(new_category):
             listing.gender  = request.POST.get('gender', '')
             listing.seeking = request.POST.get('seeking', '')

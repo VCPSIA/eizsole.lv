@@ -80,6 +80,7 @@ class Listing(models.Model):
     is_template = models.BooleanField(default=False)
     template_created_at = models.DateTimeField(null=True, blank=True)
     is_sold = models.BooleanField(default=False)
+    reference_url = models.URLField(blank=True, verbose_name='Atsauces saite', help_text='Saite uz preci ražotāja vai citas lapas katalogā (nav obligāta)')
     buyer = models.ForeignKey(
         'auth.User', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='purchases',
