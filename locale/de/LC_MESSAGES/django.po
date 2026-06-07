@@ -2640,3 +2640,6 @@ msgstr "Sport und Hobbys"
 
 msgid "Iepazīties"
 msgstr "Partnersuche"
+
+msgid "Apbalvojumi"
+msgstr "Auszeichnungen"

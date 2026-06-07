@@ -2633,3 +2633,6 @@ msgstr "Спорт и хобби"
 
 msgid "Iepazīties"
 msgstr "Знакомства"
+
+msgid "Apbalvojumi"
+msgstr "Награды и трофеи"

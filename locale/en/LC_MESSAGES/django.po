@@ -2625,3 +2625,6 @@ msgstr "Sports & hobbies"
 
 msgid "Iepazīties"
 msgstr "Dating"
+
+msgid "Apbalvojumi"
+msgstr "Awards & trophies"
