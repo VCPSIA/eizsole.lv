@@ -456,8 +456,8 @@ class DropshippingSupplierAdmin(admin.ModelAdmin):
 class MatterhornConfigAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Savienojums', {
-            'fields': ['xml_feed_url', 'api_username', 'api_password'],
-            'description': 'Matterhorn XML plūsmas adrese un autorizācijas dati.',
+            'fields': ['xml_feed_url', 'api_key', 'api_username', 'api_password'],
+            'description': 'Matterhorn B2B API atslēga vai lietotājvārds/parole. API key tiek pievienots kā Authorization: Bearer <key> headeris.',
         }),
         ('Cenu uzstādījumi', {
             'fields': ['markup_percent', 'default_category'],

@@ -30,13 +30,17 @@ def _decimal(val, default=Decimal('0')):
         return default
 
 
-def _fetch_xml(url, username='', password=''):
+def _fetch_xml(url, api_key='', username='', password=''):
     req = urllib.request.Request(url)
-    if username:
+    if api_key:
+        req.add_header('Authorization', f'Bearer {api_key}')
+        req.add_header('X-Api-Key', api_key)
+    elif username:
         import base64
         creds = base64.b64encode(f'{username}:{password}'.encode()).decode()
         req.add_header('Authorization', f'Basic {creds}')
     req.add_header('User-Agent', 'eizsole.lv/1.0')
+    req.add_header('Accept', 'application/xml, text/xml, */*')
     with urllib.request.urlopen(req, timeout=60) as resp:
         return resp.read()
 
@@ -147,7 +151,7 @@ def run_sync(config=None, limit=None):
 
     # Lejupielādē XML
     try:
-        raw = _fetch_xml(config.xml_feed_url, config.api_username, config.api_password)
+        raw = _fetch_xml(config.xml_feed_url, config.api_key, config.api_username, config.api_password)
     except Exception as e:
         msg = f'Kļūda ielādējot XML: {e}'
         log.error(msg)

@@ -514,9 +514,10 @@ class SavedSearch(models.Model):
 
 
 class MatterhornConfig(models.Model):
-    xml_feed_url   = models.URLField(verbose_name='XML feed URL', help_text='Matterhorn XML plūsmas adrese ar autorizāciju')
-    api_username   = models.CharField(max_length=200, blank=True, verbose_name='API lietotājvārds')
-    api_password   = models.CharField(max_length=200, blank=True, verbose_name='API parole')
+    xml_feed_url   = models.URLField(verbose_name='XML feed URL', help_text='Matterhorn XML plūsmas adrese')
+    api_key        = models.CharField(max_length=500, blank=True, verbose_name='B2B API atslēga', help_text='Matterhorn Wholesale B2B API key (token)')
+    api_username   = models.CharField(max_length=200, blank=True, verbose_name='API lietotājvārds (ja nepieciešams)')
+    api_password   = models.CharField(max_length=200, blank=True, verbose_name='API parole (ja nepieciešams)')
     sync_enabled   = models.BooleanField(default=True, verbose_name='Automātiskā sinhronizācija (ik 2h)')
     markup_percent = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('40.00'), verbose_name='Uzcenojums (%)', help_text='Procentuāls uzcenojums virs vairumcenas')
     default_category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Noklusējuma kategorija')
