@@ -6,7 +6,7 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages as admin_messages
 from django.http import HttpResponse
-from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner, DropshippingItem
+from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner, DropshippingItem, DropshippingSupplier
 
 
 class ListingImageInline(admin.TabularInline):
@@ -93,6 +93,10 @@ class EquipmentAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = [
+        ('Dropshipping API', {
+            'fields': ['dropshipping_api_key'],
+            'description': 'Feed URL: /dropshipping/feed.xml vai /dropshipping/feed.json — pievienot ?api_key=<atslega> ja aizpildīta.',
+        }),
         ('Kontaktinformācija', {
             'fields': [
                 'contact_company', 'contact_reg_nr', 'contact_email',
@@ -342,3 +346,105 @@ class DropshippingAdmin(admin.ModelAdmin):
         color = 'green' if p > 0 else 'red'
         return format_html('<strong style="color:{}">{} €</strong>', color, p)
     profit_display.short_description = 'Peļņa'
+
+
+@admin.register(DropshippingSupplier)
+class DropshippingSupplierAdmin(admin.ModelAdmin):
+    list_display  = ['name', 'xml_feed_url', 'is_active', 'last_sync', 'import_btn']
+    list_filter   = ['is_active']
+    search_fields = ['name']
+    readonly_fields = ['last_sync']
+    fieldsets = [
+        ('Piegādātājs', {'fields': ['name', 'is_active', 'notes']}),
+        ('XML feed', {'fields': ['xml_feed_url'], 'description': 'URL uz piegādātāja XML produktu sarakstu.'}),
+        ('API', {'fields': ['api_url', 'api_key'], 'classes': ['collapse']}),
+        ('Sinhronizācija', {'fields': ['last_sync'], 'classes': ['collapse']}),
+    ]
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom = [path('<int:pk>/import/', self.admin_site.admin_view(self.import_xml_view), name='ds_import_xml')]
+        return custom + urls
+
+    def import_btn(self, obj):
+        if obj.xml_feed_url:
+            return format_html('<a class="button" href="{}import/">Importēt XML</a>', obj.pk)
+        return '—'
+    import_btn.short_description = 'Imports'
+
+    def import_xml_view(self, request, pk):
+        import urllib.request, xml.etree.ElementTree as ET
+        from django.contrib.auth.models import User
+        from django.utils import timezone as tz
+
+        supplier = DropshippingSupplier.objects.get(pk=pk)
+        if not supplier.xml_feed_url:
+            self.message_user(request, 'Nav XML feed URL.', level='error')
+            return redirect('..')
+
+        try:
+            with urllib.request.urlopen(supplier.xml_feed_url, timeout=15) as resp:
+                raw = resp.read()
+            root = ET.fromstring(raw)
+        except Exception as e:
+            self.message_user(request, f'Kļūda ielādējot XML: {e}', level='error')
+            return redirect('..')
+
+        admin_user = User.objects.filter(is_superuser=True).first()
+        default_cat = Category.objects.filter(parent=None).first()
+        created = updated = 0
+
+        for prod in root.iter('product'):
+            def g(tag, default=''):
+                el = prod.find(tag)
+                return el.text.strip() if el is not None and el.text else default
+
+            title    = g('title') or g('name')
+            price_s  = g('price') or g('retail_price')
+            sup_price_s = g('supplier_price') or g('cost_price') or g('wholesale_price')
+            desc     = g('description')
+            img_url  = g('image_url') or g('image')
+            sup_url  = g('url') or g('product_url') or g('link')
+            ext_id   = g('id') or g('sku') or g('article')
+
+            if not title:
+                continue
+            try:
+                price = float(price_s.replace(',', '.')) if price_s else None
+                sup_price = float(sup_price_s.replace(',', '.')) if sup_price_s else (price * 0.6 if price else 0)
+            except Exception:
+                price = None
+                sup_price = 0
+
+            from decimal import Decimal
+            listing, was_created = Listing.objects.get_or_create(
+                seller=admin_user,
+                title=title,
+                defaults={
+                    'description': desc or title,
+                    'category': default_cat,
+                    'price': Decimal(str(price)) if price else None,
+                    'condition': 'new',
+                    'is_active': False,
+                    'moderation_status': 'approved',
+                }
+            )
+            ds, _ = DropshippingItem.objects.update_or_create(
+                listing=listing,
+                defaults={
+                    'supplier_name': supplier.name,
+                    'supplier_url': sup_url,
+                    'supplier_price': Decimal(str(sup_price)),
+                    'is_active': True,
+                }
+            )
+            if was_created:
+                created += 1
+            else:
+                updated += 1
+
+        supplier.last_sync = tz.now()
+        supplier.save(update_fields=['last_sync'])
+
+        self.message_user(request, f'Imports pabeigts: {created} jauni, {updated} atjaunināti produkti.')
+        return redirect('../..')

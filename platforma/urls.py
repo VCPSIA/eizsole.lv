@@ -30,6 +30,8 @@ urlpatterns = [
     path('', include('allauth.socialaccount.providers.facebook.urls')),
     path('izsoles/', include('auctions.urls')),
     path('blogs/', include('blog.urls')),
+    path('dropshipping/feed.xml',  __import__('listings.dropshipping_api', fromlist=['feed_xml']).feed_xml,  name='dropshipping_feed_xml'),
+    path('dropshipping/feed.json', __import__('listings.dropshipping_api', fromlist=['feed_json']).feed_json, name='dropshipping_feed_json'),
     path('', include((static_urlpatterns, 'pages'))),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),

@@ -128,6 +128,24 @@ class DropshippingItem(models.Model):
         return None
 
 
+class DropshippingSupplier(models.Model):
+    name        = models.CharField(max_length=200, verbose_name='Piegādātāja nosaukums')
+    xml_feed_url = models.URLField(blank=True, verbose_name='XML feed URL')
+    api_url      = models.URLField(blank=True, verbose_name='API URL')
+    api_key      = models.CharField(max_length=300, blank=True, verbose_name='API atslēga / tokens')
+    notes        = models.TextField(blank=True, verbose_name='Piezīmes')
+    is_active    = models.BooleanField(default=True, verbose_name='Aktīvs')
+    last_sync    = models.DateTimeField(null=True, blank=True, verbose_name='Pēdējā sinhronizācija')
+    created_at   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Dropshipping piegādātājs'
+        verbose_name_plural = 'Dropshipping piegādātāji'
+
+    def __str__(self):
+        return self.name
+
+
 class Equipment(models.Model):
     GROUP_CHOICES = [
         ('comfort', 'Komforts'),
@@ -513,6 +531,9 @@ class SiteSettings(models.Model):
     hero_text_ru = models.CharField(max_length=200, blank=True, default='Бесплатная платформа аукционов и объявлений', verbose_name='Hero teksts (RU)')
     hero_text_en = models.CharField(max_length=200, blank=True, default='Free auctions and classifieds platform', verbose_name='Hero teksts (EN)')
     hero_text_de = models.CharField(max_length=200, blank=True, default='Gratis Auktionen und Kleinanzeigen', verbose_name='Hero teksts (DE)')
+
+    # Dropshipping API
+    dropshipping_api_key = models.CharField(max_length=64, blank=True, verbose_name='Dropshipping API atslēga', help_text='Ja tukšs — bezmaksas piekļuve feed. Ģenerē random virkni drošībai.')
 
     # Kontaktinformācija
     contact_company = models.CharField(max_length=200, blank=True, default='SIA Olaintrans', verbose_name='Uzņēmuma nosaukums')
