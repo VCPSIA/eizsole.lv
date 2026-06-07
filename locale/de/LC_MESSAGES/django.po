@@ -2655,3 +2655,9 @@ msgstr "Herrenunterwäsche"
 
 msgid "Rokassomas, aksesuāri"
 msgstr "Handtaschen und Accessoires"
+
+msgid "Sieviešu apavi"
+msgstr "Damenschuhe"
+
+msgid "Vīriešu apavi"
+msgstr "Herrenschuhe"
