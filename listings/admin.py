@@ -6,7 +6,7 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages as admin_messages
 from django.http import HttpResponse
-from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner, DropshippingItem, DropshippingSupplier
+from .models import Category, Listing, ListingImage, Report, Equipment, SiteSettings, DiscountCode, Banner, SidebarBanner, DropshippingItem, DropshippingSupplier, MatterhornConfig, MatterhornProduct
 
 
 class ListingImageInline(admin.TabularInline):
@@ -448,3 +448,110 @@ class DropshippingSupplierAdmin(admin.ModelAdmin):
 
         self.message_user(request, f'Imports pabeigts: {created} jauni, {updated} atjaunināti produkti.')
         return redirect('../..')
+
+
+# ── MATTERHORN ──────────────────────────────────────────────────
+
+@admin.register(MatterhornConfig)
+class MatterhornConfigAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Savienojums', {
+            'fields': ['xml_feed_url', 'api_username', 'api_password'],
+            'description': 'Matterhorn XML plūsmas adrese un autorizācijas dati.',
+        }),
+        ('Cenu uzstādījumi', {
+            'fields': ['markup_percent', 'default_category'],
+            'description': 'Uzcenojums virs Matterhorn vairumcenas. Noklusējuma kategorija jauniem produktiem.',
+        }),
+        ('Sinhronizācija', {
+            'fields': ['sync_enabled', 'last_sync', 'sync_log'],
+        }),
+    ]
+    readonly_fields = ['last_sync', 'sync_log']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom = [path('sync-now/', self.admin_site.admin_view(self.sync_now_view), name='matterhorn_sync_now')]
+        return custom + urls
+
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['sync_url'] = '../sync-now/'
+        return super().changeform_view(request, object_id, form_url, extra_context)
+
+    def sync_now_view(self, request):
+        from listings.matterhorn_sync import run_sync
+        config = MatterhornConfig.get()
+        created, updated, errors = run_sync(config, limit=None)
+        if isinstance(errors, str):
+            self.message_user(request, f'Kļūda: {errors}', level='error')
+        else:
+            self.message_user(request, f'Matterhorn sync pabeigts: {created} jauni, {updated} atjaunināti, {errors} kļūdas.', level='success')
+        return redirect('../')
+
+    def has_add_permission(self, request):
+        return not MatterhornConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        MatterhornConfig.get()
+        return super().changelist_view(request, extra_context)
+
+
+@admin.register(MatterhornProduct)
+class MatterhornProductAdmin(admin.ModelAdmin):
+    list_display  = ['name', 'brand', 'wholesale_price', 'retail_price', 'total_stock_display', 'is_active', 'listing_link', 'last_updated']
+    list_filter   = ['is_active', 'brand', 'currency']
+    search_fields = ['name', 'brand', 'matterhorn_id', 'category_path']
+    readonly_fields = ['matterhorn_id', 'last_updated', 'created_at', 'sizes_stock_display', 'ean_list', 'images_preview']
+    list_editable = ['is_active']
+    list_per_page = 50
+    fieldsets = [
+        ('Produkts', {'fields': ['matterhorn_id', 'name', 'brand', 'description', 'category_path', 'product_url', 'is_active']}),
+        ('Cenas', {'fields': ['wholesale_price', 'retail_price', 'currency']}),
+        ('Vizuālie', {'fields': ['images_preview', 'colors']}),
+        ('Izmēri un krājumi', {'fields': ['sizes_stock_display']}),
+        ('EAN kodi', {'fields': ['ean_list']}),
+        ('Sludinājums', {'fields': ['listing']}),
+        ('Meta', {'fields': ['last_updated', 'created_at'], 'classes': ['collapse']}),
+    ]
+
+    def total_stock_display(self, obj):
+        s = obj.total_stock
+        color = 'green' if s > 0 else 'red'
+        return format_html('<span style="color:{}">{}</span>', color, s)
+    total_stock_display.short_description = 'Krājumi'
+
+    def listing_link(self, obj):
+        if obj.listing:
+            return format_html('<a href="/sludinajums/{}/" target="_blank">#{}</a>', obj.listing.pk, obj.listing.pk)
+        return '—'
+    listing_link.short_description = 'Sludinājums'
+
+    def sizes_stock_display(self, obj):
+        if not obj.sizes_stock:
+            return '—'
+        rows = ''.join(
+            f'<tr><td style="padding:2px 8px">{sz}</td>'
+            f'<td style="padding:2px 8px">{v.get("stock",0)}</td>'
+            f'<td style="padding:2px 8px;color:#666">{v.get("ean","")}</td></tr>'
+            for sz, v in obj.sizes_stock.items()
+        )
+        return format_html('<table><tr><th>Izmērs</th><th>Krājums</th><th>EAN</th></tr>{}</table>', rows)
+    sizes_stock_display.short_description = 'Izmēri un krājumi'
+
+    def ean_list(self, obj):
+        return ', '.join(obj.ean_codes) if obj.ean_codes else '—'
+    ean_list.short_description = 'EAN kodi'
+
+    def images_preview(self, obj):
+        if not obj.image_urls:
+            return '—'
+        imgs = ''.join(
+            f'<img src="{url}" style="height:60px;border-radius:4px;margin:2px">'
+            for url in obj.image_urls[:5]
+        )
+        return format_html(imgs)
+    images_preview.short_description = 'Attēli'

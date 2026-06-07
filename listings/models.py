@@ -513,6 +513,62 @@ class SavedSearch(models.Model):
         return f'{self.user.username}: {self.get_label()}'
 
 
+class MatterhornConfig(models.Model):
+    xml_feed_url   = models.URLField(verbose_name='XML feed URL', help_text='Matterhorn XML plūsmas adrese ar autorizāciju')
+    api_username   = models.CharField(max_length=200, blank=True, verbose_name='API lietotājvārds')
+    api_password   = models.CharField(max_length=200, blank=True, verbose_name='API parole')
+    sync_enabled   = models.BooleanField(default=True, verbose_name='Automātiskā sinhronizācija (ik 2h)')
+    markup_percent = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('40.00'), verbose_name='Uzcenojums (%)', help_text='Procentuāls uzcenojums virs vairumcenas')
+    default_category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Noklusējuma kategorija')
+    last_sync      = models.DateTimeField(null=True, blank=True, verbose_name='Pēdējā sinhronizācija')
+    sync_log       = models.TextField(blank=True, verbose_name='Sinhronizācijas žurnāls')
+    created_at     = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Matterhorn konfigurācija'
+        verbose_name_plural = 'Matterhorn konfigurācija'
+
+    def __str__(self):
+        return f'Matterhorn ({self.xml_feed_url[:50]})'
+
+    @classmethod
+    def get(cls):
+        obj, _ = cls.objects.get_or_create(pk=1, defaults={'xml_feed_url': '', 'markup_percent': Decimal('40.00')})
+        return obj
+
+
+class MatterhornProduct(models.Model):
+    matterhorn_id      = models.CharField(max_length=100, unique=True, verbose_name='Matterhorn ID')
+    name               = models.CharField(max_length=300, verbose_name='Nosaukums')
+    brand              = models.CharField(max_length=100, blank=True, verbose_name='Zīmols')
+    description        = models.TextField(blank=True, verbose_name='Apraksts')
+    category_path      = models.CharField(max_length=500, blank=True, verbose_name='Kategorija (no Matterhorn)')
+    wholesale_price    = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0'), verbose_name='Vairumcena (EUR)')
+    retail_price       = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0'), verbose_name='Pārdošanas cena (EUR)')
+    currency           = models.CharField(max_length=3, default='EUR', verbose_name='Valūta')
+    image_urls         = models.JSONField(default=list, verbose_name='Attēlu URL saraksts')
+    sizes_stock        = models.JSONField(default=dict, verbose_name='Izmēri un krājumi {izmērs: {stock, ean}}')
+    colors             = models.JSONField(default=list, verbose_name='Krāsas')
+    ean_codes          = models.JSONField(default=list, verbose_name='EAN kodi')
+    product_url        = models.URLField(blank=True, verbose_name='Saite uz Matterhorn produktu')
+    is_active          = models.BooleanField(default=True, verbose_name='Aktīvs')
+    listing            = models.OneToOneField('Listing', on_delete=models.SET_NULL, null=True, blank=True, related_name='matterhorn_product', verbose_name='Sludinājums')
+    last_updated       = models.DateTimeField(auto_now=True)
+    created_at         = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Matterhorn produkts'
+        verbose_name_plural = 'Matterhorn produkti'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.brand} — {self.name[:60]}'
+
+    @property
+    def total_stock(self):
+        return sum(v.get('stock', 0) for v in self.sizes_stock.values()) if isinstance(self.sizes_stock, dict) else 0
+
+
 class SiteSettings(models.Model):
     listing_fee_enabled = models.BooleanField(default=False, verbose_name='Maksa par sludinājumu ieslēgta')
     listing_fee = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('0.00'), verbose_name='Sludinājuma maksa (€ ar PVN)')
